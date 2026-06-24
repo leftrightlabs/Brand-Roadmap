@@ -421,8 +421,10 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
               <p className="text-gray-500 mb-8 max-w-2xl">The order we teach it: Get Clear first, then Get Noticed, then Get Paid.</p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {PILLARS.map((pillar, i) => {
-                  const move = results.sequencedMoves?.[i];
-                  if (!move) return null;
+                  const raw = results.sequencedMoves?.[i];
+                  if (!raw) return null;
+                  // Strip any leading "Get Clear — " style prefix the model adds (the pillar is already labeled).
+                  const move = raw.replace(/^\s*get\s+(clear|noticed|paid)\b\s*[—–:-]*\s*/i, "");
                   return (
                     <div key={pillar.key} className="flex flex-col h-full bg-white border border-gray-200 rounded-2xl p-6">
                       <div className="flex items-center gap-3 mb-3">
