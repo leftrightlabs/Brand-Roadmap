@@ -427,19 +427,23 @@ export async function POST(request: NextRequest) {
 
     console.log(`[WEB-AUDIT] Report record created successfully for shortId: ${shortId}`);
 
-    // Start analysis immediately but with better timeout handling
-    try {
-      await performAnalysisWithTimeout(shortId, websiteUrl, {
-        name,
-        email,
-        businessGoals,
-        industry,
-        targetAudience,
-        brandPersonality,
-        marketingStatus,
-        improvementFocus,
-      });
-    } catch (error: unknown) {
+    // Kick off the analysis in the BACKGROUND and respond immediately with the
+    // shortId. The client (analyzing page) polls /check-results for progress,
+    // so we must NOT hold the HTTP request open for the full ~2-3 min analysis:
+    // doing so blocks the client from polling and risks Railway's proxy timing
+    // out the long-held request, leaving the page spinning forever. On Railway's
+    // persistent Node server the promise keeps running after we respond (unlike
+    // serverless, where the function would be frozen).
+    void performAnalysisWithTimeout(shortId, websiteUrl, {
+      name,
+      email,
+      businessGoals,
+      industry,
+      targetAudience,
+      brandPersonality,
+      marketingStatus,
+      improvementFocus,
+    }).catch(async (error: unknown) => {
       console.error(`[WEB-AUDIT] Analysis failed for ${shortId}:`, error);
       try {
         await sql`
@@ -455,7 +459,7 @@ export async function POST(request: NextRequest) {
       } catch (updateError: unknown) {
         console.error(`[WEB-AUDIT] Failed to update report status for ${shortId}:`, updateError);
       }
-    }
+    });
 
     return NextResponse.json({
       success: true,
