@@ -82,11 +82,13 @@ OUTPUT FORMAT (return exactly this structure; keep prose concise):
     }}
   },
   "sequencedMoves": [
-    "[Move 1 — the single highest-priority next move, referencing its pillar/area]",
-    "[Move 2]",
-    "[Move 3]"
+    "[The single most important next move for GET CLEAR — synthesized, referencing the relevant area]",
+    "[The single most important next move for GET NOTICED]",
+    "[The single most important next move for GET PAID]"
   ]
 }
+
+sequencedMoves MUST contain exactly three items, in this fixed order: (1) Get Clear, (2) Get Noticed, (3) Get Paid — this is the sequence we teach. Each is the highest-leverage next move for that pillar.
 
 Website: ${websiteUrl}`;
 

@@ -268,16 +268,16 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
     <div className="min-h-screen bg-white report-page">
       {/* ── HEADER ── */}
       <header className="bg-[#112248] text-white pt-10 md:pt-14 overflow-hidden">
-        <div className="max-w-5xl mx-auto px-6">
+        <div className="max-w-6xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="grid md:grid-cols-[1fr_300px] gap-10 items-center"
+            className="grid md:grid-cols-[1fr_320px] gap-10 items-center"
           >
             <div>
               <div className="font-heading-transform">
-                <h1 className="text-2xl md:text-[30px] font-heading text-white mb-2 whitespace-nowrap">
+                <h1 className="text-2xl md:text-[34px] font-heading text-white mb-2 whitespace-nowrap">
                   Your Brand Roadmap™
                 </h1>
               </div>
@@ -320,8 +320,8 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
       </header>
 
       {/* ── TABLE OF CONTENTS ── */}
-      <nav className="sticky top-0 z-20 bg-gray-50 border-b border-gray-200 shadow-sm">
-        <div className="max-w-5xl mx-auto px-6">
+      <nav className="sticky top-0 z-20 bg-gray-50/95 backdrop-blur border-b border-gray-200 shadow-sm">
+        <div className="max-w-6xl mx-auto px-6">
           <div className="flex items-center gap-2 py-4 overflow-x-auto scrollbar-hide">
             <a href="#overview" className="text-[13px] font-bold uppercase tracking-wider text-[#112248]/70 hover:text-[#112248] border-b-2 border-transparent hover:border-[#a7c140] transition-all whitespace-nowrap px-3 py-1">
               Overview
@@ -339,88 +339,103 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
       </nav>
 
       {/* ── MAIN ── */}
-      <main className="max-w-3xl mx-auto px-6 py-12 md:py-16">
+      <main>
         {/* ── OVERVIEW: VENN + LEGACY READ ── */}
-        <motion.section id="overview" className="mb-16 md:mb-20 scroll-mt-20" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} viewport={{ once: true }}>
-          <BrandVenn statuses={statuses} onSegmentClick={scrollToArea} className="mb-10" />
-          <div className="flex items-center gap-3 mb-2">
-            <h2 className="text-2xl md:text-3xl font-heading text-[#112248]">The Legacy Read</h2>
+        <section id="overview" className="scroll-mt-20 bg-white">
+          <div className="max-w-6xl mx-auto px-6 py-12 md:py-16">
+            <div className="lg:grid lg:grid-cols-2 lg:gap-14 lg:items-center">
+              <BrandVenn statuses={statuses} onSegmentClick={scrollToArea} className="mb-10 lg:mb-0 w-full max-w-[520px] mx-auto" />
+              <div>
+                <h2 className="text-2xl md:text-3xl font-heading text-[#112248]">The Legacy Read</h2>
+                <div className="w-12 h-0.5 bg-[#a7c140] mt-2 mb-6" />
+                <div className="space-y-5">
+                  {results.legacyRead.split(/\n\n+/).filter(Boolean).map((para, i) => (
+                    <p key={i} className="text-gray-700 text-[18px] md:text-[19px] leading-[1.6]">{para}</p>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="w-12 h-0.5 bg-[#a7c140] mb-6" />
-          <div className="space-y-5">
-            {results.legacyRead.split(/\n\n+/).filter(Boolean).map((para, i) => (
-              <p key={i} className="text-gray-700 text-[19px] leading-[1.5]">{para}</p>
-            ))}
-          </div>
-        </motion.section>
+        </section>
 
-        {/* ── PILLARS ── */}
-        {PILLARS.map((pillar) => (
-          <motion.section key={pillar.key} id={pillar.key} className="mb-16 md:mb-20 scroll-mt-20" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} viewport={{ once: true, margin: "-50px" }}>
-            <h2 className="text-2xl md:text-3xl font-heading text-[#112248]">{pillar.label}</h2>
-            <div className="w-12 h-0.5 bg-[#a7c140] mt-2 mb-2" />
-            <p className="text-gray-500 mb-8">{pillar.tagline}</p>
+        {/* ── PILLARS (alternating bands, 3-up grid on desktop/tablet) ── */}
+        {PILLARS.map((pillar, idx) => (
+          <section key={pillar.key} id={pillar.key} className={`scroll-mt-16 ${idx % 2 === 1 ? "bg-[#f5f6f2]" : "bg-white"}`}>
+            <div className="max-w-6xl mx-auto px-6 py-12 md:py-16">
+              <div className="flex items-center gap-3 mb-2">
+                <span className="text-sm font-bold text-[#a7c140] tracking-wider font-heading">{String(idx + 1).padStart(2, "0")}</span>
+                <h2 className="text-2xl md:text-3xl font-heading text-[#112248]">{pillar.label}</h2>
+              </div>
+              <div className="w-12 h-0.5 bg-[#a7c140] mb-2" />
+              <p className="text-gray-500 mb-8 max-w-2xl">{pillar.tagline}</p>
 
-            <div className="space-y-5">
-              {pillar.areas.map((areaKey) => {
-                const ev: AreaEval | undefined = results.pillars?.[pillar.key]?.areas?.[areaKey];
-                if (!ev) return null;
-                const ui = STATUS_UI[ev.status];
-                return (
-                  <div key={areaKey} id={areaKey} className="scroll-mt-20 border border-gray-200 rounded-2xl p-6 md:p-7">
-                    <div className="flex items-start justify-between gap-4 flex-wrap">
-                      <div className="flex items-center gap-3 flex-wrap">
-                        <h3 className="text-xl md:text-2xl font-heading text-[#112248]">{AREA_LABELS[areaKey]}</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {pillar.areas.map((areaKey) => {
+                  const ev: AreaEval | undefined = results.pillars?.[pillar.key]?.areas?.[areaKey];
+                  if (!ev) return null;
+                  const ui = STATUS_UI[ev.status];
+                  return (
+                    <div key={areaKey} id={areaKey} className="scroll-mt-24 flex flex-col h-full bg-white border border-gray-200 rounded-2xl p-6">
+                      <div className="flex items-center justify-between gap-3 mb-3">
+                        <StrengthBar status={ev.status} />
+                        <span className="text-xs font-medium uppercase tracking-wider" style={{ color: ui.text }}>{ev.status}</span>
+                      </div>
+                      <div className="flex items-center gap-2 flex-wrap mb-3">
+                        <h3 className="text-xl font-heading text-[#112248]">{AREA_LABELS[areaKey]}</h3>
                         {ev.startHere && (
-                          <span className="text-[10px] uppercase tracking-[0.08em] px-3 py-1 rounded-full" style={{ border: `1px solid ${ui.border}`, color: ui.text }}>
+                          <span className="text-[10px] uppercase tracking-[0.08em] px-2.5 py-0.5 rounded-full" style={{ border: `1px solid ${ui.border}`, color: ui.text }}>
                             Start here
                           </span>
                         )}
                       </div>
-                      <div className="flex items-center gap-3">
-                        <StrengthBar status={ev.status} />
-                        <span className="text-sm font-medium" style={{ color: ui.text }}>{ev.status}</span>
+                      <p className="text-gray-700 text-[16px] leading-[1.6] flex-1">{ev.evaluation}</p>
+                      <div className="mt-5 border-l-4 rounded-r-lg p-4" style={{ borderColor: "#a7c140", background: "rgba(17,34,72,0.03)" }}>
+                        <div className="flex items-center gap-2 mb-1.5">
+                          <ArrowRight className="w-4 h-4 text-[#a7c140]" />
+                          <h4 className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#a7c140]">Your next move</h4>
+                        </div>
+                        <p className="text-gray-700 text-[15px] leading-[1.55]">{ev.nextMove}</p>
                       </div>
                     </div>
+                  );
+                })}
+              </div>
 
-                    <p className="text-gray-700 text-[18px] leading-[1.55] mt-4">{ev.evaluation}</p>
-
-                    <div className="mt-5 border-l-4 rounded-r-lg p-4 md:p-5" style={{ borderColor: "#a7c140", background: "rgba(17,34,72,0.03)" }}>
-                      <div className="flex items-center gap-2 mb-2">
-                        <ArrowRight className="w-4 h-4 text-[#a7c140]" />
-                        <h4 className="text-xs font-bold uppercase tracking-[0.15em] text-[#a7c140]">Your next move</h4>
-                      </div>
-                      <p className="text-gray-700 text-[17px] leading-[1.55]">{ev.nextMove}</p>
-                    </div>
-                  </div>
-                );
-              })}
+              {/* Soft per-pillar upsell (product mapping TBD) */}
+              <div className="mt-8">
+                <a href="https://leftrightlabs.com/contact" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-[#112248] font-bold uppercase tracking-wider text-sm hover:opacity-70 transition-opacity">
+                  Strengthen your {pillar.label} foundation
+                  <ArrowRight className="w-4 h-4 text-[#a7c140]" />
+                </a>
+              </div>
             </div>
-
-            {/* Soft per-pillar upsell (product mapping TBD) */}
-            <div className="mt-6">
-              <a href="https://leftrightlabs.com/contact" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-[#112248] font-bold uppercase tracking-wider text-sm hover:opacity-70 transition-opacity">
-                Strengthen your {pillar.label} foundation
-                <ArrowRight className="w-4 h-4 text-[#a7c140]" />
-              </a>
-            </div>
-          </motion.section>
+          </section>
         ))}
 
-        {/* ── SEQUENCED NEXT MOVES ── */}
+        {/* ── SEQUENCED NEXT MOVES (always Get Clear → Get Noticed → Get Paid) ── */}
         {results.sequencedMoves && results.sequencedMoves.length > 0 && (
-          <motion.section id="next-moves" className="mb-4 scroll-mt-20" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} viewport={{ once: true }}>
-            <h2 className="text-2xl md:text-3xl font-heading text-[#112248]">Your Sequenced Roadmap</h2>
-            <div className="w-12 h-0.5 bg-[#a7c140] mt-2 mb-8" />
-            <ol className="space-y-4">
-              {results.sequencedMoves.map((move, i) => (
-                <li key={i} className="flex gap-4 items-start">
-                  <span className="flex-shrink-0 w-9 h-9 rounded-full bg-[#a7c140] text-[#112248] font-heading font-bold flex items-center justify-center">{i + 1}</span>
-                  <p className="text-gray-700 text-[18px] leading-[1.55] pt-1">{move}</p>
-                </li>
-              ))}
-            </ol>
-          </motion.section>
+          <section id="next-moves" className="scroll-mt-16 bg-[#f5f6f2]">
+            <div className="max-w-6xl mx-auto px-6 py-12 md:py-16">
+              <h2 className="text-2xl md:text-3xl font-heading text-[#112248]">Your Sequenced Roadmap</h2>
+              <div className="w-12 h-0.5 bg-[#a7c140] mt-2 mb-3" />
+              <p className="text-gray-500 mb-8 max-w-2xl">The order we teach it: Get Clear first, then Get Noticed, then Get Paid.</p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {PILLARS.map((pillar, i) => {
+                  const move = results.sequencedMoves?.[i];
+                  if (!move) return null;
+                  return (
+                    <div key={pillar.key} className="flex flex-col h-full bg-white border border-gray-200 rounded-2xl p-6">
+                      <div className="flex items-center gap-3 mb-3">
+                        <span className="flex-shrink-0 w-9 h-9 rounded-full bg-[#a7c140] text-[#112248] font-heading font-bold flex items-center justify-center">{i + 1}</span>
+                        <span className="text-sm font-bold uppercase tracking-wider text-[#112248]">{pillar.label}</span>
+                      </div>
+                      <p className="text-gray-700 text-[16px] leading-[1.6]">{move}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
         )}
       </main>
 
