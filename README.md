@@ -14,7 +14,7 @@ Forked from the Brand Advantage Toolkit codebase, stripped down to just the
 
 - **Next.js 15** (App Router, standalone output)
 - **TypeScript** + **Tailwind**
-- **Supabase** for lead storage (`website_audit_leads` + `shared_reports`)
+- **Railway Postgres** (via `postgres.js`) for lead storage (`website_audit_leads` + `shared_reports`)
 - **Anthropic Claude** for brand analysis
 - **ActiveCampaign** for lead nurturing
 - Deployed on **Railway**
