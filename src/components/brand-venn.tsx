@@ -32,13 +32,15 @@ function segmentPath(a0: number, a1: number): string {
 }
 
 function labelPath(a0: number, a1: number, bottom: boolean): string {
+  // Use nearly the full segment arc so long labels (e.g. "SIGNATURE FRAMEWORK")
+  // never run past the path end and get clipped.
   if (!bottom) {
-    const s = polar(R_LABEL, a0 + 1.5);
-    const e = polar(R_LABEL, a1 - 1.5);
+    const s = polar(R_LABEL, a0 + 0.5);
+    const e = polar(R_LABEL, a1 - 0.5);
     return `M ${s[0]} ${s[1]} A ${R_LABEL} ${R_LABEL} 0 0 1 ${e[0]} ${e[1]}`;
   }
-  const s = polar(R_LABEL, a1 - 1.5);
-  const e = polar(R_LABEL, a0 + 1.5);
+  const s = polar(R_LABEL, a1 - 0.5);
+  const e = polar(R_LABEL, a0 + 0.5);
   return `M ${s[0]} ${s[1]} A ${R_LABEL} ${R_LABEL} 0 0 0 ${e[0]} ${e[1]}`;
 }
 
@@ -86,7 +88,7 @@ export function BrandVenn({ statuses, onSegmentClick, className }: BrandVennProp
                   strokeWidth={1}
                 />
                 <path id={id} d={labelPath(a0, a1, bottom)} fill="none" />
-                <text fill="#ffffff" fontSize="11" letterSpacing="1.4" fontFamily="'sweet-sans-pro', sans-serif">
+                <text fill="#ffffff" fontSize="10" letterSpacing="0.4" fontFamily="'sweet-sans-pro', Arial, sans-serif">
                   <textPath href={`#${id}`} startOffset="50%" textAnchor="middle">
                     {AREA_LABELS[area].toUpperCase()}
                   </textPath>
@@ -104,12 +106,12 @@ export function BrandVenn({ statuses, onSegmentClick, className }: BrandVennProp
           <ellipse cx="340" cy="320" rx="44" ry="52" fill="#A7C140" />
           <text x="340" y="327" textAnchor="middle" fontFamily="'scotch-display', serif" fontStyle="italic" fontSize="22" fill="#0E1B3D">Legacy</text>
 
-          <text x="340" y="183" textAnchor="middle" fill="#fff" fontFamily="'sweet-sans-pro', sans-serif" fontSize="15">Get</text>
-          <text x="340" y="214" textAnchor="middle" fill="#fff" fontFamily="'scotch-display', serif" fontStyle="italic" fontSize="30">Clear™</text>
-          <text x="248" y="392" textAnchor="middle" fill="#fff" fontFamily="'sweet-sans-pro', sans-serif" fontSize="15">Get</text>
-          <text x="248" y="423" textAnchor="middle" fill="#fff" fontFamily="'scotch-display', serif" fontStyle="italic" fontSize="30">Paid</text>
-          <text x="432" y="392" textAnchor="middle" fill="#fff" fontFamily="'sweet-sans-pro', sans-serif" fontSize="15">Get</text>
-          <text x="432" y="423" textAnchor="middle" fill="#fff" fontFamily="'scotch-display', serif" fontStyle="italic" fontSize="30">Noticed</text>
+          <text x="340" y="185" textAnchor="middle" fill="#fff" fontFamily="'sweet-sans-pro', Arial, sans-serif" fontSize="14">Get</text>
+          <text x="340" y="214" textAnchor="middle" fill="#fff" fontFamily="'scotch-display', serif" fontStyle="italic" fontSize="27">Clear™</text>
+          <text x="250" y="394" textAnchor="middle" fill="#fff" fontFamily="'sweet-sans-pro', Arial, sans-serif" fontSize="14">Get</text>
+          <text x="250" y="423" textAnchor="middle" fill="#fff" fontFamily="'scotch-display', serif" fontStyle="italic" fontSize="27">Paid</text>
+          <text x="430" y="394" textAnchor="middle" fill="#fff" fontFamily="'sweet-sans-pro', Arial, sans-serif" fontSize="14">Get</text>
+          <text x="430" y="423" textAnchor="middle" fill="#fff" fontFamily="'scotch-display', serif" fontStyle="italic" fontSize="27">Noticed</text>
 
           <text x="276" y="305" textAnchor="middle" fill="rgba(255,255,255,0.85)" fontFamily="'sweet-sans-pro', sans-serif" fontSize="12" letterSpacing="1.5">ASCEND</text>
           <text x="404" y="305" textAnchor="middle" fill="rgba(255,255,255,0.85)" fontFamily="'sweet-sans-pro', sans-serif" fontSize="12" letterSpacing="1.5">ALIGN</text>

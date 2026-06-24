@@ -56,6 +56,8 @@ export interface PillarMeta {
   label: string;
   tagline: string;
   areas: AreaKey[];
+  /** Optional embed URL (YouTube/Vimeo/Wistia) for this pillar's lesson video. */
+  videoUrl?: string;
 }
 
 export const PILLARS: PillarMeta[] = [
@@ -64,18 +66,21 @@ export const PILLARS: PillarMeta[] = [
     label: 'Get Clear',
     tagline: 'Is the foundation something only you could own?',
     areas: ['brandPersonality', 'signatureFramework', 'elevatedAudience'],
+    videoUrl: undefined, // TODO: paste the Get Clear lesson embed URL
   },
   {
     key: 'getNoticed',
     label: 'Get Noticed',
     tagline: 'Does the expression match the vision?',
     areas: ['magneticVoice', 'visualPositioning', 'onlinePresence'],
+    videoUrl: undefined, // TODO: paste the Get Noticed lesson embed URL
   },
   {
     key: 'getPaid',
     label: 'Get Paid',
     tagline: 'Is the brand built to convert and scale?',
     areas: ['brandAuthority', 'offerEvolution', 'visionaryGrowth'],
+    videoUrl: undefined, // TODO: paste the Get Paid lesson embed URL
   },
 ];
 
