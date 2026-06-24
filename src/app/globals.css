@@ -1,0 +1,163 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* LRL licensed fonts — Scotch Display + Sweet Sans Pro via Adobe Fonts */
+@import url('https://use.typekit.net/uwk2elu.css');
+
+@font-face {
+  font-family: 'Better Vinegar';
+  src: url('/fonts/better-vinegar/font.woff2') format('woff2'),
+       url('/fonts/better-vinegar/font.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-better-vinegar: 'Better Vinegar';
+}
+
+@layer base {
+  :root {
+    --background: #ffffff;
+    --foreground: #1a1a1a;
+
+    /* LRL Brand Colors — official 2025 palette */
+    --lrl-navy:  #112248;
+    --lrl-white: #ffffff;
+    --lrl-black: #000000;
+    --lrl-lime:  #a7c140;
+
+    /* Legacy aliases (kept so existing var() refs keep working; remap to new palette) */
+    --brand-primary:   #112248; /* was #112248 */
+    --brand-secondary: #112248; /* was #923a80 — magenta retired; collapses to Navy */
+    --brand-accent:    #a7c140; /* was #a7c140 — gold retired, Lime is the new accent */
+  }
+
+  body {
+    @apply bg-white text-gray-900;
+    font-family: sweet-sans-pro, 'Montserrat', 'Inter', Arial, sans-serif;
+    font-size: 1rem;
+    /* Editorial body line-height per LRL brand spec (1.6–1.8, never tighter) */
+    line-height: 1.7;
+  }
+
+  @media (min-width: 768px) {
+    body {
+      font-size: 20px;
+    }
+  }
+
+  /* Titles (H1/H2) + explicit .font-heading — Scotch Display with scaleY stretch */
+  h1, h2, .font-heading {
+    font-family: scotch-display, 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    line-height: 1.5;
+    transform: matrix(1, 0, 0, 1.2, 0, 0);
+    letter-spacing: 1px;
+  }
+
+  /* Subheads (H3–H6) — Sweet Sans Pro 600 per LRL brand spec */
+  h3, h4, h5, h6 {
+    font-family: sweet-sans-pro, 'Montserrat', 'Inter', Arial, sans-serif;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  /* Wrapper for motion-based headings so transform isn't overridden by Framer */
+  .font-heading-transform {
+    transform: matrix(1, 0, 0, 1.2, 0, 0);
+    line-height: 1.5;
+  }
+  
+  /* Apply text balance to all centered text by default */
+  .text-center h1,
+  .text-center h2,
+  .text-center h3,
+  .text-center h4,
+  .text-center h5,
+  .text-center h6,
+  .text-center p {
+    text-wrap: balance;
+  }
+}
+
+/* Report page: no letter-spacing on headings (override base and CardTitle tracking-tight) */
+.report-page h2,
+.report-page h3,
+.report-page .font-heading {
+  letter-spacing: 0;
+}
+.report-page h2 {
+  font-weight: 700;
+  font-size: 2rem !important;
+}
+
+/* Report insight/recommendation labels: Sweet Sans Pro, uppercase */
+.report-label {
+  font-family: sweet-sans-pro, sans-serif !important;
+  text-transform: uppercase;
+  font-weight: 600;
+  transform: none !important;
+  letter-spacing: 0.08em;
+}
+
+@layer components {
+  /* Primary CTA — Navy bg, white text (per LRL brand) */
+  .btn-primary {
+    @apply bg-[#112248] text-white px-8 py-3 rounded-md font-medium uppercase tracking-[0.08em] hover:bg-[#0a1730] transition-all;
+  }
+  /* Accent CTA — Lime bg, Navy text */
+  .btn-accent {
+    @apply bg-[#a7c140] text-[#112248] px-8 py-3 rounded-md font-semibold uppercase tracking-[0.08em] hover:bg-[#96ad38] transition-all;
+  }
+  /* Secondary / ghost CTA — Navy outline */
+  .btn-secondary {
+    @apply bg-transparent border-[1.5px] border-[#112248] text-[#112248] px-8 py-3 rounded-md font-medium uppercase tracking-[0.08em] hover:bg-[#112248] hover:text-white transition-all;
+  }
+}
+
+@layer utilities {
+  .text-wrap-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Enforce Scotch Display + scaleY stretch on titles (H1/H2) & explicit .font-heading site-wide */
+h1, h2, .font-heading {
+  font-family: scotch-display, 'Playfair Display', Georgia, serif !important;
+  font-weight: 700 !important;
+  transform: matrix(1, 0, 0, 1.2, 0, 0) !important;
+}
+
+/* Enforce Sweet Sans Pro on subheads (H3–H6) per LRL brand spec — no scaleY stretch.
+   :not(.font-heading) lets an explicit .font-heading opt-in keep Scotch Display. */
+h3:not(.font-heading), h4:not(.font-heading), h5:not(.font-heading), h6:not(.font-heading) {
+  font-family: sweet-sans-pro, 'Montserrat', 'Inter', Arial, sans-serif !important;
+  font-weight: 600 !important;
+  transform: none !important;
+}
+
+h2 {
+  line-height: 1.2 !important;
+}
+
+/* Titles (H1/H2) — always Capitalize Case per LRL brand spec */
+h1, h2 {
+  text-transform: capitalize;
+}
+
+/* Desktop H1 sizing
+ * Default: respect Tailwind size classes set in the JSX (text-xl, text-4xl, text-5xl, etc.)
+ * Form pages opt in via the .h1-form-title class for the 56px form heading scale.
+ * The .report-page wrapper locks the report header h1 to 30px.
+ */
+@media (min-width: 1024px) {
+  h1.h1-form-title {
+    font-size: 56px !important;
+  }
+  .report-page h1 {
+    font-size: 30px !important;
+  }
+}

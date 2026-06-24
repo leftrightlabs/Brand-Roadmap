@@ -1,0 +1,61 @@
+# robots.txt for roadmap.leftrightlabs.com
+#
+# Default policy: allow all standard search engines. We also explicitly allow
+# AI crawlers — the Brand Roadmap helps brands show up in AI answers, so we
+# want our own marketing pages to be readable by AI.
+#
+# Per-lead report pages are no-indexed via per-page meta robots, not
+# disallowed here. Disallow lines would block crawling entirely; we want
+# crawlers to see the noindex tag and respect it without losing reachability
+# from links.
+
+User-agent: *
+Allow: /
+
+# ─── AI crawlers (explicit allow) ───────────────────────────────────────────
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: FacebookBot
+Allow: /
+
+Sitemap: https://roadmap.leftrightlabs.com/sitemap.xml
