@@ -38,8 +38,27 @@ function createClient() {
   });
 }
 
-export const sql = globalThis.__pg ?? createClient();
-
-if (process.env.NODE_ENV !== 'production') {
-  globalThis.__pg = sql;
+function getClient(): ReturnType<typeof postgres> {
+  if (!globalThis.__pg) {
+    globalThis.__pg = createClient();
+  }
+  return globalThis.__pg;
 }
+
+// Lazy proxy: the real postgres client is created on first use, not at module
+// load. This matters because `next build` imports every route module during
+// page-data collection — if we instantiated here, the build would crash with
+// "DATABASE_URL is not set" (a Dockerfile `RUN npm run build` has no runtime
+// env vars). Deferring means importing `sql` is always safe; the connection
+// string is only required when a query actually runs (at request time).
+export const sql = new Proxy(function () {} as unknown as ReturnType<typeof postgres>, {
+  apply(_target, _thisArg, args: Parameters<ReturnType<typeof postgres>>) {
+    // Tagged-template call: sql`SELECT ...`
+    return (getClient() as (...a: unknown[]) => unknown)(...(args as unknown[]));
+  },
+  get(_target, prop) {
+    const client = getClient() as unknown as Record<string | symbol, unknown>;
+    const value = client[prop];
+    return typeof value === 'function' ? (value as (...a: unknown[]) => unknown).bind(client) : value;
+  },
+}) as ReturnType<typeof postgres>;
