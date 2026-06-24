@@ -34,6 +34,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Insert new lead. website_url is set later in start-analysis.
+    // updated_at defaults to NOW() on insert; no need to set it explicitly here.
     const inserted = await sql<{ id: string }[]>`
       INSERT INTO website_audit_leads (name, email, website_url)
       VALUES (${name}, ${email}, '')

@@ -375,7 +375,8 @@ export async function POST(request: NextRequest) {
         target_audience    = EXCLUDED.target_audience,
         brand_personality  = EXCLUDED.brand_personality,
         marketing_status   = EXCLUDED.marketing_status,
-        improvement_focus  = EXCLUDED.improvement_focus
+        improvement_focus  = EXCLUDED.improvement_focus,
+        updated_at         = NOW()
       RETURNING id
     `;
 
@@ -452,10 +453,11 @@ export async function POST(request: NextRequest) {
         await sql`
           UPDATE shared_reports
           SET analysis_results = ${sql.json({
-            status: 'failed',
-            error: error instanceof Error ? error.message : 'Background processing failed',
-            failedAt: new Date().toISOString(),
-          })}
+                status: 'failed',
+                error: error instanceof Error ? error.message : 'Background processing failed',
+                failedAt: new Date().toISOString(),
+              })},
+              updated_at = NOW()
           WHERE short_id = ${shortId}
         `;
       } catch (updateError: unknown) {
@@ -733,12 +735,13 @@ async function performAnalysisWithTimeout(
     await sql`
       UPDATE shared_reports
       SET analysis_results = ${sql.json({
-        ...analysisResults,
-        status: 'completed',
-        progress: 100,
-        currentStep: 5,
-        generatedAt: new Date().toISOString(),
-      })}
+            ...analysisResults,
+            status: 'completed',
+            progress: 100,
+            currentStep: 5,
+            generatedAt: new Date().toISOString(),
+          })},
+          updated_at = NOW()
       WHERE short_id = ${shortId}
     `;
 
@@ -753,10 +756,11 @@ async function performAnalysisWithTimeout(
     await sql`
       UPDATE shared_reports
       SET analysis_results = ${sql.json({
-        status: 'failed',
-        error: error instanceof Error ? error.message : 'Unknown error',
-        failedAt: new Date().toISOString(),
-      })}
+            status: 'failed',
+            error: error instanceof Error ? error.message : 'Unknown error',
+            failedAt: new Date().toISOString(),
+          })},
+          updated_at = NOW()
       WHERE short_id = ${shortId}
     `;
   }
@@ -767,11 +771,12 @@ async function updateProgress(shortId: string, progress: number, currentStep: nu
     await sql`
       UPDATE shared_reports
       SET analysis_results = ${sql.json({
-        status: 'processing',
-        progress,
-        currentStep,
-        updatedAt: new Date().toISOString(),
-      })}
+            status: 'processing',
+            progress,
+            currentStep,
+            updatedAt: new Date().toISOString(),
+          })},
+          updated_at = NOW()
       WHERE short_id = ${shortId}
     `;
   } catch (error) {

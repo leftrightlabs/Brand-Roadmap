@@ -125,7 +125,8 @@ export async function POST(
 
     await sql`
       UPDATE shared_reports
-      SET analysis_results = ${sql.json(fallbackResults)}
+      SET analysis_results = ${sql.json(fallbackResults)},
+          updated_at = NOW()
       WHERE short_id = ${shortId}
     `;
 
