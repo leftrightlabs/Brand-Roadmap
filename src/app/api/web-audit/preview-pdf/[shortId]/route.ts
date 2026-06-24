@@ -1,59 +1,65 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { sql } from '@/lib/db';
+
+interface ReportRow {
+  analysis_results: Record<string, unknown>;
+  website_url: string;
+  created_at: string;
+  expires_at: string;
+  lead_name: string | null;
+  lead_email: string | null;
+}
 
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ shortId: string }> }
 ) {
   const { shortId } = await params;
   console.log('[WEB-AUDIT-PREVIEW] GET handler called for shortId:', shortId);
-  
+
   try {
-    // Create Supabase client
-    const supabaseServer = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
+    const rows = await sql<ReportRow[]>`
+      SELECT
+        sr.analysis_results,
+        sr.website_url,
+        sr.created_at,
+        sr.expires_at,
+        l.name  AS lead_name,
+        l.email AS lead_email
+      FROM shared_reports sr
+      LEFT JOIN website_audit_leads l ON l.id = sr.lead_id
+      WHERE sr.short_id = ${shortId}
+      LIMIT 1
+    `;
 
-    // Fetch the audit results from the shared_reports table
-    const { data: reportData, error: fetchError } = await supabaseServer
-      .from('shared_reports')
-      .select(`
-        *,
-        website_audit_leads (
-          name,
-          email,
-          website_url
-        )
-      `)
-      .eq('short_id', shortId)
-      .single();
-
-    if (fetchError || !reportData) {
-      console.error('[WEB-AUDIT-PREVIEW] Error fetching report data:', fetchError);
+    if (rows.length === 0) {
+      console.error('[WEB-AUDIT-PREVIEW] No report found for shortId:', shortId);
       return NextResponse.json(
         { error: 'Audit not found or has expired' },
         { status: 404 }
       );
     }
 
-    // Check if report has expired
-    const expiresAt = new Date(reportData.expires_at);
-    const now = new Date();
-    
-    if (now > expiresAt) {
+    const reportData = rows[0];
+
+    if (new Date() > new Date(reportData.expires_at)) {
       return NextResponse.json(
         { error: 'Report has expired' },
         { status: 410 }
       );
     }
 
-    const auditData = {
+    // auditData is intentionally permissive — analysis_results is a JSONB
+    // grab-bag whose shape depends on what the AI returned (rawResponse,
+    // raw_analysis, structured fields, etc.). Downstream helpers do their
+    // own narrowing.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const auditData: any = {
       ...reportData.analysis_results,
       website_url: reportData.website_url,
       created_at: reportData.created_at,
-      lead_name: reportData.website_audit_leads?.name,
-      lead_email: reportData.website_audit_leads?.email,
+      lead_name: reportData.lead_name ?? undefined,
+      lead_email: reportData.lead_email ?? undefined,
     };
 
     // Parse the audit response if it exists

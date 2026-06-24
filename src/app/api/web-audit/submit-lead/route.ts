@@ -1,16 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+import { sql } from '@/lib/db';
 
 export async function POST(request: NextRequest) {
   try {
     const { name, email } = await request.json();
 
-    // Validate input
     if (!name || !email) {
       return NextResponse.json(
         { error: 'Name and email are required' },
@@ -18,7 +12,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return NextResponse.json(
@@ -28,45 +21,31 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if lead already exists — reuse existing record if so
-    const { data: existingLead } = await supabase
-      .from('website_audit_leads')
-      .select('id')
-      .eq('email', email)
-      .single();
+    const existing = await sql<{ id: string }[]>`
+      SELECT id FROM website_audit_leads WHERE email = ${email} LIMIT 1
+    `;
 
-    if (existingLead) {
+    if (existing.length > 0) {
       return NextResponse.json({
         success: true,
         message: 'Lead information updated',
-        leadId: existingLead.id
+        leadId: existing[0].id,
       });
     }
 
-    // Insert new lead
-    const { data: lead, error: insertError } = await supabase
-      .from('website_audit_leads')
-      .insert([
-        {
-          name,
-          email,
-          website_url: '', // Will be updated in next step
-        }
-      ])
-      .select()
-      .single();
+    // Insert new lead. website_url is set later in start-analysis.
+    const inserted = await sql<{ id: string }[]>`
+      INSERT INTO website_audit_leads (name, email, website_url)
+      VALUES (${name}, ${email}, '')
+      RETURNING id
+    `;
 
-    if (insertError) {
-      console.error('Error inserting lead:', insertError);
-      return NextResponse.json(
-        { error: 'Failed to save lead information' },
-        { status: 500 }
-      );
-    }
+    const leadId = inserted[0].id;
 
-    // Add to ActiveCampaign (if configured)
+    // Subscribe to ActiveCampaign (best-effort — don't fail the request if AC is down)
     if (process.env.ACTIVECAMPAIGN_API_KEY && process.env.ACTIVECAMPAIGN_LIST_ID) {
       try {
-        const activeCampaignResponse = await fetch(
+        const acResponse = await fetch(
           `https://${process.env.ACTIVECAMPAIGN_ACCOUNT}.api-us1.com/api/3/contacts`,
           {
             method: 'POST',
@@ -84,10 +63,8 @@ export async function POST(request: NextRequest) {
           }
         );
 
-        if (activeCampaignResponse.ok) {
-          const contactData = await activeCampaignResponse.json();
-          
-          // Add to list
+        if (acResponse.ok) {
+          const contactData = await acResponse.json();
           await fetch(
             `https://${process.env.ACTIVECAMPAIGN_ACCOUNT}.api-us1.com/api/3/contactLists`,
             {
@@ -100,7 +77,7 @@ export async function POST(request: NextRequest) {
                 contactList: {
                   list: process.env.ACTIVECAMPAIGN_LIST_ID,
                   contact: contactData.contact.id,
-                  status: 1, // Subscribed
+                  status: 1,
                 },
               }),
             }
@@ -108,16 +85,14 @@ export async function POST(request: NextRequest) {
         }
       } catch (acError) {
         console.error('ActiveCampaign error:', acError);
-        // Don't fail the request if ActiveCampaign fails
       }
     }
 
-    return NextResponse.json({ 
-      success: true, 
+    return NextResponse.json({
+      success: true,
       message: 'Lead information saved successfully',
-      leadId: lead.id 
+      leadId,
     });
-
   } catch (error) {
     console.error('Submit lead error:', error);
     return NextResponse.json(
@@ -125,4 +100,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-} 
+}

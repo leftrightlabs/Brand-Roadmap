@@ -1,13 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { sql } from '@/lib/db';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+interface ReportRow {
+  website_url: string;
+  analysis_results: {
+    status?: string;
+    progress?: number;
+    currentStep?: number;
+    error?: string;
+    [key: string]: unknown;
+  };
+  expires_at: string;
+  lead_name: string | null;
+  lead_email: string | null;
+}
 
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ shortId: string }> }
 ) {
   try {
@@ -21,49 +30,45 @@ export async function GET(
       );
     }
 
-    // Get report data
-    const { data: report, error } = await supabase
-      .from('shared_reports')
-      .select(`
-        *,
-        website_audit_leads (
-          name,
-          email,
-          website_url
-        )
-      `)
-      .eq('short_id', shortId)
-      .single();
+    // LEFT JOIN to surface lead name/email on the same row — mirrors the
+    // previous Supabase nested-select behavior.
+    const rows = await sql<ReportRow[]>`
+      SELECT
+        sr.website_url,
+        sr.analysis_results,
+        sr.expires_at,
+        l.name  AS lead_name,
+        l.email AS lead_email
+      FROM shared_reports sr
+      LEFT JOIN website_audit_leads l ON l.id = sr.lead_id
+      WHERE sr.short_id = ${shortId}
+      LIMIT 1
+    `;
 
-    if (error) {
-      console.error('[CHECK-RESULTS] Database error for shortId', shortId, ':', error);
-      return NextResponse.json(
-        { error: 'Report not found', details: error.message },
-        { status: 404 }
-      );
-    }
-    
-    if (!report) {
+    if (rows.length === 0) {
       console.error('[CHECK-RESULTS] No report found for shortId:', shortId);
       return NextResponse.json(
         { error: 'Report not found' },
         { status: 404 }
       );
     }
-    
-    console.log('[CHECK-RESULTS] Found report for shortId:', shortId, 'status:', report.analysis_results?.status);
 
-    // Check if report has expired
-    const expiresAt = new Date(report.expires_at);
-    const now = new Date();
-    
-    if (now > expiresAt) {
+    const report = rows[0];
+    console.log(
+      '[CHECK-RESULTS] Found report for shortId:',
+      shortId,
+      'status:',
+      report.analysis_results?.status
+    );
+
+    // Expiration check
+    if (new Date() > new Date(report.expires_at)) {
       return NextResponse.json(
-        { 
+        {
           error: 'Report has expired',
           expired: true,
-          shortId: shortId,
-          websiteUrl: report.website_url
+          shortId,
+          websiteUrl: report.website_url,
         },
         { status: 410 }
       );
@@ -71,7 +76,6 @@ export async function GET(
 
     const analysisResults = report.analysis_results;
 
-    // Return status and progress
     if (analysisResults.status === 'completed') {
       return NextResponse.json({
         status: 'completed',
@@ -79,28 +83,28 @@ export async function GET(
           ...analysisResults,
           shortId,
           websiteUrl: report.website_url,
-          leadName: report.website_audit_leads?.name,
-          leadEmail: report.website_audit_leads?.email,
-        }
+          leadName: report.lead_name ?? undefined,
+          leadEmail: report.lead_email ?? undefined,
+        },
       });
-    } else if (analysisResults.status === 'failed') {
+    }
+
+    if (analysisResults.status === 'failed') {
       return NextResponse.json({
         status: 'failed',
         error: analysisResults.error || 'Analysis failed',
         shortId,
         websiteUrl: report.website_url,
       });
-    } else {
-      // Still processing
-      return NextResponse.json({
-        status: 'processing',
-        progress: analysisResults.progress || 0,
-        currentStep: analysisResults.currentStep || 0,
-        shortId,
-        websiteUrl: report.website_url,
-      });
     }
 
+    return NextResponse.json({
+      status: 'processing',
+      progress: analysisResults.progress ?? 0,
+      currentStep: analysisResults.currentStep ?? 0,
+      shortId,
+      websiteUrl: report.website_url,
+    });
   } catch (error) {
     console.error('Check results error:', error);
     return NextResponse.json(
@@ -108,4 +112,4 @@ export async function GET(
       { status: 500 }
     );
   }
-} 
+}

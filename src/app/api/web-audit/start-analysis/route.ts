@@ -1,15 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import Anthropic from '@anthropic-ai/sdk';
+import { sql } from '@/lib/db';
 import { generateAnalysisPrompt } from '@/lib/website-audit-service';
 
 // Allow up to 300 seconds for this serverless function (website fetch + Anthropic API can take time)
+// Railway: this `maxDuration` export is a no-op (no per-request timeout); kept
+// for compatibility if this code is ever run on Vercel again.
 export const maxDuration = 300;
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -332,121 +329,57 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if this email has already been used for a report
-
+    // Check if this email has already received a non-failed roadmap
     try {
-      const { data: existingLead, error: leadError } = await supabase
-        .from('website_audit_leads')
-        .select('id')
-        .eq('email', email)
-        .single();
+      const existingReports = await sql<{ short_id: string }[]>`
+        SELECT sr.short_id
+        FROM shared_reports sr
+        INNER JOIN website_audit_leads l ON l.id = sr.lead_id
+        WHERE l.email = ${email}
+          AND (sr.analysis_results->>'status' IS NULL
+               OR sr.analysis_results->>'status' != 'failed')
+        LIMIT 1
+      `;
 
-      if (leadError && leadError.code !== 'PGRST116') {
-        console.error(`[WEB-AUDIT] Error checking for existing lead:`, leadError);
-      }
-
-      if (existingLead) {
-
-        const { data: existingReport, error: reportError } = await supabase
-          .from('shared_reports')
-          .select('id, short_id')
-          .eq('lead_id', existingLead.id)
-          .not('analysis_results->status', 'eq', 'failed')
-          .single();
-
-        if (reportError && reportError.code !== 'PGRST116') {
-          console.error(`[WEB-AUDIT] Error checking for existing report:`, reportError);
-        }
-
-        if (existingReport) {
-
-          return NextResponse.json(
-            { 
-              error: 'You have already received a brand strategy assessment for this email address. You can view your existing report using the link below.',
-              existingShortId: existingReport.short_id,
-              message: 'You can view your existing report or contact us if you need a new assessment.'
-            },
-            { status: 409 }
-          );
-        } else {
-
-        }
-      } else {
-
+      if (existingReports.length > 0) {
+        return NextResponse.json(
+          {
+            error: 'You have already received a Brand Roadmap for this email address. You can view your existing roadmap using the link below.',
+            existingShortId: existingReports[0].short_id,
+            message: 'You can view your existing roadmap or contact us if you need a new one.',
+          },
+          { status: 409 }
+        );
       }
     } catch (error) {
       console.error(`[WEB-AUDIT] Error checking for existing reports:`, error);
       // Continue with the analysis even if this check fails
     }
 
-    // Find or create lead
-    let { data: lead } = await supabase
-      .from('website_audit_leads')
-      .select('id')
-      .eq('email', email)
-      .single();
+    // Find or create lead. Single upsert handles both paths cleanly.
+    const upsertedLead = await sql<{ id: string }[]>`
+      INSERT INTO website_audit_leads (
+        name, email, website_url,
+        business_goals, industry, target_audience,
+        brand_personality, marketing_status, improvement_focus
+      )
+      VALUES (
+        ${name}, ${email}, ${websiteUrl},
+        ${businessGoals || null}, ${industry || null}, ${targetAudience || null},
+        ${brandPersonality || null}, ${marketingStatus || null}, ${improvementFocus || null}
+      )
+      ON CONFLICT (email) DO UPDATE SET
+        website_url        = EXCLUDED.website_url,
+        business_goals     = EXCLUDED.business_goals,
+        industry           = EXCLUDED.industry,
+        target_audience    = EXCLUDED.target_audience,
+        brand_personality  = EXCLUDED.brand_personality,
+        marketing_status   = EXCLUDED.marketing_status,
+        improvement_focus  = EXCLUDED.improvement_focus
+      RETURNING id
+    `;
 
-    if (!lead) {
-      // Create lead if doesn't exist
-      const { data: newLead, error: insertError } = await supabase
-        .from('website_audit_leads')
-        .insert([{ name, email, website_url: websiteUrl }])
-        .select()
-        .single();
-
-      if (insertError) {
-        console.error('Error creating lead:', insertError);
-        return NextResponse.json(
-          { error: 'Failed to create lead' },
-          { status: 500 }
-        );
-      }
-      lead = newLead;
-    } else {
-      // Update existing lead with website URL
-      await supabase
-        .from('website_audit_leads')
-        .update({ 
-          website_url: websiteUrl,
-          business_goals: businessGoals,
-          industry,
-          target_audience: targetAudience,
-          brand_personality: brandPersonality,
-          marketing_status: marketingStatus,
-          improvement_focus: improvementFocus,
-        })
-        .eq('id', lead.id);
-    }
-
-    // Generate unique short ID
-    let shortId: string = '';
-    let isUnique = false;
-    let attempts = 0;
-    
-    while (!isUnique && attempts < 10) {
-      shortId = generateShortId();
-      
-      const { data: existingReport } = await supabase
-        .from('shared_reports')
-        .select('id')
-        .eq('short_id', shortId)
-        .single();
-      
-      if (!existingReport) {
-        isUnique = true;
-      } else {
-        attempts++;
-      }
-    }
-
-    if (!isUnique || !shortId) {
-      return NextResponse.json(
-        { error: 'Failed to generate unique report ID' },
-        { status: 500 }
-      );
-    }
-
-    // Ensure lead exists
+    const lead = upsertedLead[0];
     if (!lead) {
       return NextResponse.json(
         { error: 'Failed to create or retrieve lead' },
@@ -454,32 +387,51 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create initial report record
+    // Generate unique short ID. We retry on collision via the table's UNIQUE
+    // constraint instead of pre-checking — fewer round-trips, atomic insert.
+    let shortId = '';
+    let inserted = false;
     const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 7); // 7 days from now
+    expiresAt.setDate(expiresAt.getDate() + 7); // 7-day TTL
 
-    console.log(`[WEB-AUDIT] Creating report record for shortId: ${shortId}, leadId: ${lead.id}`);
-    
-    const { error: reportError } = await supabase
-      .from('shared_reports')
-      .insert([
-        {
-          short_id: shortId,
-          lead_id: lead.id,
-          website_url: websiteUrl,
-          analysis_results: { status: 'processing', progress: 0, currentStep: 0 },
-          expires_at: expiresAt.toISOString(),
+    for (let attempt = 0; attempt < 10 && !inserted; attempt++) {
+      shortId = generateShortId();
+      try {
+        await sql`
+          INSERT INTO shared_reports (short_id, lead_id, website_url, analysis_results, expires_at)
+          VALUES (
+            ${shortId},
+            ${lead.id},
+            ${websiteUrl},
+            ${sql.json({ status: 'processing', progress: 0, currentStep: 0 })},
+            ${expiresAt}
+          )
+        `;
+        inserted = true;
+      } catch (err: unknown) {
+        // 23505 = unique_violation (short_id collision) — retry
+        const pgError = err as { code?: string };
+        if (pgError?.code === '23505') {
+          continue;
         }
-      ]);
+        console.error('[WEB-AUDIT] Error creating report:', err);
+        return NextResponse.json(
+          {
+            error: 'Failed to create report',
+            details: err instanceof Error ? err.message : 'Unknown error',
+          },
+          { status: 500 }
+        );
+      }
+    }
 
-    if (reportError) {
-      console.error('[WEB-AUDIT] Error creating report:', reportError);
+    if (!inserted) {
       return NextResponse.json(
-        { error: 'Failed to create report', details: reportError.message },
+        { error: 'Failed to generate unique report ID' },
         { status: 500 }
       );
     }
-    
+
     console.log(`[WEB-AUDIT] Report record created successfully for shortId: ${shortId}`);
 
     // Start analysis immediately but with better timeout handling
@@ -494,22 +446,19 @@ export async function POST(request: NextRequest) {
         marketingStatus,
         improvementFocus,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(`[WEB-AUDIT] Analysis failed for ${shortId}:`, error);
-      // Update the report status to failed
       try {
-        await supabase
-          .from('shared_reports')
-          .update({
-            analysis_results: {
-              status: 'failed',
-              error: error instanceof Error ? error.message : 'Background processing failed',
-              failedAt: new Date().toISOString(),
-            }
-          })
-          .eq('short_id', shortId);
-
-      } catch (updateError: any) {
+        await sql`
+          UPDATE shared_reports
+          SET analysis_results = ${sql.json({
+            status: 'failed',
+            error: error instanceof Error ? error.message : 'Background processing failed',
+            failedAt: new Date().toISOString(),
+          })}
+          WHERE short_id = ${shortId}
+        `;
+      } catch (updateError: unknown) {
         console.error(`[WEB-AUDIT] Failed to update report status for ${shortId}:`, updateError);
       }
     }
@@ -781,18 +730,17 @@ async function performAnalysisWithTimeout(
     console.log(`[WEB-AUDIT] Analysis completed for ${shortId} in ${Date.now() - startTime}ms`);
 
     // Save final results with completed status
-    await supabase
-      .from('shared_reports')
-      .update({
-        analysis_results: {
-          ...analysisResults,
-          status: 'completed',
-          progress: 100,
-          currentStep: 5,
-          generatedAt: new Date().toISOString(),
-        }
-      })
-      .eq('short_id', shortId);
+    await sql`
+      UPDATE shared_reports
+      SET analysis_results = ${sql.json({
+        ...analysisResults,
+        status: 'completed',
+        progress: 100,
+        currentStep: 5,
+        generatedAt: new Date().toISOString(),
+      })}
+      WHERE short_id = ${shortId}
+    `;
 
     await new Promise(resolve => setTimeout(resolve, 200));
 
@@ -802,32 +750,30 @@ async function performAnalysisWithTimeout(
     console.error(`[WEB-AUDIT] Analysis failed for ${shortId}:`, error);
     
     // Mark as failed
-    await supabase
-      .from('shared_reports')
-      .update({
-        analysis_results: {
-          status: 'failed',
-          error: error instanceof Error ? error.message : 'Unknown error',
-          failedAt: new Date().toISOString(),
-        }
-      })
-      .eq('short_id', shortId);
+    await sql`
+      UPDATE shared_reports
+      SET analysis_results = ${sql.json({
+        status: 'failed',
+        error: error instanceof Error ? error.message : 'Unknown error',
+        failedAt: new Date().toISOString(),
+      })}
+      WHERE short_id = ${shortId}
+    `;
   }
 }
 
 async function updateProgress(shortId: string, progress: number, currentStep: number) {
   try {
-    await supabase
-      .from('shared_reports')
-      .update({
-        analysis_results: {
-          status: 'processing',
-          progress,
-          currentStep,
-          updatedAt: new Date().toISOString(),
-        }
-      })
-      .eq('short_id', shortId);
+    await sql`
+      UPDATE shared_reports
+      SET analysis_results = ${sql.json({
+        status: 'processing',
+        progress,
+        currentStep,
+        updatedAt: new Date().toISOString(),
+      })}
+      WHERE short_id = ${shortId}
+    `;
   } catch (error) {
     console.error('Error updating progress:', error);
   }

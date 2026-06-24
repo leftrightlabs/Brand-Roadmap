@@ -1,16 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { sql } from '@/lib/db';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+interface ReportRow {
+  short_id: string;
+  analysis_results: {
+    status?: string;
+    [key: string]: unknown;
+  } | null;
+}
 
 export async function POST(request: NextRequest) {
   try {
     const { email } = await request.json();
 
-    // Validate email
     if (!email) {
       return NextResponse.json(
         { error: 'Email is required' },
@@ -18,7 +20,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return NextResponse.json(
@@ -29,78 +30,53 @@ export async function POST(request: NextRequest) {
 
     console.log(`[EMAIL-CHECK] Checking email status for: ${email}`);
 
-    // Check if lead exists
-    const { data: existingLead, error: leadError } = await supabase
-      .from('website_audit_leads')
-      .select('id')
-      .eq('email', email)
-      .single();
+    // Look up any existing reports for this email in one query
+    const reports = await sql<ReportRow[]>`
+      SELECT sr.short_id, sr.analysis_results
+      FROM shared_reports sr
+      INNER JOIN website_audit_leads l ON l.id = sr.lead_id
+      WHERE l.email = ${email}
+    `;
 
-    console.log(`[EMAIL-CHECK] Lead query result:`, { existingLead, leadError });
-
-    if (existingLead) {
-      console.log(`[EMAIL-CHECK] Found existing lead with ID: ${existingLead.id}`);
-      
-      // Check if they already have any report (not just completed ones)
-      const { data: existingReports, error: reportError } = await supabase
-        .from('shared_reports')
-        .select('id, short_id, analysis_results')
-        .eq('lead_id', existingLead.id);
-
-      console.log(`[EMAIL-CHECK] Reports query result:`, { existingReports, reportError });
-
-      if (existingReports && existingReports.length > 0) {
-        console.log(`[EMAIL-CHECK] Found ${existingReports.length} existing reports`);
-        
-        // Check each report for status
-        for (const report of existingReports) {
-          console.log(`[EMAIL-CHECK] Checking report ${report.short_id} with analysis_results:`, report.analysis_results);
-          
-          const analysisResults = report.analysis_results;
-          if (analysisResults) {
-            if (analysisResults.status === 'completed') {
-              console.log(`[EMAIL-CHECK] Found completed report: ${report.short_id}`);
-              return NextResponse.json(
-                { 
-                  error: 'You have already received a brand strategy assessment for this email address.',
-                  existingShortId: report.short_id,
-                  message: 'You can view your existing report or contact us if you need a new assessment.'
-                },
-                { status: 409 }
-              );
-            } else if (analysisResults.status === 'processing') {
-              console.log(`[EMAIL-CHECK] Found processing report: ${report.short_id}`);
-              return NextResponse.json(
-                { 
-                  error: 'You have an analysis in progress for this email address.',
-                  existingShortId: report.short_id,
-                  message: 'Please wait for your current analysis to complete or contact support if it has been stuck for too long.'
-                },
-                { status: 409 }
-              );
-            } else {
-              console.log(`[EMAIL-CHECK] Found report with status: ${analysisResults.status}`);
-            }
-          } else {
-            console.log(`[EMAIL-CHECK] Report ${report.short_id} has no analysis_results`);
-          }
-        }
-      } else {
-        console.log(`[EMAIL-CHECK] No existing reports found for lead ID: ${existingLead.id}`);
-      }
-    } else {
-      console.log(`[EMAIL-CHECK] No existing lead found for email: ${email}`);
+    if (reports.length === 0) {
+      console.log(`[EMAIL-CHECK] No existing reports for email: ${email}`);
+      return NextResponse.json(
+        { success: true, message: 'Email is available for new analysis' },
+        { status: 200 }
+      );
     }
 
-    // Email is available for new analysis
+    console.log(`[EMAIL-CHECK] Found ${reports.length} report(s) for email: ${email}`);
+
+    for (const report of reports) {
+      const status = report.analysis_results?.status;
+      if (status === 'completed') {
+        return NextResponse.json(
+          {
+            error: 'You have already received a Brand Roadmap for this email address.',
+            existingShortId: report.short_id,
+            message: 'You can view your existing roadmap or contact us if you need a new one.',
+          },
+          { status: 409 }
+        );
+      }
+      if (status === 'processing') {
+        return NextResponse.json(
+          {
+            error: 'You have a Brand Roadmap in progress for this email address.',
+            existingShortId: report.short_id,
+            message: 'Please wait for your current roadmap to finish, or contact support if it has been stuck.',
+          },
+          { status: 409 }
+        );
+      }
+    }
+
+    // Existing reports but none are in a blocking state — allow new analysis
     return NextResponse.json(
-      { 
-        success: true,
-        message: 'Email is available for new analysis'
-      },
+      { success: true, message: 'Email is available for new analysis' },
       { status: 200 }
     );
-
   } catch (error) {
     console.error('[EMAIL-CHECK] Error checking email status:', error);
     return NextResponse.json(
