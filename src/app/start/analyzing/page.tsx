@@ -5,15 +5,41 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
-import { Loader2, Globe, Brain, MessageSquare } from "lucide-react";
+import { Loader2, Globe, Brain, MessageSquare, CheckCircle2 } from "lucide-react";
+
+const ANALYSIS_STEPS = [
+  { icon: Globe, label: "Gathering and reviewing your website's content and structure" },
+  { icon: Brain, label: "Evaluating visual identity, tone, and overall brand consistency" },
+  { icon: MessageSquare, label: "Building your personalized Brand Advantage™ Roadmap with sequenced next moves" },
+];
 
 export default function AnalyzingPage() {
   const router = useRouter();
   const [analysisData, setAnalysisData] = useState<any>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  
+  // Smoothly-animated progress for display. The server-side progress is coarse
+  // and parks during the model call, so we drive a time-based estimate instead.
+  const [progress, setProgress] = useState(0);
+
+  const activeStep = progress < 40 ? 0 : progress < 80 ? 1 : 2;
+
   const getReportUrl = (shortId: string) => `/start/report/${shortId}`;
   const getWebsiteInputUrl = () => `/start/info`;
+
+  // Animate the progress bar while analyzing: ease toward 95% over the expected
+  // duration, then hold until the poll confirms completion (which snaps to 100).
+  useEffect(() => {
+    if (!isAnalyzing) return;
+    const start = Date.now();
+    const EST_MS = 80000; // expected analysis duration (~70-90s)
+    const id = setInterval(() => {
+      const t = Math.min(1, (Date.now() - start) / EST_MS);
+      const eased = 1 - Math.pow(1 - t, 2); // ease-out: quick start, slow finish
+      const target = Math.min(95, Math.round(eased * 95));
+      setProgress((prev) => (target > prev ? target : prev));
+    }, 400);
+    return () => clearInterval(id);
+  }, [isAnalyzing]);
 
   useEffect(() => {
     // Get form data from session storage and start analysis
@@ -276,8 +302,9 @@ export default function AnalyzingPage() {
           
           if (data.status === "completed") {
             clearInterval(pollInterval);
+            setProgress(100);
             console.log("[ANALYZING] Analysis completed, redirecting to report");
-            
+
             // Store results for the report page
             sessionStorage.setItem("webAuditResults", JSON.stringify(data.results));
             
@@ -493,44 +520,63 @@ export default function AnalyzingPage() {
         >
           <Card className="p-8 md:p-10 bg-white rounded-3xl border-0 shadow-2xl">
             <div className="text-center">
-              {/* Spinner */}
-              <div className="flex justify-center mb-8">
-                <Loader2 className="w-16 h-16 text-[#a7c140] animate-spin" />
+              {/* Progress */}
+              <div className="mb-8">
+                <div className="flex justify-center mb-5">
+                  <Loader2 className="w-12 h-12 text-[#a7c140] animate-spin" />
+                </div>
+                <div className="max-w-md mx-auto">
+                  <div className="flex justify-between items-baseline mb-2">
+                    <span className="text-sm font-medium text-[#112248]">Building your roadmap…</span>
+                    <span className="text-sm font-semibold text-[#112248] tabular-nums">{progress}%</span>
+                  </div>
+                  <div className="w-full h-2.5 bg-[#112248]/10 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-[#a7c140] rounded-full transition-all duration-500 ease-out"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                </div>
               </div>
 
               {/* Analysis Steps */}
-              <div className="space-y-6 text-left max-w-lg mx-auto">
-                <div className="flex items-center space-x-4 p-4 rounded-lg bg-[#112248]/[0.03] border-l-4 border-[#a7c140]">
-                  <div className="w-10 h-10 bg-[#a7c140] rounded-full flex items-center justify-center flex-shrink-0">
-                    <Globe className="w-5 h-5 text-white" />
-                  </div>
-                  <span className="text-gray-700 font-medium">Gathering and reviewing your website&apos;s content and structure</span>
-                </div>
-
-                <div className="flex items-center space-x-4 p-4 rounded-lg bg-[#112248]/[0.03] border-l-4 border-[#a7c140]">
-                  <div className="w-10 h-10 bg-[#a7c140] rounded-full flex items-center justify-center flex-shrink-0">
-                    <Brain className="w-5 h-5 text-white" />
-                  </div>
-                  <span className="text-gray-700 font-medium">Evaluating visual identity, tone, and overall brand consistency</span>
-                </div>
-
-                <div className="flex items-center space-x-4 p-4 rounded-lg bg-[#112248]/[0.03] border-l-4 border-[#a7c140]">
-                  <div className="w-10 h-10 bg-[#a7c140] rounded-full flex items-center justify-center flex-shrink-0">
-                    <MessageSquare className="w-5 h-5 text-white" />
-                  </div>
-                  <span className="text-gray-700 font-medium">Building your personalized Brand Advantage™ Roadmap with sequenced next moves</span>
-                </div>
+              <div className="space-y-4 text-left max-w-lg mx-auto">
+                {ANALYSIS_STEPS.map((step, i) => {
+                  const done = i < activeStep;
+                  const active = i === activeStep;
+                  const Icon = step.icon;
+                  return (
+                    <div
+                      key={i}
+                      className={`flex items-center space-x-4 p-4 rounded-lg border-l-4 transition-all duration-300 ${
+                        active
+                          ? "bg-[#a7c140]/10 border-[#a7c140]"
+                          : done
+                          ? "bg-[#112248]/[0.03] border-[#a7c140]/40"
+                          : "bg-[#112248]/[0.03] border-transparent opacity-50"
+                      }`}
+                    >
+                      <div
+                        className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 transition-colors ${
+                          active || done ? "bg-[#a7c140]" : "bg-[#112248]/20"
+                        }`}
+                      >
+                        {done ? (
+                          <CheckCircle2 className="w-5 h-5 text-white" />
+                        ) : (
+                          <Icon className={`w-5 h-5 text-white ${active ? "animate-pulse" : ""}`} />
+                        )}
+                      </div>
+                      <span className="text-gray-700 font-medium">{step.label}</span>
+                    </div>
+                  );
+                })}
               </div>
 
-              {/* Status Message */}
-              <div className="mt-8 p-6 bg-[#a7c140] rounded-xl text-[#112248]">
-                <p className="text-lg font-medium">
-                  Building your roadmap…
-                </p>
-                <p className="text-sm opacity-90 mt-1">
-                  Please wait while our AI Brand Strategist analyzes your brand and builds the sequenced plan you&apos;ll use to Get Clear, Get Noticed, and Get Paid™.
-                </p>
-              </div>
+              {/* Reassurance */}
+              <p className="mt-8 text-sm text-gray-500 max-w-md mx-auto">
+                Our AI Brand Strategist is analyzing your brand and sequencing the plan you&apos;ll use to Get Clear, Get Noticed, and Get Paid™. This usually takes a minute or two.
+              </p>
             </div>
           </Card>
         </motion.div>

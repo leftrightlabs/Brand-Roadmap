@@ -549,7 +549,10 @@ async function performAnalysisWithTimeout(
         anthropic.messages.create({
           model: "claude-sonnet-4-6",
           max_tokens: 8000,
-          output_config: { effort: "medium" },
+          // "low" effort roughly halves latency vs "medium" (~150s -> ~70-90s)
+          // while keeping Sonnet's analysis quality. The output is a structured
+          // JSON report, so depth comes mostly from the prompt, not deep thinking.
+          output_config: { effort: "low" },
           system: "You are a brand strategy expert specializing in website audits. You MUST respond with a raw JSON object only — no markdown, no code fences, no backticks, no explanatory text before or after. Start your response with { and end with }.",
           messages: [
             {
