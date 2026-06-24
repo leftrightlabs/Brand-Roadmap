@@ -2,6 +2,61 @@ import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { sql } from '@/lib/db';
 import { generateAnalysisPrompt } from '@/lib/website-audit-service';
+import { PILLARS, normalizeStatus, type AreaKey, type AreaEval, type PillarKey, type RoadmapResults } from '@/lib/roadmap-types';
+
+// Coerce the model's parsed JSON into the canonical RoadmapResults shape:
+// validate statuses, guarantee all nine areas exist, and stringify prose.
+function buildRoadmapResults(parsed: any): RoadmapResults {
+  const str = (v: unknown, fallback: string) =>
+    typeof v === 'string' && v.trim() ? v.trim() : fallback;
+
+  const pillars = {} as RoadmapResults['pillars'];
+  for (const pillar of PILLARS) {
+    const srcAreas = parsed?.pillars?.[pillar.key]?.areas ?? {};
+    const areas: Partial<Record<AreaKey, AreaEval>> = {};
+    for (const areaKey of pillar.areas) {
+      const a = srcAreas?.[areaKey] ?? {};
+      areas[areaKey] = {
+        status: normalizeStatus(a.status),
+        evaluation: str(a.evaluation, 'Data Temporarily Unavailable.'),
+        nextMove: str(a.nextMove, 'Review this area with your brand strategist.'),
+        startHere: a.startHere === true,
+      };
+    }
+    pillars[pillar.key as PillarKey] = { areas };
+  }
+
+  const moves = Array.isArray(parsed?.sequencedMoves)
+    ? parsed.sequencedMoves.filter((m: unknown) => typeof m === 'string' && m.trim()).slice(0, 3)
+    : [];
+
+  return {
+    legacyRead: str(parsed?.legacyRead, 'Your brand roadmap is ready below.'),
+    pillars,
+    sequencedMoves: moves,
+  };
+}
+
+// Fallback used only when the model output can't be parsed as JSON at all.
+function fallbackRoadmap(): RoadmapResults {
+  const pillars = {} as RoadmapResults['pillars'];
+  for (const pillar of PILLARS) {
+    const areas: Partial<Record<AreaKey, AreaEval>> = {};
+    for (const areaKey of pillar.areas) {
+      areas[areaKey] = {
+        status: 'Refine',
+        evaluation: 'We hit a snag formatting this part of your roadmap. Please regenerate or contact support.',
+        nextMove: 'Regenerate your roadmap, or reach out and we will rebuild it for you.',
+      };
+    }
+    pillars[pillar.key as PillarKey] = { areas };
+  }
+  return {
+    legacyRead: 'Your roadmap was generated but a formatting issue interrupted the final assembly. Please regenerate it or contact support.',
+    pillars,
+    sequencedMoves: [],
+  };
+}
 
 // Allow up to 300 seconds for this serverless function (website fetch + Anthropic API can take time)
 // Railway: this `maxDuration` export is a no-op (no per-request timeout); kept
@@ -600,128 +655,24 @@ async function performAnalysisWithTimeout(
 
 
     
-    // Parse the JSON response
-    let analysisResults;
+    // Parse the JSON response into the canonical RoadmapResults shape
+    let analysisResults: RoadmapResults;
     try {
       // Strip markdown code fences if Claude wrapped the JSON
       const jsonMatch = analysisText.match(/\{[\s\S]*\}/);
       const cleanJson = jsonMatch ? jsonMatch[0] : analysisText;
       const parsedData = JSON.parse(cleanJson);
-      
 
-      
       await updateProgress(shortId, 75, 4);
-
-      // Create the analysis results structure using the actual JSON data
-      analysisResults = {
-        summary: parsedData.executiveSummary || "Analysis completed successfully",
-        overallGrade: parsedData.overallGrade || "B",
-        brandMessaging: {
-          quote: "Analysis completed",
-          evaluation: parsedData.sections?.brandMessaging?.insight || "Brand messaging evaluated",
-          recommendation: parsedData.sections?.brandMessaging?.recommendation || "Recommendations provided"
-        },
-        visualIdentity: {
-          description: parsedData.sections?.visualIdentity?.insight || "Visual identity analyzed",
-          colors: parsedData.visualIdentity?.colors || [],
-          fonts: parsedData.visualIdentity?.fonts || [],
-          recommendation: parsedData.sections?.visualIdentity?.recommendation || "Visual improvements suggested"
-        },
-        userJourney: {
-          navigation: parsedData.sections?.userJourney?.insight || "User journey analyzed",
-          cta: "CTAs evaluated",
-          recommendation: parsedData.sections?.userJourney?.recommendation || "UX improvements recommended"
-        },
-        callsToAction: {
-          ctas: ["Analysis completed"],
-          evaluation: parsedData.sections?.callsToAction?.insight || "CTA effectiveness evaluated",
-          recommendation: parsedData.sections?.callsToAction?.recommendation || "CTA improvements suggested"
-        },
-        offerClarity: {
-          product: "Offer clarity analyzed",
-          description: "Product/service description evaluated",
-          evaluation: parsedData.sections?.offerClarity?.insight || "Clarity assessment completed",
-          recommendation: parsedData.sections?.offerClarity?.recommendation || "Clarity improvements suggested"
-        },
-        connectionTrust: {
-          elements: ["Trust elements identified"],
-          weaknesses: ["Trust gaps identified"],
-          evaluation: parsedData.sections?.connectionTrust?.insight || "Trust elements analysis completed",
-          recommendation: parsedData.sections?.connectionTrust?.recommendation || "Trust-building improvements suggested"
-        },
-        contentOpportunities: {
-          suggestion: parsedData.sections?.contentOpportunities?.insight || "Content opportunities identified",
-          placement: "Content placement recommended",
-          rationale: parsedData.sections?.contentOpportunities?.recommendation || "Content strategy rationale provided"
-        },
-        strengths: parsedData.strengths || ["Analysis completed successfully"],
-        weaknesses: parsedData.improvements || ["Areas for improvement identified"],
-        actionableSteps: parsedData.nextSteps || ["Review recommendations", "Implement key improvements"],
-        nextSteps: parsedData.nextSteps || ["Prioritize improvements", "Track progress"],
-        additionalSuggestions: parsedData.additionalSuggestions || ["Consider professional consultation"],
-        rawResponse: analysisText,
-        // Add the structured data from the JSON response
-        radarChart: parsedData.radarChart,
-        roiForecast: parsedData.roiForecast,
-        technicalMetrics: parsedData.technicalMetrics
-      };
+      analysisResults = buildRoadmapResults(parsedData);
     } catch (parseError) {
       console.error('[WEB-AUDIT] Error parsing AI response as JSON:', parseError);
       console.error(`[WEB-AUDIT] stop_reason: ${stopReason}, response length: ${analysisText.length}`);
       console.error('[WEB-AUDIT] Raw response (first 500 chars):', analysisText.substring(0, 500));
       console.error('[WEB-AUDIT] Raw response (last 200 chars):', analysisText.substring(analysisText.length - 200));
-      
+
       await updateProgress(shortId, 75, 4);
-      await new Promise(resolve => setTimeout(resolve, 200));
-      
-      // Fallback to the old parsing method if JSON parsing fails
-      analysisResults = {
-        summary: "Analysis completed but response format was unexpected. Please contact support for assistance.",
-        overallGrade: "C",
-        brandMessaging: {
-          quote: "Data Temporarily Unavailable",
-          evaluation: "Unable to analyze messaging at this time",
-          recommendation: "Contact support for detailed analysis"
-        },
-        visualIdentity: {
-          description: "Unable to analyze visual identity at this time",
-          colors: [],
-          fonts: [],
-          recommendation: "Contact support for detailed analysis"
-        },
-        userJourney: {
-          navigation: "Data Temporarily Unavailable",
-          cta: "Data Temporarily Unavailable",
-          recommendation: "Contact support for detailed analysis"
-        },
-        callsToAction: {
-          ctas: ["Data Temporarily Unavailable"],
-          evaluation: "Unable to analyze CTAs at this time",
-          recommendation: "Contact support for detailed analysis"
-        },
-        offerClarity: {
-          product: "Data Temporarily Unavailable",
-          description: "Data Temporarily Unavailable",
-          evaluation: "Unable to analyze offer clarity at this time",
-          recommendation: "Contact support for detailed analysis"
-        },
-        connectionTrust: {
-          elements: ["Data Temporarily Unavailable"],
-          weaknesses: ["Unable to analyze trust elements at this time"],
-          recommendation: "Contact support for detailed analysis"
-        },
-        contentOpportunities: {
-          suggestion: "Contact support for detailed analysis",
-          placement: "Contact support for detailed analysis",
-          rationale: "Contact support for detailed analysis"
-        },
-        strengths: ["Analysis completed successfully"],
-        weaknesses: ["Response format issue"],
-        actionableSteps: ["Contact support for detailed analysis"],
-        nextSteps: ["Review the analysis", "Implement key recommendations"],
-        additionalSuggestions: ["Consider professional consultation"],
-        rawResponse: analysisText
-      };
+      analysisResults = fallbackRoadmap();
     }
 
     // Step 6: Finalizing your report (80-100%)
@@ -739,7 +690,8 @@ async function performAnalysisWithTimeout(
             progress: 100,
             currentStep: 5,
             generatedAt: new Date().toISOString(),
-          })},
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } as any)},
           updated_at = NOW()
       WHERE short_id = ${shortId}
     `;

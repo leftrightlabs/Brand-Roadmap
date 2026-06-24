@@ -12,92 +12,80 @@ export interface WebsiteAuditData {
 }
 
 export function generateAnalysisPrompt(websiteUrl: string, userData: WebsiteAuditData, websiteContent?: string): string {
-  let prompt = `You are generating a structured brand strategy assessment report from a website analysis.
+  let prompt = `You are generating a personalized Brand Roadmap from a website analysis, using Left Right Labs' signature framework: Get Clear → Get Noticed → Get Paid.
 
-You must return the output as a **valid JSON object only** — not Markdown, not plain text, and not a mix.
+You must return the output as a **valid JSON object only** — not Markdown, not plain text, and not a mix. Start with { and end with }.
 
 ---
 
 TONE & BEHAVIOR:
 
-Act like a seasoned **brand strategist and UX expert** with 15+ years of experience. Your role is to analyze the live content of the provided website and create a highly personalized, strategic brand assessment that feels like a premium consulting report worth thousands of dollars.
+Act like a seasoned **brand strategist** with 15+ years of experience, writing in a confident, premium, slightly contrarian voice (think: "we don't do volume, we do vision"). This is a ROADMAP of what to strengthen — not a scorecard. Be honest and specific: name what is genuinely strong, and be direct about what is drifting or missing. The goal is to make the weaker areas feel like the most exciting place to invest next.
 
-Your insights and recommendations should be:
-- **Highly specific to the content found on the site**
-- **Strategic and actionable with clear implementation steps**
-- **Quoted directly from the site's real copy** wherever applicable
-- **Comprehensive and detailed** - each insight and recommendation should be 2-3 paragraphs long
-- Focused on **clarity, trust, emotional connection, and conversion**
-- **Evidence-based** with specific examples and rationale
+For every area, return three things:
+- **status**: exactly one of "Strong", "Refine", or "Prioritize".
+   - "Strong" = clearly working and ownable; a real competitive asset.
+   - "Refine" = present but unfocused, inconsistent, or underleveraged; needs sharpening.
+   - "Prioritize" = missing, weak, or unclear; the biggest opportunity to fix.
+- **evaluation**: 2–4 tight sentences. Evidence-based. **Quote the site's real copy** (headlines, taglines, button text, section labels) where possible. If something genuinely can't be determined from the content, say so plainly — do not invent.
+- **nextMove**: ONE concrete, specific action they can take to strengthen or align this area. Imperative, practical, not generic.
 
----
-
-CONTENT REQUIREMENTS:
-
-Each insight and recommendation should be **comprehensive and detailed** (2-3 paragraphs, 150-300 words each):
-
-**INSIGHTS should include:**
-- Specific analysis of what's working or not working
-- Direct quotes from the website with page context
-- Detailed observations about messaging, design, or user experience
-- Specific examples of good practices or areas needing improvement
-- Context about how this affects brand perception and user behavior
-
-**RECOMMENDATIONS should include:**
-- Specific, actionable steps with clear implementation guidance
-- Prioritized suggestions (high/medium/low impact)
-- Expected outcomes and benefits
-- Alternative approaches or considerations
+Mark "startHere": true on the 1–2 weakest areas overall (your top "Prioritize" areas) — these are where the roadmap begins.
 
 ---
 
-PERSONALIZATION REQUIREMENTS:
+PERSONALIZATION:
 
-- Pull in **real headlines, button text, product names, or section labels** found on the actual website
-- Include **multiple quoted snippets of copy** in each insight section
-- Mention actual **page names, section headers, or nav items** when relevant
-- **IMPORTANT: The website content includes a "VISUAL DESIGN DATA" section** at the end with actual CSS colors, font families, font sizes, font weights, CSS custom properties, gradients, and external font sources extracted directly from the site's code. **Use this data** to provide specific, accurate analysis of the visual identity — reference actual hex colors, font names, and typographic hierarchy. Do not say colors or fonts are "not clearly defined" if they appear in this data.
-- Reference **specific user journey elements** and conversion paths
-- If something is missing from the site, write \`"Data Temporarily Unavailable"\` — do not make assumptions
+- Pull in **real headlines, button text, product/offer names, nav items, and section labels** from the actual site.
+- The website content includes a **"VISUAL DESIGN DATA"** section with actual CSS colors, font families, sizes, weights, custom properties, gradients, and font sources extracted from the site. **Use it** for the Visual positioning evaluation — reference real hex colors and font names. Do not claim colors/fonts are "not defined" if they appear in this data.
 
 ---
 
-OUTPUT FORMAT:
+THE NINE AREAS (three per pillar):
 
-You must return a single valid JSON object in the exact structure below. Each insight and recommendation should be 2-3 detailed paragraphs.
+GET CLEAR — is the foundation something only they could own?
+- brandPersonality: Is there a distinct, ownable brand personality and is it consistent across the site?
+- signatureFramework: Do they have a signature framework/methodology/process? Identify it by name if so; if not, say they need to create one.
+- elevatedAudience: Is it clear and specific who the ideal client is, and is that audience elevated/well-defined (vs. trying to speak to everyone)?
+
+GET NOTICED — does the expression match the vision?
+- magneticVoice: Is the copy voice distinctive and magnetic, or generic? Quote examples.
+- visualPositioning: Is the visual identity ownable and consistent (color system, typography, imagery)? Use the VISUAL DESIGN DATA.
+- onlinePresence: How strong is their footprint — site structure, content/blog, channels, and overall visibility for an authority brand?
+
+GET PAID — is the brand built to convert and scale?
+- brandAuthority: Strength of proof — testimonials, named clients, results/numbers, credibility, awards.
+- offerEvolution: Clarity of the offer ladder — are offers, who-they're-for, and pricing/positioning clear and easy to act on?
+- visionaryGrowth: Is the brand built to scale — repeatable/productized paths, systems, and a clear next chapter (vs. fully bespoke effort)?
+
+---
+
+OUTPUT FORMAT (return exactly this structure; keep prose concise):
 
 {
-  "executiveSummary": "[Comprehensive 2-3 paragraph summary covering key findings, overall brand health, and strategic recommendations]",
-  "sections": {
-    "brandMessaging": {
-      "insight": "[Detailed 2-3 paragraph analysis of brand messaging, including specific quotes from headlines, taglines, and key messaging elements. Analyze tone, consistency, clarity, and emotional resonance. Reference specific pages and sections where messaging appears.]",
-      "recommendation": "[Comprehensive 2-3 paragraph recommendation with specific steps to improve brand messaging. Include prioritized actions, expected outcomes, and alternative approaches. Reference specific content that should be revised or added.]"
-    },
-    "visualIdentity": {
-      "insight": "[Detailed 2-3 paragraph analysis of visual identity including colors, fonts, imagery, layout consistency, and brand visual elements. Reference specific design choices, color usage, typography decisions, and visual hierarchy. Analyze how visuals support or detract from brand messaging.]",
-      "recommendation": "[Comprehensive 2-3 paragraph recommendation for visual identity improvements. Include specific design suggestions, color palette recommendations, typography changes, and layout improvements. Provide implementation steps and expected brand impact.]"
-    },
-    "userJourney": {
-      "insight": "[Detailed 2-3 paragraph analysis of user journey and navigation structure. Analyze menu organization, page flow, user experience, conversion paths, and friction points. Reference specific navigation elements, page transitions, and user interaction patterns.]",
-      "recommendation": "[Comprehensive 2-3 paragraph recommendation for user journey optimization. Include specific navigation improvements, page flow suggestions, conversion path enhancements, and user experience fixes. Provide step-by-step implementation guidance.]"
-    },
-    "callsToAction": {
-      "insight": "[Detailed 2-3 paragraph analysis of calls-to-action throughout the website. Analyze CTA placement, messaging, design, urgency, and effectiveness. Reference specific button text, link placement, and conversion elements. Evaluate CTA hierarchy and user motivation.]",
-      "recommendation": "[Comprehensive 2-3 paragraph recommendation for CTA optimization. Include specific improvements to button text, placement, design, and conversion strategy. Provide A/B testing suggestions and implementation priorities.]"
-    },
-    "offerClarity": {
-      "insight": "[Detailed 2-3 paragraph analysis of offer clarity and value proposition communication. Analyze how clearly products/services are presented, pricing transparency, benefit communication, and competitive differentiation. Reference specific product descriptions, pricing pages, and value statements.]",
-      "recommendation": "[Comprehensive 2-3 paragraph recommendation for improving offer clarity. Include specific suggestions for value proposition enhancement, pricing presentation, benefit communication, and competitive positioning. Provide content and design recommendations.]"
-    },
-    "connectionTrust": {
-      "insight": "[Detailed 2-3 paragraph analysis of trust-building elements and credibility indicators. Analyze testimonials, team bios, certifications, social proof, security indicators, and trust signals. Reference specific trust elements, their placement, and effectiveness.]",
-      "recommendation": "[Comprehensive 2-3 paragraph recommendation for strengthening trust and credibility. Include specific suggestions for testimonials, team presentation, certifications, social proof, and trust signal placement. Provide implementation steps and content recommendations.]"
-    },
-    "contentOpportunities": {
-      "insight": "[Detailed 2-3 paragraph analysis of content opportunities and gaps. Analyze existing content types, quality, engagement potential, and missing content that could support conversion. Reference specific content sections, blog posts, case studies, FAQs, and educational content.]",
-      "recommendation": "[Comprehensive 2-3 paragraph recommendation for content development and optimization. Include specific content types to create, topics to cover, content strategy suggestions, and content marketing and SEO recommendations.]"
-    }
-  }
+  "legacyRead": "[2 short paragraphs: a premium synthesis of where the brand stands and where it's drifting — framed as the center ('Legacy') of the Get Clear / Get Noticed / Get Paid framework. No scores.]",
+  "pillars": {
+    "getClear": { "areas": {
+      "brandPersonality":  { "status": "Strong|Refine|Prioritize", "evaluation": "...", "nextMove": "...", "startHere": false },
+      "signatureFramework":{ "status": "Strong|Refine|Prioritize", "evaluation": "...", "nextMove": "..." },
+      "elevatedAudience":  { "status": "Strong|Refine|Prioritize", "evaluation": "...", "nextMove": "..." }
+    }},
+    "getNoticed": { "areas": {
+      "magneticVoice":     { "status": "Strong|Refine|Prioritize", "evaluation": "...", "nextMove": "..." },
+      "visualPositioning": { "status": "Strong|Refine|Prioritize", "evaluation": "...", "nextMove": "..." },
+      "onlinePresence":    { "status": "Strong|Refine|Prioritize", "evaluation": "...", "nextMove": "..." }
+    }},
+    "getPaid": { "areas": {
+      "brandAuthority":    { "status": "Strong|Refine|Prioritize", "evaluation": "...", "nextMove": "..." },
+      "offerEvolution":    { "status": "Strong|Refine|Prioritize", "evaluation": "...", "nextMove": "..." },
+      "visionaryGrowth":   { "status": "Strong|Refine|Prioritize", "evaluation": "...", "nextMove": "..." }
+    }}
+  },
+  "sequencedMoves": [
+    "[Move 1 — the single highest-priority next move, referencing its pillar/area]",
+    "[Move 2]",
+    "[Move 3]"
+  ]
 }
 
 Website: ${websiteUrl}`;
@@ -111,7 +99,7 @@ ${websiteContent}`;
 
   prompt += `
 
-Analyze the website content provided above with the depth and detail of a premium brand strategy consultation. Focus on brand strategy, visual identity, user experience, and overall effectiveness. Provide comprehensive, actionable insights that demonstrate deep expertise and strategic thinking.`;
+Analyze the website content above and produce the Brand Roadmap. Be specific, quote real copy, keep each evaluation to 2–4 sentences and each nextMove to one concrete action. Return only the JSON object.`;
 
   return prompt;
-} 
+}

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sql } from '@/lib/db';
+import { PILLARS, AREA_LABELS, type RoadmapResults, type AreaStatus } from '@/lib/roadmap-types';
 
 interface ReportRow {
   analysis_results: Record<string, unknown>;
@@ -10,22 +11,24 @@ interface ReportRow {
   lead_email: string | null;
 }
 
+const NAVY: [number, number, number] = [17, 34, 72];
+const LIME: [number, number, number] = [167, 193, 64];
+const STATUS_RGB: Record<AreaStatus, [number, number, number]> = {
+  Strong: [95, 125, 24],
+  Refine: [169, 120, 31],
+  Prioritize: [192, 86, 58],
+};
+
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ shortId: string }> }
 ) {
   const { shortId } = await params;
-  console.log('[WEB-AUDIT-PDF] GET handler called for shortId:', shortId);
 
   try {
     const rows = await sql<ReportRow[]>`
-      SELECT
-        sr.analysis_results,
-        sr.website_url,
-        sr.created_at,
-        sr.expires_at,
-        l.name  AS lead_name,
-        l.email AS lead_email
+      SELECT sr.analysis_results, sr.website_url, sr.created_at, sr.expires_at,
+             l.name AS lead_name, l.email AS lead_email
       FROM shared_reports sr
       LEFT JOIN website_audit_leads l ON l.id = sr.lead_id
       WHERE sr.short_id = ${shortId}
@@ -33,208 +36,28 @@ export async function GET(
     `;
 
     if (rows.length === 0) {
-      console.error('[WEB-AUDIT-PDF] No report found for shortId:', shortId);
-      return NextResponse.json(
-        { error: 'Audit not found or has expired' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Roadmap not found or has expired' }, { status: 404 });
     }
 
-    const reportData = rows[0];
-
-    if (new Date() > new Date(reportData.expires_at)) {
-      return NextResponse.json(
-        { error: 'Report has expired' },
-        { status: 410 }
-      );
+    const report = rows[0];
+    if (new Date() > new Date(report.expires_at)) {
+      return NextResponse.json({ error: 'Report has expired' }, { status: 410 });
     }
 
-    // auditData is intentionally permissive — analysis_results is a JSONB
-    // grab-bag whose shape depends on what the AI returned (rawResponse,
-    // raw_analysis, structured fields, etc.). Downstream helpers do their
-    // own narrowing.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const auditData: any = {
-      ...reportData.analysis_results,
-      website_url: reportData.website_url,
-      created_at: reportData.created_at,
-      lead_name: reportData.lead_name ?? undefined,
-      lead_email: reportData.lead_email ?? undefined,
-    };
-
-    // Parse the audit response if it exists
-    let parsedResults = null;
-    const rawResponse = auditData.rawResponse || auditData.raw_analysis;
-    if (rawResponse) {
-      try {
-        const { parseAuditResponse } = await import('@/lib/audit-parser');
-        
-        // Handle both string and object formats
-        let rawAnalysisText: string;
-        if (typeof rawResponse === 'string') {
-          rawAnalysisText = rawResponse;
-        } else if (rawResponse && typeof rawResponse === 'object' && 'detailed' in rawResponse) {
-          rawAnalysisText = rawResponse.detailed || rawResponse.initial || '';
-        } else {
-          rawAnalysisText = '';
-        }
-        
-        if (rawAnalysisText) {
-          parsedResults = parseAuditResponse(rawAnalysisText);
-        }
-      } catch (parseError) {
-        console.error('[WEB-AUDIT-PDF] Error parsing audit response:', parseError);
-      }
+    const data = report.analysis_results as unknown as RoadmapResults;
+    if (!data?.pillars || !data?.legacyRead) {
+      return NextResponse.json({ error: 'Roadmap is not available for PDF export' }, { status: 422 });
     }
 
-    // If no parsed results, create fallback data from structured results
-    if (!parsedResults) {
-      console.log('[WEB-AUDIT-PDF] No parsed results, creating fallback data');
-      parsedResults = createFallbackFromStructuredData(auditData);
-    }
+    const pdfBuffer = generateRoadmapPDF(data, report.website_url, report.created_at, report.lead_name);
+    const domain = new URL(report.website_url).hostname.replace('www.', '');
 
-    // Try to fetch OG image directly from the website
-    let ogImageUrl = null;
-    try {
-      console.log('[WEB-AUDIT-PDF] Attempting to fetch OG image directly from website...');
-      
-      // Try to fetch the website HTML and extract OG image
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000);
-      
-      const websiteResponse = await fetch(auditData.website_url, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (compatible; Brand-Advantage-Bot/1.0)'
-        },
-        signal: controller.signal
-      });
-      
-      clearTimeout(timeoutId);
-      
-      if (websiteResponse.ok) {
-        const html = await websiteResponse.text();
-        
-        // Extract OG image from HTML
-        const ogImageMatch = html.match(/<meta[^>]*property=["\']og:image["\'][^>]*content=["\']([^"\']+)["\'][^>]*>/i);
-        if (ogImageMatch && ogImageMatch[1]) {
-          ogImageUrl = ogImageMatch[1];
-          console.log('[WEB-AUDIT-PDF] Found OG image:', ogImageUrl);
-        } else {
-          console.log('[WEB-AUDIT-PDF] No OG image found in HTML');
-        }
-      }
-    } catch (error) {
-      console.error('[WEB-AUDIT-PDF] Error fetching OG image directly:', error);
-      
-      // Fallback: Try the internal API if direct fetch fails
-      try {
-        console.log('[WEB-AUDIT-PDF] Trying internal OG API as fallback...');
-        const ogResponse = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3001'}/api/og-image?url=${encodeURIComponent(auditData.website_url)}`);
-        if (ogResponse.ok) {
-          const ogData = await ogResponse.json();
-          if (ogData.ogImage) {
-            ogImageUrl = ogData.ogImage;
-            console.log('[WEB-AUDIT-PDF] Got OG image from internal API:', ogImageUrl);
-          }
-        }
-      } catch (fallbackError) {
-        console.error('[WEB-AUDIT-PDF] Internal OG API also failed:', fallbackError);
-      }
-    }
-
-    // Generate PDF using React PDF Renderer (professional styling)
-    console.log('[WEB-AUDIT-PDF] Generating professional PDF with React PDF Renderer...');
-    
-    try {
-      // Import React PDF components - using the BEAUTIFUL PDF component
-      const { renderToBuffer } = await import('@react-pdf/renderer');
-      const React = await import('react');
-      const WebsiteAuditPDF = (await import('@/components/WebsiteAuditPDF')).default;
-      
-      // Transform data to match the beautiful PDF interface
-      const pdfData = {
-        websiteUrl: auditData.website_url,
-        auditSummary: parsedResults?.executiveSummary || 'Comprehensive brand strategy assessment completed.',
-        ogImageUrl: ogImageUrl, // Add the fetched OG image
-        requestedBy: auditData.lead_name || 'Brand Analysis', // Use actual user name
-      };
-      
-      console.log('[WEB-AUDIT-PDF] PDF data prepared with OG image:', ogImageUrl ? 'YES' : 'NO');
-      console.log('[WEB-AUDIT-PDF] PDF requested by:', auditData.lead_name || 'Unknown');
-      if (ogImageUrl) {
-        console.log('[WEB-AUDIT-PDF] OG image URL:', ogImageUrl);
-      }
-      
-      const finalPdfData = {
-        ...pdfData,
-        sections: {
-          brandMessaging: {
-            insight: parsedResults?.sections?.brandMessaging?.insight || 'Brand messaging analysis completed.',
-            recommendation: parsedResults?.sections?.brandMessaging?.recommendation || 'Consider enhancing messaging clarity.'
-          },
-          visualIdentity: {
-            insight: parsedResults?.sections?.visualIdentity?.insight || 'Visual identity assessment completed.',
-            recommendation: parsedResults?.sections?.visualIdentity?.recommendation || 'Consider visual consistency improvements.'
-          },
-          userJourney: {
-            insight: parsedResults?.sections?.userJourney?.insight,
-            recommendation: parsedResults?.sections?.userJourney?.recommendation
-          },
-          callsToAction: {
-            insight: parsedResults?.sections?.callsToAction?.insight,
-            recommendation: parsedResults?.sections?.callsToAction?.recommendation
-          },
-          offerClarity: {
-            insight: parsedResults?.sections?.offerClarity?.insight,
-            recommendation: parsedResults?.sections?.offerClarity?.recommendation
-          },
-          connectionTrust: {
-            insight: parsedResults?.sections?.connectionTrust?.insight,
-            recommendation: parsedResults?.sections?.connectionTrust?.recommendation
-          },
-          contentOpportunities: {
-            insight: parsedResults?.sections?.contentOpportunities?.insight,
-            recommendation: parsedResults?.sections?.contentOpportunities?.recommendation
-          }
-        }
-      };
-      
-      // Generate PDF buffer using React PDF Renderer with the BEAUTIFUL component
-      const pdfBuffer = await renderToBuffer(
-        React.createElement(WebsiteAuditPDF, { data: finalPdfData }) as any
-      );
-      
-      console.log('[WEB-AUDIT-PDF] React PDF generation successful, size:', pdfBuffer.length);
-      
-      // Create filename with domain
-      const domain = new URL(auditData.website_url).hostname.replace('www.', '');
-      const filename = `Brand-Strategy-Assessment-${domain}.pdf`;
-
-      return new NextResponse(new Uint8Array(pdfBuffer), {
-        headers: {
-          'Content-Type': 'application/pdf',
-          'Content-Disposition': `attachment; filename="${filename}"`
-        }
-      });
-    } catch (pdfError) {
-      console.error('[WEB-AUDIT-PDF] React PDF generation error:', pdfError);
-      console.error('[WEB-AUDIT-PDF] Error stack:', pdfError instanceof Error ? pdfError.stack : 'No stack trace');
-      
-      // Fallback to simple jsPDF if React PDF fails
-      console.log('[WEB-AUDIT-PDF] React PDF failed, falling back to simple jsPDF...');
-      const fallbackPdf = generateSimplePDF(auditData, parsedResults);
-      
-      const domain = new URL(auditData.website_url).hostname.replace('www.', '');
-      const filename = `Brand-Strategy-Assessment-${domain}.pdf`;
-
-      return new NextResponse(new Uint8Array(fallbackPdf), {
-        headers: {
-          'Content-Type': 'application/pdf',
-          'Content-Disposition': `attachment; filename="${filename}"`
-        }
-      });
-    }
-
+    return new NextResponse(new Uint8Array(pdfBuffer), {
+      headers: {
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': `attachment; filename="Brand-Roadmap-${domain}.pdf"`,
+      },
+    });
   } catch (error) {
     console.error('[WEB-AUDIT-PDF] Error:', error);
     return NextResponse.json(
@@ -244,354 +67,149 @@ export async function GET(
   }
 }
 
-
-
-function generateBeautifulPDF(auditData: any, parsedResults: any): Buffer {
+function generateRoadmapPDF(
+  data: RoadmapResults,
+  websiteUrl: string,
+  createdAt: string,
+  leadName: string | null
+): Buffer {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { jsPDF } = require('jspdf');
   const doc = new jsPDF();
-  
-  const domain = new URL(auditData.website_url).hostname.replace('www.', '');
-  const reportDate = new Date(auditData.created_at).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
+  const pageW = 210;
+  const margin = 20;
+  const contentW = pageW - margin * 2;
+  let y = 0;
 
-  // Set up colors - using RGB values (0-255) — LRL Brand 2025 palette
-  const navy = [17, 34, 72];     // #112248
-  const lime = [167, 193, 64];   // #a7c140
-  // Legacy aliases (kept so downstream code that references purple/gold still compiles; both map to brand-correct colors)
-  const purple = navy;           // magenta retired → collapses to Navy
-  const gold = lime;             // gold retired → Lime is the new accent
-  const tan = [234, 225, 205];   // #eae1cd (warm neutral, kept)
+  const reportDate = new Date(createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
-  // Header with proper color values
-  doc.setFillColor(17, 34, 72); // Navy blue
-  doc.rect(0, 0, 210, 60, 'F');
-  
-  // Lime accent bar
-  doc.setFillColor(167, 193, 64); // Lime
-  doc.rect(0, 0, 210, 8, 'F');
-  
-  // Header text with better positioning and styling
-  doc.setFontSize(28);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(255, 255, 255);
-  doc.text('Elevate Your Brand Advantage', 105, 35, { align: 'center' });
-  
-  doc.setFontSize(18);
-  doc.text('Brand Strategy Assessment', 105, 45, { align: 'center' });
-  
-  doc.setFontSize(11);
-  doc.setTextColor(255, 255, 255, 0.9);
-  doc.text(`Comprehensive analysis of ${auditData.website_url}`, 105, 55, { align: 'center' });
-
-  // Reset text color
-  doc.setTextColor(0, 0, 0);
-  
-  // Metadata section with better styling
-  let y = 80;
-  doc.setFillColor(248, 250, 252); // Light gray background
-  doc.roundedRect(15, y - 10, 180, 25, 3, 3, 'F');
-  doc.setDrawColor(226, 232, 240);
-  doc.roundedRect(15, y - 10, 180, 25, 3, 3, 'S');
-  
-  doc.setFontSize(8);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(107, 114, 128);
-  doc.text('Website Analyzed:', 25, y);
-  doc.text('Report Generated:', 85, y);
-  doc.text('Requested By:', 145, y);
-  
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(31, 41, 55);
-  doc.setFontSize(9);
-  doc.text(auditData.website_url, 25, y + 8);
-  doc.text(reportDate, 85, y + 8);
-  doc.text(auditData.lead_name || 'N/A', 145, y + 8);
-
-  // Executive Summary with enhanced styling
-  y += 40;
-  doc.setFillColor(254, 247, 255); // Light tinted background
-  doc.setDrawColor(17, 34, 72); // Navy
-  doc.setLineWidth(2);
-  doc.roundedRect(15, y - 10, 180, 40, 6, 6, 'FD');
-  
-  doc.setFontSize(13);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(17, 34, 72); // Navy blue
-  doc.text('Executive Summary', 25, y);
-  
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(55, 65, 81);
-  const summaryText = parsedResults.executiveSummary || 'Executive summary not available.';
-  const summaryLines = doc.splitTextToSize(summaryText, 160);
-  doc.text(summaryLines, 25, y + 15);
-
-  // Sections with enhanced styling
-  y += 60;
-  const sectionConfigs = [
-    { key: 'brandMessaging', title: 'Brand Messaging', icon: '💬' },
-    { key: 'visualIdentity', title: 'Visual Identity', icon: '🎨' },
-    { key: 'userJourney', title: 'User Journey', icon: '🛤️' },
-    { key: 'callsToAction', title: 'Calls to Action', icon: '🎯' },
-    { key: 'offerClarity', title: 'Offer Clarity', icon: '💡' },
-    { key: 'connectionTrust', title: 'Connection & Trust', icon: '🤝' },
-    { key: 'contentOpportunities', title: 'Content Opportunities', icon: '📝' }
-  ];
-
-  for (const config of sectionConfigs) {
-    const sectionData = parsedResults.sections?.[config.key];
-    if (!sectionData?.insight && !sectionData?.recommendation) continue;
-
-    // Check if we need a new page
-    if (y > 250) {
+  const ensureSpace = (needed: number) => {
+    if (y + needed > 280) {
       doc.addPage();
-      y = 30;
+      y = 24;
     }
+  };
 
-    // Section header with enhanced styling
-    doc.setFillColor(17, 34, 72); // Navy blue
-    doc.roundedRect(15, y - 8, 180, 18, 4, 4, 'F');
-    
-    doc.setFontSize(12);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(255, 255, 255);
-    doc.text(config.title, 25, y + 2);
-
-    // Section content with better styling
-    doc.setFillColor(255, 255, 255);
-    doc.setDrawColor(229, 231, 235);
-    doc.setLineWidth(0.5);
-    doc.roundedRect(15, y + 10, 180, 30, 4, 4, 'FD');
-    
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(17, 34, 72); // Navy blue
-    
-    let contentY = y + 20;
-    
-    if (sectionData.insight) {
-      doc.text('INSIGHT:', 25, contentY);
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(55, 65, 81);
-      const insightLines = doc.splitTextToSize(sectionData.insight, 70);
-      doc.text(insightLines, 25, contentY + 6);
+  const paragraph = (text: string, size = 10, lineH = 5, color: [number, number, number] = [55, 65, 81]) => {
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(size);
+    doc.setTextColor(...color);
+    const lines = doc.splitTextToSize(text, contentW);
+    for (const line of lines) {
+      ensureSpace(lineH);
+      doc.text(line, margin, y);
+      y += lineH;
     }
-    
-    if (sectionData.recommendation) {
-      doc.setFont('helvetica', 'bold');
-      doc.setTextColor(17, 34, 72); // Navy blue
-      doc.text('RECOMMENDATION:', 115, contentY);
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(55, 65, 81);
-      const recLines = doc.splitTextToSize(sectionData.recommendation, 70);
-      doc.text(recLines, 115, contentY + 6);
-    }
-
-    y += 50;
-  }
-
-  // Footer
-  doc.addPage();
-  doc.setFillColor(248, 250, 252);
-  doc.setDrawColor(226, 232, 240);
-  doc.roundedRect(15, 20, 180, 40, 3, 3, 'FD');
-  
-  doc.setFontSize(8);
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(107, 114, 128);
-  
-  const disclaimer = 'This report was generated using advanced AI analysis based on publicly available website content. While care is taken to provide accurate and relevant insights, this report may contain errors, omissions, or generalized recommendations. For tailored strategy or functionality recommendations, we recommend a human-led review with our expert brand strategists. Contact us to book your in-depth consultation.';
-  const disclaimerLines = doc.splitTextToSize(disclaimer, 160);
-  doc.text(disclaimerLines, 25, 30);
-  
-  doc.setFontSize(8);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(17, 34, 72); // Navy blue
-  doc.text('© 2026 Brand Roadmap™ by Left Right Labs. All rights reserved.', 25, 50);
-
-  return Buffer.from(doc.output('arraybuffer'));
-}
-
-function generateSimplePDF(auditData: any, parsedResults: any): Buffer {
-  // Create a simple PDF using jsPDF as fallback
-  const { jsPDF } = require('jspdf');
-  const doc = new jsPDF();
-  
-  const domain = new URL(auditData.website_url).hostname.replace('www.', '');
-  const reportDate = new Date(auditData.created_at).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
+  };
 
   // Header
-  doc.setFillColor(17, 34, 72); // Navy
-  doc.rect(0, 0, 210, 50, 'F');
-  doc.setFontSize(20);
-  doc.setFont('helvetica', 'bold');
+  doc.setFillColor(...NAVY);
+  doc.rect(0, 0, pageW, 52, 'F');
+  doc.setFillColor(...LIME);
+  doc.rect(0, 0, pageW, 6, 'F');
   doc.setTextColor(255, 255, 255);
-  doc.text('Elevate Your Brand Advantage', 20, 30);
-  doc.setFontSize(14);
-  doc.text('Brand Strategy Assessment', 20, 40);
-
-  // Reset text color
-  doc.setTextColor(0, 0, 0);
-  
-  // Metadata section with proper spacing
-  let y = 70;
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(24);
+  doc.text('Your Brand Roadmap', margin, 28);
+  doc.setFont('helvetica', 'normal');
   doc.setFontSize(11);
+  doc.text(`The sequenced moves to re-align ${websiteUrl}`, margin, 38);
+  doc.setFontSize(9);
+  doc.setTextColor(220, 220, 220);
+  doc.text(`${reportDate}${leadName ? `  ·  Prepared for ${leadName}` : ''}`, margin, 46);
+
+  // Legacy Read
+  y = 66;
   doc.setFont('helvetica', 'bold');
-  doc.text('Website Analyzed:', 20, y);
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(10);
-  const websiteText = auditData.website_url;
-  const websiteLines = doc.splitTextToSize(websiteText, 120);
-  doc.text(websiteLines, 60, y);
-  y += Math.max(websiteLines.length * 5, 15);
-  
-  doc.setFont('helvetica', 'bold');
-  doc.text('Report Generated:', 20, y);
-  doc.setFont('helvetica', 'normal');
-  doc.text(reportDate, 60, y);
-  y += 15;
-  
-  if (auditData.lead_name) {
-    doc.setFont('helvetica', 'bold');
-    doc.text('Requested By:', 20, y);
-    doc.setFont('helvetica', 'normal');
-    doc.text(auditData.lead_name, 60, y);
-    y += 15;
+  doc.setFontSize(15);
+  doc.setTextColor(...NAVY);
+  doc.text('The Legacy Read', margin, y);
+  y += 8;
+  for (const para of data.legacyRead.split(/\n\n+/).filter(Boolean)) {
+    paragraph(para);
+    y += 3;
   }
+  y += 4;
 
-  // Executive Summary with proper spacing
-  y += 10;
-  doc.setFontSize(16);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Executive Summary', 20, y);
-  
-  y += 15;
-  doc.setFontSize(11);
-  doc.setFont('helvetica', 'normal');
-  const summaryText = parsedResults.executiveSummary || 'Executive summary not available.';
-  const summaryLines = doc.splitTextToSize(summaryText, 170);
-  doc.text(summaryLines, 20, y);
-  y += summaryLines.length * 6 + 20;
-
-  // Sections with proper spacing and page breaks
-  const sections = parsedResults.sections || {};
-  const sectionConfigs = [
-    { key: 'brandMessaging', title: 'Brand Messaging' },
-    { key: 'visualIdentity', title: 'Visual Identity' },
-    { key: 'userJourney', title: 'User Journey' },
-    { key: 'callsToAction', title: 'Calls to Action' },
-    { key: 'offerClarity', title: 'Offer Clarity' },
-    { key: 'connectionTrust', title: 'Connection & Trust' },
-    { key: 'contentOpportunities', title: 'Content Opportunities' }
-  ];
-
-  for (const config of sectionConfigs) {
-    const sectionData = sections[config.key];
-    if (!sectionData?.insight && !sectionData?.recommendation) continue;
-
-    // Check if we need a new page
-    if (y > 240) {
-      doc.addPage();
-      y = 30;
-    }
-
-    // Section title
-    y += 10;
-    doc.setFontSize(14);
+  // Pillars
+  for (const pillar of PILLARS) {
+    ensureSpace(26);
+    doc.setFillColor(...NAVY);
+    doc.roundedRect(margin, y, contentW, 12, 2, 2, 'F');
+    doc.setTextColor(255, 255, 255);
     doc.setFont('helvetica', 'bold');
-    doc.text(config.title, 20, y);
-    y += 15;
+    doc.setFontSize(13);
+    doc.text(pillar.label, margin + 4, y + 8);
+    y += 18;
 
-    doc.setFontSize(11);
-    doc.setFont('helvetica', 'normal');
+    for (const areaKey of pillar.areas) {
+      const ev = data.pillars?.[pillar.key]?.areas?.[areaKey];
+      if (!ev) continue;
+      ensureSpace(20);
 
-    // Insight
-    if (sectionData.insight) {
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(11);
-      doc.text('Insight:', 20, y);
-      y += 8;
-      
-      doc.setFont('helvetica', 'normal');
-      const insightText = sectionData.insight;
-      const insightLines = doc.splitTextToSize(insightText, 170);
-      doc.text(insightLines, 20, y);
-      y += insightLines.length * 6 + 10;
-    }
+      doc.setTextColor(...NAVY);
+      doc.text(AREA_LABELS[areaKey], margin, y);
 
-    // Recommendation
-    if (sectionData.recommendation) {
+      const status = ev.status;
+      doc.setFontSize(9);
+      doc.setTextColor(...(STATUS_RGB[status] ?? [100, 100, 100]));
+      const label = `${status}${ev.startHere ? '  ·  START HERE' : ''}`;
+      doc.text(label, pageW - margin, y, { align: 'right' });
+      y += 6;
+
+      paragraph(ev.evaluation, 10, 5);
+      y += 2;
+
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(11);
-      doc.text('Recommendation:', 20, y);
-      y += 8;
-      
-      doc.setFont('helvetica', 'normal');
-      const recommendationText = sectionData.recommendation;
-      const recommendationLines = doc.splitTextToSize(recommendationText, 170);
-      doc.text(recommendationLines, 20, y);
-      y += recommendationLines.length * 6 + 15;
+      doc.setFontSize(9);
+      doc.setTextColor(...NAVY);
+      ensureSpace(5);
+      doc.text('Your next move:', margin, y);
+      y += 5;
+      paragraph(ev.nextMove, 10, 5);
+      y += 6;
     }
+    y += 2;
   }
 
-  // Footer
+  // Sequenced moves
+  if (data.sequencedMoves && data.sequencedMoves.length > 0) {
+    ensureSpace(16);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(15);
+    doc.setTextColor(...NAVY);
+    doc.text('Your Sequenced Roadmap', margin, y);
+    y += 8;
+    data.sequencedMoves.forEach((move, i) => {
+      ensureSpace(8);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.setTextColor(...NAVY);
+      doc.text(`${i + 1}.`, margin, y);
+      const lines = doc.splitTextToSize(move, contentW - 8);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(55, 65, 81);
+      for (let l = 0; l < lines.length; l++) {
+        ensureSpace(5);
+        doc.text(lines[l], margin + 8, y);
+        y += 5;
+      }
+      y += 3;
+    });
+  }
+
+  // Footer on every page
   const pageCount = doc.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
-    doc.setFontSize(9);
+    doc.setFontSize(8);
     doc.setFont('helvetica', 'normal');
-    doc.setTextColor(100, 100, 100);
-    doc.text('© 2026 Brand Roadmap™ by Left Right Labs. All rights reserved.', 20, 280);
-    doc.text(`Page ${i} of ${pageCount}`, 170, 280);
+    doc.setTextColor(120, 120, 120);
+    doc.text('© 2026 Brand Roadmap™ by Left Right Labs. All rights reserved.', margin, 290);
+    doc.text(`Page ${i} of ${pageCount}`, pageW - margin, 290, { align: 'right' });
   }
 
   return Buffer.from(doc.output('arraybuffer'));
-}
-
-function createFallbackFromStructuredData(results: any): any {
-  return {
-    executiveSummary: results.summary || 'Executive summary not available.',
-    sections: {
-      brandMessaging: {
-        insight: results.brandMessaging?.evaluation || 'Analysis not available.',
-        recommendation: results.brandMessaging?.recommendation || 'Recommendation not available.'
-      },
-      visualIdentity: {
-        insight: results.visualIdentity?.description || 'Analysis not available.',
-        recommendation: results.visualIdentity?.recommendation || 'Recommendation not available.'
-      },
-      userJourney: {
-        insight: results.userJourney?.navigation || 'Analysis not available.',
-        recommendation: results.userJourney?.recommendation || 'Recommendation not available.'
-      },
-      callsToAction: {
-        insight: results.callsToAction?.evaluation || 'Analysis not available.',
-        recommendation: results.callsToAction?.recommendation || 'Recommendation not available.'
-      },
-      offerClarity: {
-        insight: results.offerClarity?.evaluation || 'Analysis not available.',
-        recommendation: results.offerClarity?.recommendation || 'Recommendation not available.'
-      },
-      connectionTrust: {
-        insight: results.connectionTrust?.elements?.join(', ') || 'Analysis not available.',
-        recommendation: results.connectionTrust?.recommendation || 'Recommendation not available.'
-      },
-      contentOpportunities: {
-        insight: results.contentOpportunities?.suggestion || 'Analysis not available.',
-        recommendation: results.contentOpportunities?.placement || 'Recommendation not available.'
-      }
-    },
-    metadata: {
-      parsedAt: new Date().toISOString(),
-      version: '1.0',
-      sectionsFound: 7
-    }
-  };
 }
