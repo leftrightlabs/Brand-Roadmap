@@ -73,7 +73,7 @@ export const PILLARS: PillarMeta[] = [
     tagline: 'Is the foundation something only you could own?',
     areas: ['brandPersonality', 'signatureFramework', 'elevatedAudience'],
     videoUrl: undefined, // TODO: paste the Get Clear lesson embed URL
-    bgImage: undefined,  // e.g. '/images/get-clear-bg.jpg'
+    bgImage: '/images/Architecture-Bird.webp',
   },
   {
     key: 'getNoticed',
@@ -81,7 +81,7 @@ export const PILLARS: PillarMeta[] = [
     tagline: 'Does the expression match the vision?',
     areas: ['magneticVoice', 'visualPositioning', 'onlinePresence'],
     videoUrl: undefined, // TODO: paste the Get Noticed lesson embed URL
-    bgImage: undefined,  // e.g. '/images/get-noticed-bg.jpg'
+    bgImage: '/images/people-networking.webp',
   },
   {
     key: 'getPaid',
@@ -89,7 +89,7 @@ export const PILLARS: PillarMeta[] = [
     tagline: 'Is the brand built to convert and scale?',
     areas: ['brandAuthority', 'offerEvolution', 'visionaryGrowth'],
     videoUrl: undefined, // TODO: paste the Get Paid lesson embed URL
-    bgImage: undefined,  // e.g. '/images/get-paid-bg.jpg'
+    bgImage: '/images/blurred-hotel.webp',
   },
 ];
 
