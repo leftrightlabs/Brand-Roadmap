@@ -348,7 +348,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
                 <BrandVenn statuses={statuses} onSegmentClick={scrollToArea} />
               </motion.div>
               <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp}>
-                <h2 className="text-3xl md:text-4xl font-heading text-[#112248]">The Legacy Read</h2>
+                <h2 className="text-4xl md:text-6xl font-heading text-[#112248]">The Legacy Read</h2>
                 <div className="w-12 h-0.5 bg-[#a7c140] mt-3 mb-6" />
                 <div className="space-y-5">
                   {results.legacyRead.split(/\n\n+/).filter(Boolean).map((para, i) => (
@@ -366,13 +366,13 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
           return (
             <section key={pillar.key} id={pillar.key} className="scroll-mt-16" style={bandStyle(dark, pillar.bgImage)}>
               <div className={`${CONTENT} py-14 md:py-20`}>
-                <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-60px" }} variants={fadeUp} className="text-center mb-10">
-                  <div className="flex items-center justify-center gap-3 mb-2">
-                    <span className="text-sm font-bold text-[#a7c140] tracking-[0.2em] font-heading">{String(idx + 1).padStart(2, "0")}</span>
-                    <h2 className={`text-3xl md:text-4xl font-heading ${dark ? "text-white" : "text-[#112248]"}`}>{pillar.label}</h2>
+                <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-60px" }} variants={fadeUp} className="text-center mb-12">
+                  <div className="flex items-center justify-center gap-4 mb-3">
+                    <span className="text-xl md:text-3xl font-bold text-[#a7c140] tracking-[0.2em] font-heading">{String(idx + 1).padStart(2, "0")}</span>
+                    <h2 className={`text-5xl md:text-7xl font-heading leading-[1.1] ${dark ? "text-white" : "text-[#112248]"}`}>{pillar.label}</h2>
                   </div>
-                  <div className="w-12 h-0.5 bg-[#a7c140] mx-auto mb-3" />
-                  <p className={`${dark ? "text-white/55" : "text-gray-500"} text-lg`}>{pillar.tagline}</p>
+                  <div className="w-16 md:w-20 h-1 bg-[#a7c140] mx-auto mb-5" />
+                  <p className={`${dark ? "text-white/65" : "text-gray-600"} text-2xl md:text-3xl max-w-3xl mx-auto leading-snug`}>{pillar.tagline}</p>
                 </motion.div>
 
                 <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-60px" }} variants={stagger}>
@@ -425,7 +425,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
           <section id="next-moves" className="scroll-mt-16" style={LIGHT_BAND}>
             <div className={`${CONTENT} py-14 md:py-20`}>
               <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp} className="text-center mb-10">
-                <h2 className="text-3xl md:text-4xl font-heading text-[#112248]">Your Sequenced Roadmap</h2>
+                <h2 className="text-4xl md:text-6xl font-heading text-[#112248]">Your Sequenced Roadmap</h2>
                 <div className="w-12 h-0.5 bg-[#a7c140] mx-auto mt-3 mb-3" />
                 <p className="text-gray-500 text-lg">The order we teach it: Get Clear first, then Get Noticed, then Get Paid.</p>
               </motion.div>
@@ -455,7 +455,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
         <div className="max-w-3xl mx-auto px-6 text-center">
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} viewport={{ once: true }}>
             <div className="font-heading-transform">
-              <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-2">Ready to build the brand you&apos;re meant to lead?</h2>
+              <h2 className="text-4xl md:text-5xl font-heading font-bold text-white mb-2">Ready to build the brand you&apos;re meant to lead?</h2>
             </div>
             <div className="w-16 h-0.5 bg-[#a7c140] mx-auto my-6" />
             <p className="text-base md:text-lg text-white/60 mb-8 max-w-xl mx-auto">Let&apos;s turn this roadmap into a brand that speaks before you do, sells with integrity, and scales without chaos.</p>

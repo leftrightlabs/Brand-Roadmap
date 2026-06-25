@@ -91,7 +91,7 @@
 }
 .report-page h2 {
   font-weight: 700;
-  font-size: 2rem !important;
+  /* size is controlled per-heading via Tailwind classes (no forced cap) */
 }
 
 /* Report insight/recommendation labels: Sweet Sans Pro, uppercase */
