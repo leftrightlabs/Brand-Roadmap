@@ -44,6 +44,23 @@ const LIGHT_BAND: CSSProperties = {
   backgroundSize: "22px 22px, 100% 100%",
 };
 
+// A band uses its pillar's photo (with a readability scrim) when set in
+// PILLARS[].bgImage; otherwise it falls back to the CSS texture above.
+function bandStyle(dark: boolean, bgImage?: string): CSSProperties {
+  if (bgImage) {
+    const scrim = dark
+      ? "linear-gradient(rgba(12,24,56,0.86), rgba(12,24,56,0.88))"
+      : "linear-gradient(rgba(246,243,236,0.90), rgba(246,243,236,0.92))";
+    return {
+      backgroundColor: dark ? "#0c1838" : "#f6f3ec",
+      backgroundImage: `${scrim}, url(${bgImage})`,
+      backgroundSize: "cover, cover",
+      backgroundPosition: "center, center",
+    };
+  }
+  return dark ? DARK_BAND : LIGHT_BAND;
+}
+
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 24 },
   show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
@@ -347,7 +364,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
         {PILLARS.map((pillar, idx) => {
           const dark = idx % 2 === 0; // Get Clear & Get Paid dark; Get Noticed light
           return (
-            <section key={pillar.key} id={pillar.key} className="scroll-mt-16" style={dark ? DARK_BAND : LIGHT_BAND}>
+            <section key={pillar.key} id={pillar.key} className="scroll-mt-16" style={bandStyle(dark, pillar.bgImage)}>
               <div className={`${CONTENT} py-14 md:py-20`}>
                 <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-60px" }} variants={fadeUp} className="text-center mb-10">
                   <div className="flex items-center justify-center gap-3 mb-2">

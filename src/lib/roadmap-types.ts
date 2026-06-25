@@ -58,6 +58,12 @@ export interface PillarMeta {
   areas: AreaKey[];
   /** Optional embed URL (YouTube/Vimeo/Wistia) for this pillar's lesson video. */
   videoUrl?: string;
+  /**
+   * Optional background image for this pillar's band. Drop the file in
+   * `public/images/` and set the path here, e.g. '/images/get-clear-bg.jpg'.
+   * A dark/light scrim is applied automatically so text stays readable.
+   */
+  bgImage?: string;
 }
 
 export const PILLARS: PillarMeta[] = [
@@ -67,6 +73,7 @@ export const PILLARS: PillarMeta[] = [
     tagline: 'Is the foundation something only you could own?',
     areas: ['brandPersonality', 'signatureFramework', 'elevatedAudience'],
     videoUrl: undefined, // TODO: paste the Get Clear lesson embed URL
+    bgImage: undefined,  // e.g. '/images/get-clear-bg.jpg'
   },
   {
     key: 'getNoticed',
@@ -74,6 +81,7 @@ export const PILLARS: PillarMeta[] = [
     tagline: 'Does the expression match the vision?',
     areas: ['magneticVoice', 'visualPositioning', 'onlinePresence'],
     videoUrl: undefined, // TODO: paste the Get Noticed lesson embed URL
+    bgImage: undefined,  // e.g. '/images/get-noticed-bg.jpg'
   },
   {
     key: 'getPaid',
@@ -81,6 +89,7 @@ export const PILLARS: PillarMeta[] = [
     tagline: 'Is the brand built to convert and scale?',
     areas: ['brandAuthority', 'offerEvolution', 'visionaryGrowth'],
     videoUrl: undefined, // TODO: paste the Get Paid lesson embed URL
+    bgImage: undefined,  // e.g. '/images/get-paid-bg.jpg'
   },
 ];
 
