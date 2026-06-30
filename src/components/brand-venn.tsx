@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   AREA_LABELS,
   STATUS_STYLE,
@@ -14,6 +15,7 @@ const R_INNER = 250;
 const R_OUTER = 302;
 const R_LABEL = 276;
 const GAP = 2.2;
+const POP = 13; // how far a segment slides outward on hover
 
 function polar(r: number, deg: number): [number, number] {
   const a = ((deg - 90) * Math.PI) / 180;
@@ -21,6 +23,11 @@ function polar(r: number, deg: number): [number, number] {
     Math.round((CX + r * Math.cos(a)) * 100) / 100,
     Math.round((CY + r * Math.sin(a)) * 100) / 100,
   ];
+}
+
+function outwardVec(deg: number): [number, number] {
+  const a = ((deg - 90) * Math.PI) / 180;
+  return [Math.round(Math.cos(a) * POP * 100) / 100, Math.round(Math.sin(a) * POP * 100) / 100];
 }
 
 function segmentPath(a0: number, a1: number): string {
@@ -32,8 +39,6 @@ function segmentPath(a0: number, a1: number): string {
 }
 
 function labelPath(a0: number, a1: number, bottom: boolean): string {
-  // Use nearly the full segment arc so long labels (e.g. "SIGNATURE FRAMEWORK")
-  // never run past the path end and get clipped.
   if (!bottom) {
     const s = polar(R_LABEL, a0 + 0.5);
     const e = polar(R_LABEL, a1 - 0.5);
@@ -51,20 +56,30 @@ interface BrandVennProps {
 }
 
 export function BrandVenn({ statuses, onSegmentClick, className }: BrandVennProps) {
+  const [hover, setHover] = useState<AreaKey | null>(null);
+
   return (
     <div className={className}>
       <div
         style={{
-          background: "#0E1B3D",
-          border: "1px solid rgba(167,193,64,0.28)",
-          borderRadius: 16,
-          padding: "18px 16px",
+          background: "#112248",
+          border: "1px solid rgba(167,193,64,0.30)",
+          borderRadius: 20,
+          padding: "22px 18px",
         }}
       >
-        <svg viewBox="0 0 680 660" width="100%" role="img" aria-label="Your brand mapped onto the Get Clear, Get Noticed, Get Paid framework, with nine areas color-coded by status.">
-          <circle cx={CX} cy={CY} r={R_INNER} fill="none" stroke="rgba(255,255,255,0.16)" strokeWidth="1" />
-          <circle cx={CX} cy={CY} r={R_OUTER} fill="none" stroke="rgba(255,255,255,0.16)" strokeWidth="1" />
+        <svg viewBox="0 0 680 660" width="100%" role="img" aria-label="Your brand mapped onto the Get Clear, Get Noticed, Get Paid framework, with nine areas color-coded by status. Hover a segment to focus it.">
+          <defs>
+            <filter id="vennPop" x="-40%" y="-40%" width="180%" height="180%">
+              <feDropShadow dx="0" dy="3" stdDeviation="7" floodColor="#000000" floodOpacity="0.45" />
+            </filter>
+          </defs>
 
+          {/* guide rings */}
+          <circle cx={CX} cy={CY} r={R_INNER} fill="none" stroke="rgba(255,255,255,0.14)" strokeWidth="1" />
+          <circle cx={CX} cy={CY} r={R_OUTER} fill="none" stroke="rgba(255,255,255,0.14)" strokeWidth="1" />
+
+          {/* status segments */}
           {VENN_SEGMENTS.map(({ area, angle }) => {
             const status = statuses[area] ?? "Refine";
             const style = STATUS_STYLE[status];
@@ -72,20 +87,30 @@ export function BrandVenn({ statuses, onSegmentClick, className }: BrandVennProp
             const a1 = angle + 20 - GAP / 2;
             const bottom = angle > 90 && angle < 270;
             const id = `venn-lp-${area}`;
+            const isHover = hover === area;
+            const [dx, dy] = outwardVec(angle);
             const clickable = !!onSegmentClick;
             return (
               <g
                 key={area}
+                onMouseEnter={() => setHover(area)}
+                onMouseLeave={() => setHover((h) => (h === area ? null : h))}
                 onClick={clickable ? () => onSegmentClick!(area) : undefined}
-                style={clickable ? { cursor: "pointer" } : undefined}
+                filter={isHover ? "url(#vennPop)" : undefined}
+                style={{
+                  cursor: clickable ? "pointer" : "default",
+                  transform: isHover ? `translate(${dx}px, ${dy}px)` : "none",
+                  transition: "transform 220ms cubic-bezier(0.22,1,0.36,1)",
+                }}
               >
                 <path
                   d={segmentPath(a0, a1)}
                   fill={style.color}
-                  fillOpacity={style.fillOpacity}
+                  fillOpacity={isHover ? Math.min(0.62, style.fillOpacity + 0.3) : style.fillOpacity}
                   stroke={style.color}
-                  strokeOpacity={0.85}
-                  strokeWidth={1}
+                  strokeOpacity={isHover ? 1 : 0.85}
+                  strokeWidth={isHover ? 1.8 : 1}
+                  style={{ transition: "fill-opacity 220ms ease, stroke-width 220ms ease" }}
                 />
                 <path id={id} d={labelPath(a0, a1, bottom)} fill="none" />
                 <text fill="#ffffff" fontSize="10" letterSpacing="0.4" fontFamily="'sweet-sans-pro', Arial, sans-serif">
@@ -97,31 +122,31 @@ export function BrandVenn({ statuses, onSegmentClick, className }: BrandVennProp
             );
           })}
 
-          <g fill="rgba(255,255,255,0.045)" stroke="rgba(255,255,255,0.5)" strokeWidth="1.2">
+          {/* the three pillar circles */}
+          <g fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.45)" strokeWidth="1.2">
             <circle cx="340" cy="240" r="150" />
             <circle cx="262" cy="378" r="150" />
             <circle cx="418" cy="378" r="150" />
           </g>
 
+          {/* legacy core with lime halo */}
+          <ellipse cx="340" cy="320" rx="58" ry="66" fill="none" stroke="#A7C140" strokeOpacity="0.35" strokeWidth="1.5" />
           <ellipse cx="340" cy="320" rx="44" ry="52" fill="#A7C140" />
-          <text x="340" y="327" textAnchor="middle" fontFamily="'scotch-display', serif" fontStyle="italic" fontSize="22" fill="#0E1B3D">Legacy</text>
+          <text x="340" y="327" textAnchor="middle" fontFamily="'scotch-display', serif" fontStyle="italic" fontSize="22" fill="#112248">Legacy</text>
 
+          {/* pillar names */}
           <text x="340" y="185" textAnchor="middle" fill="#fff" fontFamily="'sweet-sans-pro', Arial, sans-serif" fontSize="14">Get</text>
           <text x="340" y="214" textAnchor="middle" fill="#fff" fontFamily="'scotch-display', serif" fontStyle="italic" fontSize="27">Clear™</text>
           <text x="250" y="394" textAnchor="middle" fill="#fff" fontFamily="'sweet-sans-pro', Arial, sans-serif" fontSize="14">Get</text>
           <text x="250" y="423" textAnchor="middle" fill="#fff" fontFamily="'scotch-display', serif" fontStyle="italic" fontSize="27">Paid</text>
           <text x="430" y="394" textAnchor="middle" fill="#fff" fontFamily="'sweet-sans-pro', Arial, sans-serif" fontSize="14">Get</text>
           <text x="430" y="423" textAnchor="middle" fill="#fff" fontFamily="'scotch-display', serif" fontStyle="italic" fontSize="27">Noticed</text>
-
-          <text x="276" y="305" textAnchor="middle" fill="rgba(255,255,255,0.85)" fontFamily="'sweet-sans-pro', sans-serif" fontSize="12" letterSpacing="1.5">ASCEND</text>
-          <text x="404" y="305" textAnchor="middle" fill="rgba(255,255,255,0.85)" fontFamily="'sweet-sans-pro', sans-serif" fontSize="12" letterSpacing="1.5">ALIGN</text>
-          <text x="340" y="410" textAnchor="middle" fill="rgba(255,255,255,0.85)" fontFamily="'sweet-sans-pro', sans-serif" fontSize="12" letterSpacing="1.5">ACTIVATE</text>
         </svg>
 
-        <div style={{ display: "flex", gap: 18, flexWrap: "wrap", justifyContent: "center", marginTop: 14, fontSize: 12, color: "rgba(255,255,255,0.65)" }}>
+        <div style={{ display: "flex", gap: 22, flexWrap: "wrap", justifyContent: "center", marginTop: 16, fontSize: 12.5, color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>
           {(["Strong", "Refine", "Prioritize"] as AreaStatus[]).map((s) => (
-            <span key={s} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <span style={{ width: 9, height: 9, borderRadius: "50%", background: STATUS_STYLE[s].color }} />
+            <span key={s} style={{ display: "flex", alignItems: "center", gap: 7 }}>
+              <span style={{ width: 10, height: 10, borderRadius: "50%", background: STATUS_STYLE[s].color }} />
               {s}
             </span>
           ))}
