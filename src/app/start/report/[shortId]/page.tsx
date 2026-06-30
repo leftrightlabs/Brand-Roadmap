@@ -70,10 +70,10 @@ const stagger: Variants = {
   show: { transition: { staggerChildren: 0.12 } },
 };
 
-const STATUS_UI: Record<AreaStatus, { text: string; border: string }> = {
-  Strong: { text: "#5f7d18", border: "#A7C140" },
-  Refine: { text: "#a9781f", border: "#E9BD6A" },
-  Prioritize: { text: "#c0563a", border: "#E08363" },
+const STATUS_UI: Record<AreaStatus, { text: string; border: string; bg: string }> = {
+  Strong: { text: "#5f7d18", border: "#A7C140", bg: "rgba(167,193,64,0.16)" },
+  Refine: { text: "#a9781f", border: "#E9BD6A", bg: "rgba(233,189,106,0.22)" },
+  Prioritize: { text: "#c0563a", border: "#E08363", bg: "rgba(224,131,99,0.16)" },
 };
 
 function StrengthBar({ status }: { status: AreaStatus }) {
@@ -378,30 +378,40 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
                 <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-60px" }} variants={stagger}>
                   <VideoBlock label={pillar.label} url={pillar.videoUrl} dark={dark} />
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 gap-6">
                     {pillar.areas.map((areaKey) => {
                       const ev: AreaEval | undefined = results.pillars?.[pillar.key]?.areas?.[areaKey];
                       if (!ev) return null;
                       const ui = STATUS_UI[ev.status];
+                      const stripColor = STATUS_STYLE[ev.status].color;
                       return (
-                        <motion.div key={areaKey} id={areaKey} variants={fadeUp} whileHover={{ y: -6 }} className="scroll-mt-24 flex flex-col h-full bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-                          <div className="flex items-center justify-between gap-3 mb-3">
-                            <StrengthBar status={ev.status} />
-                            <span className="text-xs font-medium uppercase tracking-wider" style={{ color: ui.text }}>{ev.status}</span>
-                          </div>
-                          <div className="flex items-center gap-2 flex-wrap mb-3">
-                            <h3 className="text-xl font-heading text-[#112248]">{AREA_LABELS[areaKey]}</h3>
-                            {ev.startHere && (
-                              <span className="text-[10px] uppercase tracking-[0.08em] px-2.5 py-0.5 rounded-full" style={{ border: `1px solid ${ui.border}`, color: ui.text }}>Start here</span>
-                            )}
-                          </div>
-                          <p className="text-gray-700 text-[16px] leading-[1.6] flex-1">{ev.evaluation}</p>
-                          <div className="mt-5 border-l-4 rounded-r-lg p-4" style={{ borderColor: "#a7c140", background: "rgba(17,34,72,0.03)" }}>
-                            <div className="flex items-center gap-2 mb-1.5">
-                              <ArrowRight className="w-4 h-4 text-[#a7c140]" />
-                              <h4 className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#a7c140]">Your next move</h4>
+                        <motion.div key={areaKey} id={areaKey} variants={fadeUp} whileHover={{ y: -4 }} className="scroll-mt-24 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+                          {/* priority color strip */}
+                          <div style={{ height: 8, background: stripColor }} />
+                          <div className="p-6 md:p-8 grid gap-6 md:gap-8 md:grid-cols-[minmax(210px,250px)_minmax(0,1fr)_minmax(280px,340px)] md:items-start">
+                            {/* status + title */}
+                            <div>
+                              <div className="flex items-center gap-3 mb-4">
+                                <StrengthBar status={ev.status} />
+                                <span className="text-sm font-bold uppercase tracking-wider px-3 py-1 rounded-full" style={{ background: ui.bg, color: ui.text }}>{ev.status}</span>
+                              </div>
+                              <h3 className="text-2xl md:text-[28px] font-heading text-[#112248] leading-tight">{AREA_LABELS[areaKey]}</h3>
+                              {ev.startHere && (
+                                <span className="inline-block mt-3 text-[11px] font-bold uppercase tracking-[0.08em] px-3 py-1 rounded-full" style={{ border: `1px solid ${ui.border}`, color: ui.text }}>Start here</span>
+                              )}
                             </div>
-                            <p className="text-gray-700 text-[15px] leading-[1.55]">{ev.nextMove}</p>
+                            {/* evaluation */}
+                            <p className="text-gray-700 text-[17px] md:text-[18px] leading-[1.65]">{ev.evaluation}</p>
+                            {/* next move */}
+                            <div className="rounded-xl p-5" style={{ background: "rgba(167,193,64,0.12)", border: "1px solid rgba(167,193,64,0.45)" }}>
+                              <div className="flex items-center gap-2 mb-2.5">
+                                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#a7c140]">
+                                  <ArrowRight className="w-3.5 h-3.5 text-[#112248]" />
+                                </span>
+                                <h4 className="text-sm font-bold uppercase tracking-[0.12em] text-[#3d4f12]">Your next move</h4>
+                              </div>
+                              <p className="text-[#112248] text-[16px] md:text-[17px] leading-[1.6] font-medium">{ev.nextMove}</p>
+                            </div>
                           </div>
                         </motion.div>
                       );
