@@ -129,8 +129,7 @@ export function BrandVenn({ statuses, onSegmentClick, className }: BrandVennProp
             <circle cx="418" cy="378" r="150" />
           </g>
 
-          {/* legacy core with lime halo */}
-          <ellipse cx="340" cy="320" rx="58" ry="66" fill="none" stroke="#A7C140" strokeOpacity="0.35" strokeWidth="1.5" />
+          {/* legacy core */}
           <ellipse cx="340" cy="320" rx="44" ry="52" fill="#A7C140" />
           <text x="340" y="327" textAnchor="middle" fontFamily="'scotch-display', serif" fontStyle="italic" fontSize="22" fill="#112248">Legacy</text>
 
