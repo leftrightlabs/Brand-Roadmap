@@ -378,32 +378,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if this email has already received a non-failed roadmap
-    try {
-      const existingReports = await sql<{ short_id: string }[]>`
-        SELECT sr.short_id
-        FROM shared_reports sr
-        INNER JOIN website_audit_leads l ON l.id = sr.lead_id
-        WHERE l.email = ${email}
-          AND (sr.analysis_results->>'status' IS NULL
-               OR sr.analysis_results->>'status' != 'failed')
-        LIMIT 1
-      `;
-
-      if (existingReports.length > 0) {
-        return NextResponse.json(
-          {
-            error: 'You have already received a Brand Roadmap for this email address. You can view your existing roadmap using the link below.',
-            existingShortId: existingReports[0].short_id,
-            message: 'You can view your existing roadmap or contact us if you need a new one.',
-          },
-          { status: 409 }
-        );
-      }
-    } catch (error) {
-      console.error(`[WEB-AUDIT] Error checking for existing reports:`, error);
-      // Continue with the analysis even if this check fails
-    }
+    // Note: we intentionally do NOT block repeat emails. Every submission
+    // generates a fresh roadmap (a returning/paying customer should always get
+    // a new one); a lead may have multiple shared_reports over time.
 
     // Find or create lead. Single upsert handles both paths cleanly.
     const upsertedLead = await sql<{ id: string }[]>`

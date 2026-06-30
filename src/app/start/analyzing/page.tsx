@@ -354,7 +354,7 @@ export default function AnalyzingPage() {
             description: errorData.message || "You already have a Brand Roadmap for this email address.",
             variant: "destructive",
           });
-          router.push("/start/website-input");
+          router.push("/start/info");
         } else if (response.status === 404) {
           // Report not found - might be a timing issue, wait a bit and retry
           console.warn("[ANALYZING] Report not found (404), might be timing issue, will retry");
@@ -413,7 +413,7 @@ export default function AnalyzingPage() {
             description: "Building your roadmap appears to have stalled. This might be due to server load. Please try again in a few minutes.",
             variant: "destructive",
           });
-          router.push("/start/website-input");
+          router.push("/start/info");
           return;
         }
 
@@ -426,7 +426,7 @@ export default function AnalyzingPage() {
             description: "Building your roadmap is taking longer than expected. This might be due to server load. Please try again in a few minutes.",
             variant: "destructive",
           });
-          router.push("/start/website-input");
+          router.push("/start/info");
           return;
         }
       } catch (error) {
@@ -479,7 +479,7 @@ export default function AnalyzingPage() {
             description: "Unable to connect to our roadmap-building service. Please check your internet connection and try again.",
             variant: "destructive",
           });
-          router.push("/start/website-input");
+          router.push("/start/info");
           return;
         }
         
