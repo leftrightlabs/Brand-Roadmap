@@ -119,9 +119,9 @@ export interface StatusStyle {
 }
 
 export const STATUS_STYLE: Record<AreaStatus, StatusStyle> = {
-  Strong: { color: '#A7C140', fillOpacity: 0.14, segments: 3 },
-  Refine: { color: '#E9BD6A', fillOpacity: 0.24, segments: 2 },
-  Prioritize: { color: '#E08363', fillOpacity: 0.4, segments: 1 },
+  Strong: { color: '#A7C140', fillOpacity: 0.16, segments: 3 }, // lime green
+  Refine: { color: '#EAB43C', fillOpacity: 0.3, segments: 2 }, // gold-yellow
+  Prioritize: { color: '#E0552E', fillOpacity: 0.34, segments: 1 }, // orange-red
 };
 
 export const VALID_STATUSES: AreaStatus[] = ['Strong', 'Refine', 'Prioritize'];

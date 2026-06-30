@@ -72,8 +72,8 @@ const stagger: Variants = {
 
 const STATUS_UI: Record<AreaStatus, { text: string; border: string; bg: string }> = {
   Strong: { text: "#5f7d18", border: "#A7C140", bg: "rgba(167,193,64,0.16)" },
-  Refine: { text: "#a9781f", border: "#E9BD6A", bg: "rgba(233,189,106,0.22)" },
-  Prioritize: { text: "#c0563a", border: "#E08363", bg: "rgba(224,131,99,0.16)" },
+  Refine: { text: "#9a7710", border: "#EAB43C", bg: "rgba(234,180,60,0.22)" },
+  Prioritize: { text: "#b53e1c", border: "#E0552E", bg: "rgba(224,85,46,0.15)" },
 };
 
 function StrengthBar({ status }: { status: AreaStatus }) {
