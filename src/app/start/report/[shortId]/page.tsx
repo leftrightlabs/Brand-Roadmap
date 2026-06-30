@@ -448,7 +448,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
                     <motion.div key={pillar.key} variants={fadeUp} whileHover={{ y: -6 }} className="flex flex-col h-full bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
                       <div className="flex items-center gap-3 mb-3">
                         <span className="flex-shrink-0 w-9 h-9 rounded-full bg-[#a7c140] text-[#112248] font-heading font-bold flex items-center justify-center">{i + 1}</span>
-                        <span className="text-sm font-bold uppercase tracking-wider text-[#112248]">{pillar.label}</span>
+                        <span className="text-lg md:text-xl font-bold uppercase tracking-wider text-[#112248]">{pillar.label}</span>
                       </div>
                       <p className="text-gray-700 text-[16px] leading-[1.6]">{move}</p>
                     </motion.div>
