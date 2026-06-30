@@ -139,12 +139,12 @@ export function BrandVenn({ statuses, onSegmentClick, className }: BrandVennProp
             <ellipse cx="340" cy="320" rx="44" ry="52" fill="#A7C140" />
             <text x="340" y="327" textAnchor="middle" fontFamily="'scotch-display', serif" fontStyle="italic" fontSize="22" fill="#112248">Legacy</text>
 
-            <text x="340" y="185" textAnchor="middle" fill="#fff" fontFamily="'sweet-sans-pro', Arial, sans-serif" fontSize="14">Get</text>
-            <text x="340" y="214" textAnchor="middle" fill="#fff" fontFamily="'scotch-display', serif" fontStyle="italic" fontSize="27">Clear™</text>
-            <text x="250" y="394" textAnchor="middle" fill="#fff" fontFamily="'sweet-sans-pro', Arial, sans-serif" fontSize="14">Get</text>
-            <text x="250" y="423" textAnchor="middle" fill="#fff" fontFamily="'scotch-display', serif" fontStyle="italic" fontSize="27">Paid</text>
-            <text x="430" y="394" textAnchor="middle" fill="#fff" fontFamily="'sweet-sans-pro', Arial, sans-serif" fontSize="14">Get</text>
-            <text x="430" y="423" textAnchor="middle" fill="#fff" fontFamily="'scotch-display', serif" fontStyle="italic" fontSize="27">Noticed</text>
+            <text x="340" y="172" textAnchor="middle" fill="#fff" fontFamily="'sweet-sans-pro', Arial, sans-serif" fontSize="14">Get</text>
+            <text x="340" y="201" textAnchor="middle" fill="#fff" fontFamily="'scotch-display', serif" fontStyle="italic" fontSize="27">Clear™</text>
+            <text x="206" y="394" textAnchor="middle" fill="#fff" fontFamily="'sweet-sans-pro', Arial, sans-serif" fontSize="14">Get</text>
+            <text x="206" y="423" textAnchor="middle" fill="#fff" fontFamily="'scotch-display', serif" fontStyle="italic" fontSize="27">Paid</text>
+            <text x="474" y="394" textAnchor="middle" fill="#fff" fontFamily="'sweet-sans-pro', Arial, sans-serif" fontSize="14">Get</text>
+            <text x="474" y="423" textAnchor="middle" fill="#fff" fontFamily="'scotch-display', serif" fontStyle="italic" fontSize="27">Noticed</text>
           </motion.g>
         </svg>
 
