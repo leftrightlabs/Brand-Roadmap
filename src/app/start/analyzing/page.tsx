@@ -93,17 +93,16 @@ export default function AnalyzingPage() {
     setIsAnalyzing(true);
 
     try {
-      // Map form data fields to API expected fields
+      // Forward the founder intake (the five tailoring questions) to the API.
       const apiPayload = {
         name: formData.name,
         email: formData.email,
         websiteUrl: formData.websiteUrl,
-        businessGoals: formData.primaryGoal || formData.businessGoals || '',
-        industry: formData.industry || '',
-        targetAudience: formData.targetAudience || '',
-        brandPersonality: formData.brandPersonality || '',
-        marketingStatus: formData.marketingCampaigns || formData.marketingStatus || '',
-        improvementFocus: formData.improvementFocus || '',
+        brandStage: formData.brandStage || '',
+        primaryGoal: formData.primaryGoal || '',
+        idealClient: formData.idealClient || '',
+        primaryOffer: formData.primaryOffer || '',
+        biggestGap: formData.biggestGap || '',
       };
 
       console.log("[ANALYZING] Starting analysis with payload:", { ...apiPayload, email: apiPayload.email ? '***' : undefined });

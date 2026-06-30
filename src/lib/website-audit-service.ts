@@ -11,8 +11,34 @@ export interface WebsiteAuditData {
   attributes?: any[];
 }
 
-export function generateAnalysisPrompt(websiteUrl: string, userData: WebsiteAuditData, websiteContent?: string): string {
+export interface FounderIntake {
+  brandStage?: string;
+  primaryGoal?: string;
+  idealClient?: string;
+  primaryOffer?: string;
+  biggestGap?: string;
+}
+
+export function generateAnalysisPrompt(websiteUrl: string, intake: FounderIntake = {}, websiteContent?: string): string {
+  const intakeLines = [
+    intake.brandStage && `- Where their brand is right now: ${intake.brandStage}`,
+    intake.primaryGoal && `- Their #1 goal for the next 6–12 months: ${intake.primaryGoal}`,
+    intake.idealClient && `- The ideal client they most want to attract: ${intake.idealClient}`,
+    intake.primaryOffer && `- Their primary offer and its price: ${intake.primaryOffer}`,
+    intake.biggestGap && `- What feels most "off" to them right now: ${intake.biggestGap}`,
+  ].filter(Boolean);
+
+  const intakeBlock = intakeLines.length
+    ? `
+
+---
+
+WHAT THE FOUNDER TOLD US — use this to TAILOR the roadmap, not just the website. Weight emphasis toward their stated goal (if it maps to a pillar, make that pillar's evaluations and sequenced move especially sharp); judge their audience against who they WANT to attract, not only who the site implies; evaluate the offer against the price they gave; and speak directly to their stated frustration in the legacyRead.
+${intakeLines.join("\n")}`
+    : "";
+
   let prompt = `You are generating a personalized Brand Roadmap from a website analysis, using Left Right Labs' signature framework: Get Clear → Get Noticed → Get Paid.
+${intakeBlock}
 
 You must return the output as a **valid JSON object only** — not Markdown, not plain text, and not a mix. Start with { and end with }.
 

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { sql } from '@/lib/db';
-import { generateAnalysisPrompt } from '@/lib/website-audit-service';
+import { generateAnalysisPrompt, type FounderIntake } from '@/lib/website-audit-service';
 import { PILLARS, normalizeStatus, type AreaKey, type AreaEval, type PillarKey, type RoadmapResults } from '@/lib/roadmap-types';
 
 // Coerce the model's parsed JSON into the canonical RoadmapResults shape:
@@ -350,13 +350,15 @@ export async function POST(request: NextRequest) {
       name,
       email,
       websiteUrl,
-      businessGoals,
-      industry,
-      targetAudience,
-      brandPersonality,
-      marketingStatus,
-      improvementFocus,
+      // Founder intake (the five tailoring questions)
+      brandStage,
+      primaryGoal,
+      idealClient,
+      primaryOffer,
+      biggestGap,
     } = await request.json();
+
+    const intake = { brandStage, primaryGoal, idealClient, primaryOffer, biggestGap };
 
     // Validate required fields
     if (!name || !email || !websiteUrl) {
@@ -412,8 +414,8 @@ export async function POST(request: NextRequest) {
       )
       VALUES (
         ${name}, ${email}, ${websiteUrl},
-        ${businessGoals || null}, ${industry || null}, ${targetAudience || null},
-        ${brandPersonality || null}, ${marketingStatus || null}, ${improvementFocus || null}
+        ${primaryGoal || null}, ${null}, ${idealClient || null},
+        ${primaryOffer || null}, ${brandStage || null}, ${biggestGap || null}
       )
       ON CONFLICT (email) DO UPDATE SET
         website_url        = EXCLUDED.website_url,
@@ -489,16 +491,7 @@ export async function POST(request: NextRequest) {
     // out the long-held request, leaving the page spinning forever. On Railway's
     // persistent Node server the promise keeps running after we respond (unlike
     // serverless, where the function would be frozen).
-    void performAnalysisWithTimeout(shortId, websiteUrl, {
-      name,
-      email,
-      businessGoals,
-      industry,
-      targetAudience,
-      brandPersonality,
-      marketingStatus,
-      improvementFocus,
-    }).catch(async (error: unknown) => {
+    void performAnalysisWithTimeout(shortId, websiteUrl, intake).catch(async (error: unknown) => {
       console.error(`[WEB-AUDIT] Analysis failed for ${shortId}:`, error);
       try {
         await sql`
@@ -534,7 +527,7 @@ export async function POST(request: NextRequest) {
 async function performAnalysisWithTimeout(
   shortId: string,
   websiteUrl: string,
-  userData: any
+  intake: FounderIntake
 ): Promise<void> {
   const startTime = Date.now();
   const maxExecutionTime = 5 * 60 * 1000; // 5 minutes max for Vercel (increased for detailed analysis)
@@ -565,24 +558,8 @@ async function performAnalysisWithTimeout(
     }
 
     // Step 3: Evaluating brand messaging (30-45%)
-    // Create user data structure that matches WebsiteAuditData interface
-    const auditUserData = {
-      brandProfile: {
-        business_name: userData.name,
-        industry: userData.industry,
-        products_services: userData.businessGoals,
-        ideal_client: userData.targetAudience,
-        pain_points: userData.improvementFocus,
-        differentiator: userData.brandPersonality
-      },
-      archetypes: [],
-      uvps: null,
-      taglines: null,
-      attributes: []
-    };
-
-    // Generate the analysis prompt using the same function as website-audit
-    const analysisPrompt = generateAnalysisPrompt(websiteUrl, auditUserData, websiteContent);
+    // Generate the analysis prompt, tailored with the founder's intake answers.
+    const analysisPrompt = generateAnalysisPrompt(websiteUrl, intake, websiteContent);
 
     await updateProgress(shortId, 45, 2);
 
