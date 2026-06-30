@@ -63,7 +63,7 @@ Mark "startHere": true on the 1–2 weakest areas overall (your top "Prioritize"
 PERSONALIZATION:
 
 - Pull in **real headlines, button text, product/offer names, nav items, and section labels** from the actual site.
-- The website content includes a **"VISUAL DESIGN DATA"** section with actual CSS colors, font families, sizes, weights, custom properties, gradients, and font sources extracted from the site. **Use it** for the Visual positioning evaluation — reference real hex colors and font names. Do not claim colors/fonts are "not defined" if they appear in this data.
+- The website content includes a **"VISUAL DESIGN DATA"** section (extracted colors, fonts, etc.). Use it ONLY as private evidence to judge how distinctive and ownable the visual identity is — do NOT recite hex codes, font file names, CSS class names, or WordPress/theme preset artifacts in the output. Translate what you observe into plain, strategic language a founder actually cares about.
 
 ---
 
@@ -76,7 +76,7 @@ GET CLEAR — is the foundation something only they could own?
 
 GET NOTICED — does the expression match the vision?
 - magneticVoice: Is the copy voice distinctive and magnetic, or generic? Quote examples.
-- visualPositioning: Is the visual identity ownable and consistent (color system, typography, imagery)? Use the VISUAL DESIGN DATA.
+- visualPositioning: Judge this through ONE lens — does their visual brand make them STAND OUT in their industry, or blend in with everyone else? Look at the overall art direction (color, typography, imagery, polish) and assess whether it looks distinctly theirs and memorable next to competitors, or generic/templated/expected for their space. Keep it broad and strategic, NOT technical — talk about distinctiveness, consistency, and the impression it creates; never list hex codes, font filenames, or CSS artifacts. The nextMove should be one concrete way to look more like a category leader and less like the field.
 - onlinePresence: How strong is their footprint — site structure, content/blog, channels, and overall visibility for an authority brand?
 
 GET PAID — is the brand built to convert and scale?
