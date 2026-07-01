@@ -75,7 +75,12 @@ GET CLEAR — is the foundation something only they could own?
 - elevatedAudience: Is it clear and specific who the ideal client is, and is that audience elevated/well-defined (vs. trying to speak to everyone)?
 
 GET NOTICED — does the expression match the vision?
-- magneticVoice: Is the copy voice distinctive and magnetic, or generic? Quote examples.
+- magneticVoice: First assess whether the copy voice is distinctive and magnetic or generic — quote real lines from the site. THEN add a soft brand-archetype read: based ONLY on how the voice actually sounds, suggest which ONE of these four archetype QUADRANTS it leans toward. Name the QUADRANT ONLY — never a specific archetype:
+   • Discovery — curious, wise, aspirational, truth- and freedom-seeking
+   • Structure — authoritative, refined, in-control, service- and craft-oriented
+   • Legacy — bold, transformational, rebellious, mastery- and vision-driven
+   • Connection — warm, relatable, intimate, playful, belonging-oriented
+  Frame it as a hint, not a verdict — e.g. "Your voice reads like it lives in the [Quadrant] quadrant" — and note it may not be exact, so it's worth confirming. If anything you are inferring about their business feels uncertain or could be wrong, say so plainly rather than stating it as fact.
 - visualPositioning: Judge this through ONE lens — does their visual brand make them STAND OUT in their industry, or blend in with everyone else? Look at the overall art direction (color, typography, imagery, polish) and assess whether it looks distinctly theirs and memorable next to competitors, or generic/templated/expected for their space. Keep it broad and strategic, NOT technical — talk about distinctiveness, consistency, and the impression it creates; never list hex codes, font filenames, or CSS artifacts. The nextMove should be one concrete way to look more like a category leader and less like the field.
 - onlinePresence: How strong is their footprint — site structure, content/blog, channels, and overall visibility for an authority brand?
 
