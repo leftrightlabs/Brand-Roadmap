@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion, type Variants } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { Share2, Download, AlertTriangle, Globe, Copy, ArrowRight, Play } from "lucide-react";
+import { Share2, Download, AlertTriangle, Globe, Copy, ArrowRight, Play, Lock, Check } from "lucide-react";
 
 import { BrandVenn } from "@/components/brand-venn";
 import {
@@ -26,7 +26,10 @@ interface AssessmentResults extends Partial<RoadmapResults> {
   status?: string;
   error?: string;
   generatedAt?: string;
+  paid?: boolean;
 }
+
+const FULL_PRICE = "$97";
 
 const CONTENT = "max-w-[84rem] mx-auto px-6 md:px-10";
 
@@ -124,6 +127,9 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
   const [isSharing, setIsSharing] = useState(false);
   const [ogImageUrl, setOgImageUrl] = useState<string | null>(null);
   const [shortId, setShortId] = useState<string>("");
+  // Temporary preview unlock (?preview=full) for testing the paid view before
+  // payment is wired. The real gate is the `paid` flag on the report.
+  const [previewFull, setPreviewFull] = useState(false);
 
   useEffect(() => {
     const getParams = async () => {
@@ -132,6 +138,10 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
     };
     getParams();
   }, [params]);
+
+  useEffect(() => {
+    setPreviewFull(new URLSearchParams(window.location.search).get("preview") === "full");
+  }, []);
 
   useEffect(() => {
     if (shortId) loadResults();
@@ -286,6 +296,10 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
     if (ev) statuses[a] = ev.status;
   }));
 
+  // Free = "Brand Snapshot" (diagnosis). Paid/preview unlocks the full roadmap.
+  const unlocked = results.paid === true || previewFull;
+  const goUnlock = () => { window.location.href = `/start/report/${shortId}?preview=full`; };
+
   return (
     <div className="min-h-screen bg-white report-page">
       {/* ── HEADER ── */}
@@ -376,7 +390,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
                 </motion.div>
 
                 <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-60px" }} variants={stagger}>
-                  <VideoBlock label={pillar.label} url={pillar.videoUrl} dark={dark} />
+                  {unlocked && <VideoBlock label={pillar.label} url={pillar.videoUrl} dark={dark} />}
 
                   <div className="grid grid-cols-1 gap-6">
                     {pillar.areas.map((areaKey) => {
@@ -388,30 +402,67 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
                         <motion.div key={areaKey} id={areaKey} variants={fadeUp} whileHover={{ y: -4 }} className="scroll-mt-24 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
                           {/* priority color strip */}
                           <div style={{ height: 8, background: stripColor }} />
-                          <div className="p-6 md:p-8 grid gap-6 md:gap-8 md:grid-cols-[minmax(210px,250px)_minmax(0,1fr)_minmax(280px,340px)] md:items-start">
-                            {/* status + title */}
-                            <div>
-                              <div className="flex items-center gap-3 mb-4">
-                                <StrengthBar status={ev.status} />
-                                <span className="text-sm font-bold uppercase tracking-wider px-3 py-1 rounded-full" style={{ background: ui.bg, color: ui.text }}>{ev.status}</span>
+                          <div className="p-6 md:p-8">
+                            <div className="grid gap-6 md:gap-8 md:grid-cols-[minmax(210px,250px)_minmax(0,1fr)_minmax(280px,340px)] md:items-start">
+                              {/* status + title */}
+                              <div>
+                                <div className="flex items-center gap-3 mb-4">
+                                  <StrengthBar status={ev.status} />
+                                  <span className="text-sm font-bold uppercase tracking-wider px-3 py-1 rounded-full" style={{ background: ui.bg, color: ui.text }}>{ev.status}</span>
+                                </div>
+                                <h3 className="text-2xl md:text-[28px] font-heading text-[#112248] leading-tight">{AREA_LABELS[areaKey]}</h3>
+                                {ev.startHere && (
+                                  <span className="inline-block mt-3 text-[11px] font-bold uppercase tracking-[0.08em] px-3 py-1 rounded-full" style={{ border: `1px solid ${ui.border}`, color: ui.text }}>Start here</span>
+                                )}
                               </div>
-                              <h3 className="text-2xl md:text-[28px] font-heading text-[#112248] leading-tight">{AREA_LABELS[areaKey]}</h3>
-                              {ev.startHere && (
-                                <span className="inline-block mt-3 text-[11px] font-bold uppercase tracking-[0.08em] px-3 py-1 rounded-full" style={{ border: `1px solid ${ui.border}`, color: ui.text }}>Start here</span>
+
+                              {/* read: short (free) or full evaluation (paid) */}
+                              <p className="text-gray-700 text-[17px] md:text-[18px] leading-[1.65]">{unlocked ? ev.evaluation : ev.shortRead}</p>
+
+                              {/* next move (paid) or locked panel (free) */}
+                              {unlocked ? (
+                                <div className="rounded-xl p-5" style={{ background: "rgba(167,193,64,0.12)", border: "1px solid rgba(167,193,64,0.45)" }}>
+                                  <div className="flex items-center gap-2 mb-2.5">
+                                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#a7c140]">
+                                      <ArrowRight className="w-3.5 h-3.5 text-[#112248]" />
+                                    </span>
+                                    <h4 className="text-sm font-bold uppercase tracking-[0.12em] text-[#3d4f12]">Your next move</h4>
+                                  </div>
+                                  <p className="text-[#112248] text-[16px] md:text-[17px] leading-[1.6] font-medium">{ev.nextMove}</p>
+                                </div>
+                              ) : (
+                                <button onClick={goUnlock} className="w-full text-left rounded-xl p-5 border border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 transition-colors">
+                                  <div className="flex items-center gap-2 mb-3 text-[#112248]">
+                                    <Lock className="w-4 h-4" />
+                                    <h4 className="text-sm font-bold uppercase tracking-[0.12em]">Your next move</h4>
+                                  </div>
+                                  <div className="space-y-1.5 mb-3" aria-hidden="true">
+                                    <div className="h-2.5 rounded bg-gray-200" />
+                                    <div className="h-2.5 rounded bg-gray-200 w-[85%]" />
+                                    <div className="h-2.5 rounded bg-gray-200 w-[60%]" />
+                                  </div>
+                                  <span className="text-sm font-bold uppercase tracking-wider text-[#5f7d18]">Unlock →</span>
+                                </button>
                               )}
                             </div>
-                            {/* evaluation */}
-                            <p className="text-gray-700 text-[17px] md:text-[18px] leading-[1.65]">{ev.evaluation}</p>
-                            {/* next move */}
-                            <div className="rounded-xl p-5" style={{ background: "rgba(167,193,64,0.12)", border: "1px solid rgba(167,193,64,0.45)" }}>
-                              <div className="flex items-center gap-2 mb-2.5">
-                                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#a7c140]">
-                                  <ArrowRight className="w-3.5 h-3.5 text-[#112248]" />
-                                </span>
-                                <h4 className="text-sm font-bold uppercase tracking-[0.12em] text-[#3d4f12]">Your next move</h4>
+
+                            {/* paid extras */}
+                            {unlocked && (ev.whatGoodLooksLike || ev.exampleRewrite) && (
+                              <div className="mt-6 pt-6 border-t border-gray-100 grid gap-6 md:grid-cols-2">
+                                {ev.whatGoodLooksLike && (
+                                  <div>
+                                    <h5 className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#112248] mb-1.5">What good looks like</h5>
+                                    <p className="text-gray-600 text-[15px] leading-[1.55]">{ev.whatGoodLooksLike}</p>
+                                  </div>
+                                )}
+                                {ev.exampleRewrite && (
+                                  <div>
+                                    <h5 className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#112248] mb-1.5">Example, in your voice</h5>
+                                    <p className="text-gray-600 text-[15px] leading-[1.55] italic">{ev.exampleRewrite}</p>
+                                  </div>
+                                )}
                               </div>
-                              <p className="text-[#112248] text-[16px] md:text-[17px] leading-[1.6] font-medium">{ev.nextMove}</p>
-                            </div>
+                            )}
                           </div>
                         </motion.div>
                       );
@@ -430,30 +481,57 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
           );
         })}
 
-        {/* ── SEQUENCED NEXT MOVES ── */}
-        {results.sequencedMoves && results.sequencedMoves.length > 0 && (
-          <section id="next-moves" className="scroll-mt-16" style={LIGHT_BAND}>
-            <div className={`${CONTENT} py-14 md:py-20`}>
-              <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp} className="text-center mb-10">
-                <h2 className="text-4xl md:text-6xl font-heading text-[#112248]">Your Sequenced Roadmap</h2>
-                <div className="w-12 h-0.5 bg-[#a7c140] mx-auto mt-3 mb-3" />
-                <p className="text-gray-500 text-lg">The order we teach it: Get Clear first, then Get Noticed, then Get Paid.</p>
-              </motion.div>
-              <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-60px" }} variants={stagger} className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {PILLARS.map((pillar, i) => {
-                  const raw = results.sequencedMoves?.[i];
-                  if (!raw) return null;
-                  const move = raw.replace(/^\s*get\s+(clear|noticed|paid)\b\s*[—–:-]*\s*/i, "");
-                  return (
-                    <motion.div key={pillar.key} variants={fadeUp} whileHover={{ y: -6 }} className="flex flex-col h-full bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-                      <div className="flex items-center gap-3 mb-3">
+        {/* ── PAID: 30/60/90 PLAN  ·  FREE: UPSELL ── */}
+        {unlocked ? (
+          results.phasedPlan && results.phasedPlan.length > 0 && (
+            <section id="next-moves" className="scroll-mt-16" style={LIGHT_BAND}>
+              <div className={`${CONTENT} py-14 md:py-20`}>
+                <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp} className="text-center mb-10">
+                  <h2 className="text-4xl md:text-6xl font-heading text-[#112248]">Your 30 / 60 / 90-Day Roadmap</h2>
+                  <div className="w-12 h-0.5 bg-[#a7c140] mx-auto mt-3 mb-3" />
+                  <p className="text-gray-500 text-lg">Sequenced the way we teach it: Get Clear, then Get Noticed, then Get Paid.</p>
+                </motion.div>
+                <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-60px" }} variants={stagger} className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {results.phasedPlan.map((phase, i) => (
+                    <motion.div key={i} variants={fadeUp} whileHover={{ y: -6 }} className="flex flex-col h-full bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+                      <div className="flex items-center gap-3 mb-4">
                         <span className="flex-shrink-0 w-9 h-9 rounded-full bg-[#a7c140] text-[#112248] font-heading font-bold flex items-center justify-center">{i + 1}</span>
-                        <span className="text-lg md:text-xl font-bold uppercase tracking-wider text-[#112248]">{pillar.label}</span>
+                        <span className="text-lg md:text-xl font-bold uppercase tracking-wider text-[#112248]">{phase.label}</span>
                       </div>
-                      <p className="text-gray-700 text-[16px] leading-[1.6]">{move}</p>
+                      <ul className="space-y-3">
+                        {phase.moves.map((m, j) => (
+                          <li key={j} className="flex gap-2.5 text-gray-700 text-[15px] leading-[1.55]">
+                            <Check className="w-4 h-4 text-[#a7c140] mt-1 flex-shrink-0" />
+                            <span>{m}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </motion.div>
-                  );
-                })}
+                  ))}
+                </motion.div>
+              </div>
+            </section>
+          )
+        ) : (
+          <section id="unlock" className="scroll-mt-16" style={DARK_BAND}>
+            <div className={`${CONTENT} py-16 md:py-24`}>
+              <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp} className="max-w-3xl mx-auto text-center">
+                <p className="text-sm font-bold uppercase tracking-[0.2em] text-[#a7c140] mb-4">The Full Brand Roadmap</p>
+                <h2 className="text-4xl md:text-6xl font-heading text-white leading-[1.1]">You can see every gap. Here&apos;s exactly how to close them.</h2>
+                <div className="w-16 h-1 bg-[#a7c140] mx-auto my-6" />
+                <p className="text-white/60 text-lg mb-8">Unlock the specific next move for all nine areas — plus deeper analysis, example rewrites in your voice, the Get Clear / Noticed / Paid lessons, your 30/60/90-day plan, and a downloadable PDF.</p>
+                <ul className="text-left max-w-md mx-auto space-y-3 mb-10">
+                  {["The specific next move for all 9 areas", "Deeper analysis + what ‘good’ looks like", "Example rewrites in your brand voice", "Get Clear / Noticed / Paid lessons", "Your 30/60/90-day action plan", "Downloadable, shareable PDF"].map((f) => (
+                    <li key={f} className="flex items-center gap-3 text-white/85 text-[16px]">
+                      <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#a7c140] flex-shrink-0"><Check className="w-3.5 h-3.5 text-[#112248]" /></span>
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <Button onClick={goUnlock} size="lg" className="bg-[#a7c140] hover:bg-[#96ad39] text-[#112248] font-bold uppercase tracking-wider text-base px-8 py-6">
+                  Unlock your full roadmap — {FULL_PRICE}
+                </Button>
+                <p className="text-white/40 text-sm mt-4">One-time · Instant access</p>
               </motion.div>
             </div>
           </section>

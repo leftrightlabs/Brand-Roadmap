@@ -91,35 +91,42 @@ GET PAID — is the brand built to convert and scale?
 
 ---
 
-OUTPUT FORMAT (return exactly this structure; keep prose concise):
+OUTPUT FORMAT — return exactly this JSON. Every area object has these fields:
+- "status": "Strong" | "Refine" | "Prioritize"
+- "shortRead": ONE punchy, specific sentence naming what's going on (this is the free teaser — compelling, never generic). For magneticVoice, fold the archetype QUADRANT hint into this sentence.
+- "evaluation": 2–4 sentence deeper read, quoting real site copy where possible.
+- "nextMove": one concrete, specific action.
+- "whatGoodLooksLike": one sentence describing the target state — what "fixed" looks like.
+- "exampleRewrite": ONLY for the 2–3 highest-priority areas, a short concrete "in your voice" example (ideally a before → after line). Use "" where it doesn't apply.
+- "startHere": true on the 1–2 weakest areas, otherwise false.
 
 {
-  "legacyRead": "[2 short paragraphs: a premium synthesis of where the brand stands and where it's drifting — framed as the center ('Legacy') of the Get Clear / Get Noticed / Get Paid framework. No scores.]",
+  "legacyRead": "[2 short paragraphs: a premium synthesis of where the brand stands and where it's drifting — framed as the center ('Legacy') of the framework. No scores.]",
   "pillars": {
     "getClear": { "areas": {
-      "brandPersonality":  { "status": "Strong|Refine|Prioritize", "evaluation": "...", "nextMove": "...", "startHere": false },
-      "signatureFramework":{ "status": "Strong|Refine|Prioritize", "evaluation": "...", "nextMove": "..." },
-      "elevatedAudience":  { "status": "Strong|Refine|Prioritize", "evaluation": "...", "nextMove": "..." }
+      "brandPersonality":  { "status":"", "shortRead":"", "evaluation":"", "nextMove":"", "whatGoodLooksLike":"", "exampleRewrite":"", "startHere":false },
+      "signatureFramework":{ "status":"", "shortRead":"", "evaluation":"", "nextMove":"", "whatGoodLooksLike":"", "exampleRewrite":"", "startHere":false },
+      "elevatedAudience":  { "status":"", "shortRead":"", "evaluation":"", "nextMove":"", "whatGoodLooksLike":"", "exampleRewrite":"", "startHere":false }
     }},
     "getNoticed": { "areas": {
-      "magneticVoice":     { "status": "Strong|Refine|Prioritize", "evaluation": "...", "nextMove": "..." },
-      "visualPositioning": { "status": "Strong|Refine|Prioritize", "evaluation": "...", "nextMove": "..." },
-      "onlinePresence":    { "status": "Strong|Refine|Prioritize", "evaluation": "...", "nextMove": "..." }
+      "magneticVoice":     { "status":"", "shortRead":"", "evaluation":"", "nextMove":"", "whatGoodLooksLike":"", "exampleRewrite":"", "startHere":false },
+      "visualPositioning": { "status":"", "shortRead":"", "evaluation":"", "nextMove":"", "whatGoodLooksLike":"", "exampleRewrite":"", "startHere":false },
+      "onlinePresence":    { "status":"", "shortRead":"", "evaluation":"", "nextMove":"", "whatGoodLooksLike":"", "exampleRewrite":"", "startHere":false }
     }},
     "getPaid": { "areas": {
-      "brandAuthority":    { "status": "Strong|Refine|Prioritize", "evaluation": "...", "nextMove": "..." },
-      "offerEvolution":    { "status": "Strong|Refine|Prioritize", "evaluation": "...", "nextMove": "..." },
-      "visionaryGrowth":   { "status": "Strong|Refine|Prioritize", "evaluation": "...", "nextMove": "..." }
+      "brandAuthority":    { "status":"", "shortRead":"", "evaluation":"", "nextMove":"", "whatGoodLooksLike":"", "exampleRewrite":"", "startHere":false },
+      "offerEvolution":    { "status":"", "shortRead":"", "evaluation":"", "nextMove":"", "whatGoodLooksLike":"", "exampleRewrite":"", "startHere":false },
+      "visionaryGrowth":   { "status":"", "shortRead":"", "evaluation":"", "nextMove":"", "whatGoodLooksLike":"", "exampleRewrite":"", "startHere":false }
     }}
   },
-  "sequencedMoves": [
-    "[The single most important next move for GET CLEAR — synthesized, referencing the relevant area]",
-    "[The single most important next move for GET NOTICED]",
-    "[The single most important next move for GET PAID]"
+  "phasedPlan": [
+    { "label": "First 30 days", "moves": ["..."] },
+    { "label": "Days 31–60", "moves": ["..."] },
+    { "label": "Days 61–90", "moves": ["..."] }
   ]
 }
 
-sequencedMoves MUST contain exactly three items, in this fixed order: (1) Get Clear, (2) Get Noticed, (3) Get Paid — this is the sequence we teach. Each is the highest-leverage next move for that pillar.
+phasedPlan is a prioritized 30/60/90-day sequence that pulls the most important moves across all nine areas — front-load Get Clear, then Get Noticed, then Get Paid. 1–3 moves per phase.
 
 Website: ${websiteUrl}`;
 
@@ -132,7 +139,7 @@ ${websiteContent}`;
 
   prompt += `
 
-Analyze the website content above and produce the Brand Roadmap. Be specific, quote real copy, keep each evaluation to 2–4 sentences and each nextMove to one concrete action. Return only the JSON object.`;
+Analyze the website content above and produce the Brand Roadmap. Be specific and quote real copy. Keep shortRead to one sentence, evaluation to 2–4 sentences, nextMove and whatGoodLooksLike to one line each. Return only the JSON object.`;
 
   return prompt;
 }

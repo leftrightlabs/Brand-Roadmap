@@ -18,22 +18,31 @@ function buildRoadmapResults(parsed: any): RoadmapResults {
       const a = srcAreas?.[areaKey] ?? {};
       areas[areaKey] = {
         status: normalizeStatus(a.status),
+        shortRead: str(a.shortRead, str(a.evaluation, 'Data Temporarily Unavailable.')),
         evaluation: str(a.evaluation, 'Data Temporarily Unavailable.'),
         nextMove: str(a.nextMove, 'Review this area with your brand strategist.'),
+        whatGoodLooksLike: str(a.whatGoodLooksLike, ''),
+        exampleRewrite: str(a.exampleRewrite, ''),
         startHere: a.startHere === true,
       };
     }
     pillars[pillar.key as PillarKey] = { areas };
   }
 
-  const moves = Array.isArray(parsed?.sequencedMoves)
-    ? parsed.sequencedMoves.filter((m: unknown) => typeof m === 'string' && m.trim()).slice(0, 3)
+  const phasedPlan: RoadmapResults['phasedPlan'] = Array.isArray(parsed?.phasedPlan)
+    ? parsed.phasedPlan
+        .filter((p: any) => p && typeof p.label === 'string')
+        .slice(0, 3)
+        .map((p: any) => ({
+          label: String(p.label),
+          moves: Array.isArray(p.moves) ? p.moves.filter((m: unknown) => typeof m === 'string' && m.trim()).slice(0, 3) : [],
+        }))
     : [];
 
   return {
     legacyRead: str(parsed?.legacyRead, 'Your brand roadmap is ready below.'),
     pillars,
-    sequencedMoves: moves,
+    phasedPlan,
   };
 }
 
@@ -45,6 +54,7 @@ function fallbackRoadmap(): RoadmapResults {
     for (const areaKey of pillar.areas) {
       areas[areaKey] = {
         status: 'Refine',
+        shortRead: 'We hit a snag formatting this part of your roadmap.',
         evaluation: 'We hit a snag formatting this part of your roadmap. Please regenerate or contact support.',
         nextMove: 'Regenerate your roadmap, or reach out and we will rebuild it for you.',
       };
@@ -54,7 +64,7 @@ function fallbackRoadmap(): RoadmapResults {
   return {
     legacyRead: 'Your roadmap was generated but a formatting issue interrupted the final assembly. Please regenerate it or contact support.',
     pillars,
-    sequencedMoves: [],
+    phasedPlan: [],
   };
 }
 
@@ -557,7 +567,7 @@ async function performAnalysisWithTimeout(
       analysisResult = await Promise.race([
         anthropic.messages.create({
           model: "claude-sonnet-4-6",
-          max_tokens: 8000,
+          max_tokens: 12000,
           // "low" effort roughly halves latency vs "medium" (~150s -> ~70-90s)
           // while keeping Sonnet's analysis quality. The output is a structured
           // JSON report, so depth comes mostly from the prompt, not deep thinking.

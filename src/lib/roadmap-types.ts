@@ -13,10 +13,24 @@ export type AreaStatus = 'Strong' | 'Refine' | 'Prioritize';
 
 export interface AreaEval {
   status: AreaStatus;
+  /** FREE — one-sentence read of what's going on. */
+  shortRead: string;
+  /** PAID — deeper 2–4 sentence evaluation. */
   evaluation: string;
+  /** PAID — the specific action. */
   nextMove: string;
+  /** PAID — one line describing the target state. */
+  whatGoodLooksLike?: string;
+  /** PAID — a concrete "in your voice" example, for priority areas. */
+  exampleRewrite?: string;
   /** Set on the 1–2 weakest areas to surface a "Start here" flag. */
   startHere?: boolean;
+}
+
+/** PAID — one phase of the 30/60/90-day action plan. */
+export interface RoadmapPhase {
+  label: string;
+  moves: string[];
 }
 
 export type PillarKey = 'getClear' | 'getNoticed' | 'getPaid';
@@ -36,7 +50,8 @@ export type AreaKey =
 export interface RoadmapResults {
   legacyRead: string;
   pillars: Record<PillarKey, { areas: Partial<Record<AreaKey, AreaEval>> }>;
-  sequencedMoves: string[];
+  /** PAID — 30/60/90-day phased plan (replaces the flat sequencedMoves). */
+  phasedPlan: RoadmapPhase[];
 }
 
 export const AREA_LABELS: Record<AreaKey, string> = {

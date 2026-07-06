@@ -169,34 +169,44 @@ function generateRoadmapPDF(
       doc.text('Your next move:', margin, y);
       y += 5;
       paragraph(ev.nextMove, 10, 5);
+
+      if (ev.whatGoodLooksLike) {
+        y += 1;
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(...NAVY);
+        ensureSpace(5); doc.text('What good looks like:', margin, y); y += 5;
+        paragraph(ev.whatGoodLooksLike, 10, 5);
+      }
+      if (ev.exampleRewrite) {
+        y += 1;
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(...NAVY);
+        ensureSpace(5); doc.text('Example, in your voice:', margin, y); y += 5;
+        paragraph(ev.exampleRewrite, 10, 5);
+      }
       y += 6;
     }
     y += 2;
   }
 
-  // Sequenced moves
-  if (data.sequencedMoves && data.sequencedMoves.length > 0) {
+  // 30/60/90-day plan
+  if (data.phasedPlan && data.phasedPlan.length > 0) {
     ensureSpace(16);
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(15);
     doc.setTextColor(...NAVY);
-    doc.text('Your Sequenced Roadmap', margin, y);
-    y += 8;
-    data.sequencedMoves.forEach((move, i) => {
-      ensureSpace(8);
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(10);
-      doc.setTextColor(...NAVY);
-      doc.text(`${i + 1}.`, margin, y);
-      const lines = doc.splitTextToSize(move, contentW - 8);
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(55, 65, 81);
-      for (let l = 0; l < lines.length; l++) {
+    doc.text('Your 30 / 60 / 90-Day Roadmap', margin, y);
+    y += 9;
+    data.phasedPlan.forEach((phase) => {
+      ensureSpace(9);
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.setTextColor(...NAVY);
+      doc.text(phase.label, margin, y); y += 6;
+      (phase.moves || []).forEach((move) => {
+        const lines = doc.splitTextToSize(move, contentW - 8);
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(55, 65, 81);
         ensureSpace(5);
-        doc.text(lines[l], margin + 8, y);
-        y += 5;
-      }
-      y += 3;
+        doc.text('•', margin + 2, y);
+        for (let l = 0; l < lines.length; l++) { ensureSpace(5); doc.text(lines[l], margin + 8, y); y += 5; }
+      });
+      y += 4;
     });
   }
 

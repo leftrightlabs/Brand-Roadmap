@@ -11,6 +11,7 @@ interface ReportRow {
     [key: string]: unknown;
   };
   expires_at: string;
+  paid: boolean;
   lead_name: string | null;
   lead_email: string | null;
 }
@@ -37,6 +38,7 @@ export async function GET(
         sr.website_url,
         sr.analysis_results,
         sr.expires_at,
+        sr.paid,
         l.name  AS lead_name,
         l.email AS lead_email
       FROM shared_reports sr
@@ -83,6 +85,7 @@ export async function GET(
           ...analysisResults,
           shortId,
           websiteUrl: report.website_url,
+          paid: report.paid === true,
           leadName: report.lead_name ?? undefined,
           leadEmail: report.lead_email ?? undefined,
         },
