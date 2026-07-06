@@ -95,7 +95,7 @@ OUTPUT FORMAT — return exactly this JSON. Every area object has these fields:
 - "status": "Strong" | "Refine" | "Prioritize"
 - "shortRead": 2–3 substantive sentences — a real read of what's going on AND why it matters for their brand. Specific, evidence-based, and genuinely valuable on its own (this is the FREE portion). Name the problem/opportunity clearly, but do NOT give the fix or the action — that lives in nextMove, which is paid. For magneticVoice, fold the archetype QUADRANT hint into this read.
 - "evaluation": the deeper PAID read — 3–4 sentences DIAGNOSING what's happening and why it matters, with specific evidence and quotes from the site. This is the ONLY field that describes the problem.
-- "nextMove": the concrete ACTION to take — imperative, specific, and precise (name the exact page, section, or asset). Phrase it as what to DO, ideally a short sequence ("Rewrite X, then Y"). Do NOT restate the problem and do NOT describe the payoff.
+- "nextMove": the concrete ACTION to take — 2 sentences. First sentence: exactly what to DO, imperative and specific (name the exact page, section, or asset). Second sentence: add genuine practical value — the key thing to get right, where to start, or a concrete "how" — never filler, and never a restatement of the problem or the payoff. Prefer a tight, useful two sentences; only drop to one if there is truly nothing worth adding.
 - "whatGoodLooksLike": the PAYOFF once they act — the tangible result and the competitive edge it creates (what it unlocks with their ideal client, or why it makes them harder to replicate). Describe the outcome/benefit, NOT the fix and NOT the problem.
 - "exampleRewrite": ONLY for the 2–3 highest-priority areas, a short concrete "in your voice" example (ideally a before → after line). Use "" where it doesn't apply.
 - "startHere": true on the 1–2 weakest areas, otherwise false.
@@ -141,7 +141,7 @@ ${websiteContent}`;
 
   prompt += `
 
-Analyze the website content above and produce the Brand Roadmap. Be specific and quote real copy. Keep shortRead to 2–3 substantive sentences (valuable but no fix), evaluation to 3–4 deeper sentences, nextMove and whatGoodLooksLike to one line each. Return only the JSON object.`;
+Analyze the website content above and produce the Brand Roadmap. Be specific and quote real copy. Keep shortRead to 2–3 substantive sentences (valuable but no fix), evaluation to 3–4 deeper sentences, nextMove to two useful sentences, and whatGoodLooksLike to one line. Return only the JSON object.`;
 
   return prompt;
 }
