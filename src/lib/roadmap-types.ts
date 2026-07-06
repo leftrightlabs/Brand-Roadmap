@@ -49,6 +49,8 @@ export type AreaKey =
 /** The shape stored in shared_reports.analysis_results (plus the status envelope). */
 export interface RoadmapResults {
   legacyRead: string;
+  /** FREE — one directional sentence: where to focus first (which pillar + why). */
+  roadmapNudge: string;
   pillars: Record<PillarKey, { areas: Partial<Record<AreaKey, AreaEval>> }>;
   /** PAID — 30/60/90-day phased plan (replaces the flat sequencedMoves). */
   phasedPlan: RoadmapPhase[];

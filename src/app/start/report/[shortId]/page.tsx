@@ -296,6 +296,23 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
     if (ev) statuses[a] = ev.status;
   }));
 
+  // "Start here" areas (weakest) and the pillar carrying the most weight — used
+  // for the free directional nudge so the diagnosis still points somewhere.
+  const startHereLabels: string[] = [];
+  const pillarPressure: Record<string, number> = {};
+  PILLARS.forEach((p) => {
+    let pressure = 0;
+    p.areas.forEach((a) => {
+      const ev = results.pillars?.[p.key]?.areas?.[a];
+      if (!ev) return;
+      if (ev.startHere) startHereLabels.push(AREA_LABELS[a]);
+      pressure += ev.status === "Prioritize" ? 2 : ev.status === "Refine" ? 1 : 0;
+    });
+    pillarPressure[p.key] = pressure;
+  });
+  const priorityPillar =
+    [...PILLARS].sort((a, b) => (pillarPressure[b.key] ?? 0) - (pillarPressure[a.key] ?? 0))[0] ?? PILLARS[0];
+
   // Free = "Brand Snapshot" (diagnosis). Paid/preview unlocks the full roadmap.
   const unlocked = results.paid === true || previewFull;
   const goUnlock = () => { window.location.href = `/start/report/${shortId}?preview=full`; };
@@ -373,6 +390,37 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
             </div>
           </div>
         </section>
+
+        {/* ── FREE: WHERE YOUR ROADMAP STARTS (directional nudge) ── */}
+        {!unlocked && (results.roadmapNudge || startHereLabels.length > 0) && (
+          <section style={DARK_BAND}>
+            <div className={`${CONTENT} py-12 md:py-16`}>
+              <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp} className="max-w-4xl mx-auto">
+                <div className="rounded-3xl border border-[#a7c140]/40 bg-white/[0.04] p-8 md:p-12">
+                  <p className="text-[13px] font-bold uppercase tracking-[0.12em] text-[#a7c140] mb-4">Where your roadmap starts</p>
+                  {results.roadmapNudge && (
+                    <p className="text-white text-[22px] md:text-[26px] font-heading leading-[1.3] mb-6">{results.roadmapNudge}</p>
+                  )}
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8">
+                    <div className="flex items-center gap-3">
+                      <span className="text-[13px] font-bold uppercase tracking-[0.12em] text-white/50">Lead with</span>
+                      <span className="inline-flex items-center rounded-full bg-[#a7c140] text-[#112248] font-bold text-sm px-4 py-1.5">{priorityPillar.label}</span>
+                    </div>
+                    {startHereLabels.length > 0 && (
+                      <div className="flex items-center gap-3 flex-wrap">
+                        <span className="text-[13px] font-bold uppercase tracking-[0.12em] text-white/50">Begin with</span>
+                        {startHereLabels.map((label) => (
+                          <span key={label} className="inline-flex items-center rounded-full border border-white/25 text-white/90 text-sm px-4 py-1.5">{label}</span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-white/45 text-[15px] mt-6">Your specific moves — the exact what, where, and how — are laid out in the full roadmap below.</p>
+                </div>
+              </motion.div>
+            </div>
+          </section>
+        )}
 
         {/* ── PILLARS ── */}
         {PILLARS.map((pillar, idx) => {
@@ -511,15 +559,48 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
             </section>
           )
         ) : (
-          <section id="unlock" className="scroll-mt-16" style={DARK_BAND}>
+          <section id="next-moves" className="scroll-mt-16" style={DARK_BAND}>
             <div className={`${CONTENT} py-16 md:py-24`}>
-              <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp} className="max-w-3xl mx-auto text-center">
-                <p className="text-sm font-bold uppercase tracking-[0.2em] text-[#a7c140] mb-4">The Full Brand Roadmap</p>
-                <h2 className="text-4xl md:text-6xl font-heading text-white leading-[1.1]">You can see every gap. Here&apos;s exactly how to close them.</h2>
+              {/* Locked plan teaser — the shape of the 30/60/90 plan is visible, the steps are not. */}
+              <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp} className="text-center mb-10">
+                <p className="text-[13px] font-bold uppercase tracking-[0.12em] text-[#a7c140] mb-4">Your Sequenced Plan</p>
+                <h2 className="text-4xl md:text-6xl font-heading text-white leading-[1.1]">Your 30 / 60 / 90-day plan is built.</h2>
                 <div className="w-16 h-1 bg-[#a7c140] mx-auto my-6" />
-                <p className="text-white/60 text-lg mb-8">Unlock the specific next move for all nine areas — plus deeper analysis, example rewrites in your voice, the Get Clear / Noticed / Paid lessons, your 30/60/90-day plan, and a downloadable PDF.</p>
+                <p className="text-white/60 text-lg max-w-2xl mx-auto">We&apos;ve sequenced every move in the order we teach it. Unlock to see exactly what to do, and when.</p>
+              </motion.div>
+
+              {results.phasedPlan && results.phasedPlan.length > 0 && (
+                <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-60px" }} variants={stagger} className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-12">
+                  {results.phasedPlan.map((phase, i) => (
+                    <motion.div key={i} variants={fadeUp} className="relative flex flex-col h-full rounded-2xl border border-white/15 bg-white/[0.04] p-6 overflow-hidden">
+                      <div className="flex items-center gap-3 mb-5">
+                        <span className="flex-shrink-0 w-9 h-9 rounded-full bg-[#a7c140] text-[#112248] font-heading font-bold flex items-center justify-center">{i + 1}</span>
+                        <span className="text-lg font-bold uppercase tracking-wider text-white">{phase.label}</span>
+                      </div>
+                      {/* Blurred placeholder bars stand in for the real steps. */}
+                      <div className="space-y-3" aria-hidden>
+                        {Array.from({ length: Math.min(3, Math.max(2, phase.moves?.length || 3)) }).map((_, j) => (
+                          <div key={j} className="flex gap-2.5 items-start">
+                            <Check className="w-4 h-4 text-[#a7c140]/60 mt-0.5 flex-shrink-0" />
+                            <div className="flex-1 space-y-1.5 blur-[5px] select-none">
+                              <div className="h-2.5 rounded-full bg-white/25" style={{ width: `${92 - j * 12}%` }} />
+                              <div className="h-2.5 rounded-full bg-white/15" style={{ width: `${70 - j * 10}%` }} />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="mt-5 flex items-center gap-2 text-white/45 text-[13px] font-bold uppercase tracking-[0.1em]">
+                        <Lock className="w-3.5 h-3.5" /> Locked
+                      </div>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              )}
+
+              <motion.div id="unlock" initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp} className="max-w-3xl mx-auto text-center scroll-mt-16">
+                <p className="text-white/60 text-lg mb-8">Unlock the specific next move for all nine areas — plus deeper analysis, example rewrites in your voice, the Get Clear / Noticed / Paid lessons, your full 30/60/90-day plan, and a downloadable PDF.</p>
                 <ul className="text-left max-w-md mx-auto space-y-3 mb-10">
-                  {["The specific next move for all 9 areas", "Deeper analysis + what ‘good’ looks like", "Example rewrites in your brand voice", "Get Clear / Noticed / Paid lessons", "Your 30/60/90-day action plan", "Downloadable, shareable PDF"].map((f) => (
+                  {["The specific next move for all 9 areas", "Deeper analysis + what ‘good’ looks like", "Example rewrites in your brand voice", "Get Clear / Noticed / Paid lessons", "Every step of your 30/60/90-day plan", "Downloadable, shareable PDF"].map((f) => (
                     <li key={f} className="flex items-center gap-3 text-white/85 text-[16px]">
                       <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#a7c140] flex-shrink-0"><Check className="w-3.5 h-3.5 text-[#112248]" /></span>
                       {f}

@@ -104,6 +104,7 @@ CRITICAL — the three paid fields (evaluation, nextMove, whatGoodLooksLike) mus
 
 {
   "legacyRead": "[2 short paragraphs: a premium synthesis of where the brand stands and where it's drifting — framed as the center ('Legacy') of the framework. No scores.]",
+  "roadmapNudge": "[ONE sentence — the single most important DIRECTION for where to focus first: which pillar (Get Clear / Get Noticed / Get Paid) and why, framed as momentum ('Your fastest gains are in Get Noticed — …'). This is FREE and directional: name the focus and the reason, but NEVER a specific action, step, or the detailed move — those are paid.]",
   "pillars": {
     "getClear": { "areas": {
       "brandPersonality":  { "status":"", "shortRead":"", "evaluation":"", "nextMove":"", "whatGoodLooksLike":"", "exampleRewrite":"", "startHere":false },

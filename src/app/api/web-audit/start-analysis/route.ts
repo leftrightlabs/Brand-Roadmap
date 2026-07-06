@@ -41,6 +41,7 @@ function buildRoadmapResults(parsed: any): RoadmapResults {
 
   return {
     legacyRead: str(parsed?.legacyRead, 'Your brand roadmap is ready below.'),
+    roadmapNudge: str(parsed?.roadmapNudge, ''),
     pillars,
     phasedPlan,
   };
@@ -63,6 +64,7 @@ function fallbackRoadmap(): RoadmapResults {
   }
   return {
     legacyRead: 'Your roadmap was generated but a formatting issue interrupted the final assembly. Please regenerate it or contact support.',
+    roadmapNudge: '',
     pillars,
     phasedPlan: [],
   };
