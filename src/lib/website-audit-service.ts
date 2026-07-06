@@ -94,11 +94,13 @@ GET PAID — is the brand built to convert and scale?
 OUTPUT FORMAT — return exactly this JSON. Every area object has these fields:
 - "status": "Strong" | "Refine" | "Prioritize"
 - "shortRead": 2–3 substantive sentences — a real read of what's going on AND why it matters for their brand. Specific, evidence-based, and genuinely valuable on its own (this is the FREE portion). Name the problem/opportunity clearly, but do NOT give the fix or the action — that lives in nextMove, which is paid. For magneticVoice, fold the archetype QUADRANT hint into this read.
-- "evaluation": the deeper PAID read — 3–4 sentences that go further than shortRead: quote real site copy, add specific evidence and nuance the free read doesn't.
-- "nextMove": one concrete, specific action.
-- "whatGoodLooksLike": one sentence describing the target state — what "fixed" looks like.
+- "evaluation": the deeper PAID read — 3–4 sentences DIAGNOSING what's happening and why it matters, with specific evidence and quotes from the site. This is the ONLY field that describes the problem.
+- "nextMove": the concrete ACTION to take — imperative, specific, and precise (name the exact page, section, or asset). Phrase it as what to DO, ideally a short sequence ("Rewrite X, then Y"). Do NOT restate the problem and do NOT describe the payoff.
+- "whatGoodLooksLike": the PAYOFF once they act — the tangible result and the competitive edge it creates (what it unlocks with their ideal client, or why it makes them harder to replicate). Describe the outcome/benefit, NOT the fix and NOT the problem.
 - "exampleRewrite": ONLY for the 2–3 highest-priority areas, a short concrete "in your voice" example (ideally a before → after line). Use "" where it doesn't apply.
 - "startHere": true on the 1–2 weakest areas, otherwise false.
+
+CRITICAL — the three paid fields (evaluation, nextMove, whatGoodLooksLike) must be genuinely DIFFERENT, not three rephrasings of the same point. evaluation = the problem, nextMove = the action, whatGoodLooksLike = the benefit. Never reuse the same distinctive term across them (e.g. if the evaluation hinges on the word "mechanism," do NOT repeat "mechanism" in the other two — say it another way). Vary the vocabulary; no field should echo another.
 
 {
   "legacyRead": "[2 short paragraphs: a premium synthesis of where the brand stands and where it's drifting — framed as the center ('Legacy') of the framework. No scores.]",
