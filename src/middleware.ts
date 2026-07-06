@@ -5,6 +5,10 @@ import type { NextRequest } from 'next/server'
 // Middleware exists only to redirect the root `/` to `/start`. Long-term,
 // we may move /start to the root URL, at which point this can be removed.
 
+// Funnel steps + per-lead reports must never be indexed. The public /start
+// landing stays indexable for marketing.
+const NOINDEX_PREFIXES = ['/start/report', '/start/analyzing', '/start/info', '/start/expired']
+
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
 
@@ -15,7 +19,14 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(redirectUrl, 302)
   }
 
-  return NextResponse.next()
+  const res = NextResponse.next()
+
+  // Response-level noindex for the funnel + reports (belt to the meta-tag suspenders).
+  if (NOINDEX_PREFIXES.some((p) => pathname.startsWith(p))) {
+    res.headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive')
+  }
+
+  return res
 }
 
 export const config = {
