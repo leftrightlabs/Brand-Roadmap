@@ -93,8 +93,8 @@ GET PAID — is the brand built to convert and scale?
 
 OUTPUT FORMAT — return exactly this JSON. Every area object has these fields:
 - "status": "Strong" | "Refine" | "Prioritize"
-- "shortRead": ONE punchy, specific sentence naming what's going on (this is the free teaser — compelling, never generic). For magneticVoice, fold the archetype QUADRANT hint into this sentence.
-- "evaluation": 2–4 sentence deeper read, quoting real site copy where possible.
+- "shortRead": 2–3 substantive sentences — a real read of what's going on AND why it matters for their brand. Specific, evidence-based, and genuinely valuable on its own (this is the FREE portion). Name the problem/opportunity clearly, but do NOT give the fix or the action — that lives in nextMove, which is paid. For magneticVoice, fold the archetype QUADRANT hint into this read.
+- "evaluation": the deeper PAID read — 3–4 sentences that go further than shortRead: quote real site copy, add specific evidence and nuance the free read doesn't.
 - "nextMove": one concrete, specific action.
 - "whatGoodLooksLike": one sentence describing the target state — what "fixed" looks like.
 - "exampleRewrite": ONLY for the 2–3 highest-priority areas, a short concrete "in your voice" example (ideally a before → after line). Use "" where it doesn't apply.
@@ -139,7 +139,7 @@ ${websiteContent}`;
 
   prompt += `
 
-Analyze the website content above and produce the Brand Roadmap. Be specific and quote real copy. Keep shortRead to one sentence, evaluation to 2–4 sentences, nextMove and whatGoodLooksLike to one line each. Return only the JSON object.`;
+Analyze the website content above and produce the Brand Roadmap. Be specific and quote real copy. Keep shortRead to 2–3 substantive sentences (valuable but no fix), evaluation to 3–4 deeper sentences, nextMove and whatGoodLooksLike to one line each. Return only the JSON object.`;
 
   return prompt;
 }
