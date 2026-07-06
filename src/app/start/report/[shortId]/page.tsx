@@ -417,12 +417,12 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
                             <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr] gap-6 md:gap-10 md:items-start">
                               {/* situation lane */}
                               <div>
-                                <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-gray-400 mb-2">The read</p>
-                                <p className="text-gray-700 text-[16px] leading-[1.65]">{unlocked ? ev.evaluation : ev.shortRead}</p>
+                                <p className="text-[13px] font-bold uppercase tracking-[0.12em] text-gray-400 mb-2">The read</p>
+                                <p className="text-gray-700 text-[20px] leading-[1.6]">{unlocked ? ev.evaluation : ev.shortRead}</p>
                                 {unlocked && ev.whatGoodLooksLike && (
                                   <div className="mt-6">
-                                    <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-gray-400 mb-2">What good looks like</p>
-                                    <p className="text-gray-700 text-[16px] leading-[1.65]">{ev.whatGoodLooksLike}</p>
+                                    <p className="text-[13px] font-bold uppercase tracking-[0.12em] text-gray-400 mb-2">What good looks like</p>
+                                    <p className="text-gray-700 text-[20px] leading-[1.6]">{ev.whatGoodLooksLike}</p>
                                   </div>
                                 )}
                               </div>
@@ -435,15 +435,15 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
                                       <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#a7c140]">
                                         <ArrowRight className="w-3.5 h-3.5 text-[#112248]" />
                                       </span>
-                                      <h4 className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#3d4f12]">Your next move</h4>
+                                      <h4 className="text-[13px] font-bold uppercase tracking-[0.12em] text-[#3d4f12]">Your next move</h4>
                                     </div>
-                                    <p className="text-[#112248] text-[16px] leading-[1.65] font-medium">{ev.nextMove}</p>
+                                    <p className="text-[#112248] text-[20px] leading-[1.6] font-medium">{ev.nextMove}</p>
                                   </div>
                                 ) : (
                                   <button onClick={goUnlock} className="w-full text-left rounded-xl p-5 border border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 transition-colors">
                                     <div className="flex items-center gap-2 mb-3 text-[#112248]">
                                       <Lock className="w-4 h-4" />
-                                      <h4 className="text-[11px] font-bold uppercase tracking-[0.12em]">Your next move</h4>
+                                      <h4 className="text-[13px] font-bold uppercase tracking-[0.12em]">Your next move</h4>
                                     </div>
                                     <div className="space-y-1.5 mb-3" aria-hidden="true">
                                       <div className="h-2.5 rounded bg-gray-200" />
@@ -455,8 +455,8 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
                                 )}
                                 {unlocked && ev.exampleRewrite && (
                                   <div className="rounded-xl p-4 border border-gray-200">
-                                    <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-gray-400 mb-1.5">Example, in your voice</p>
-                                    <p className="text-gray-600 text-[16px] leading-[1.65] italic">{ev.exampleRewrite}</p>
+                                    <p className="text-[13px] font-bold uppercase tracking-[0.12em] text-gray-400 mb-1.5">Example, in your voice</p>
+                                    <p className="text-gray-600 text-[20px] leading-[1.6] italic">{ev.exampleRewrite}</p>
                                   </div>
                                 )}
                               </div>
