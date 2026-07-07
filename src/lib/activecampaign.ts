@@ -47,27 +47,51 @@ function base(): string {
   return `https://${ACCOUNT}.api-us1.com/api/3`;
 }
 
-async function ac<T = any>(path: string, method: string, body?: unknown): Promise<T | null> {
-  if (!acEnabled()) return null;
-  try {
-    const res = await fetch(`${base()}${path}`, {
-      method,
-      headers: {
-        'Api-Token': API_KEY as string,
-        'Content-Type': 'application/json',
-      },
-      body: body ? JSON.stringify(body) : undefined,
-    });
-    if (!res.ok) {
-      const text = await res.text().catch(() => '');
-      console.error(`[AC] ${method} ${path} → ${res.status}: ${text.slice(0, 300)}`);
+// AC enforces ~5 requests/second per account. A completed-report sync fires a
+// burst (create fields + sync contact + several tags), so we serialize calls
+// with a minimum gap and retry on 429. This runs in the background, so the
+// added latency is invisible to the user.
+const MIN_GAP_MS = 250;
+let acChain: Promise<void> = Promise.resolve();
+
+function nextSlot(): Promise<void> {
+  const run = acChain.then(() => new Promise<void>((r) => setTimeout(r, MIN_GAP_MS)));
+  acChain = run.catch(() => {});
+  return run;
+}
+
+async function acRaw<T>(path: string, method: string, body?: unknown): Promise<T | null> {
+  await nextSlot();
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const res = await fetch(`${base()}${path}`, {
+        method,
+        headers: { 'Api-Token': API_KEY as string, 'Content-Type': 'application/json' },
+        body: body ? JSON.stringify(body) : undefined,
+      });
+      if (res.status === 429) {
+        const retryAfter = Number(res.headers.get('retry-after')) || 1;
+        await new Promise((r) => setTimeout(r, retryAfter * 1000));
+        continue;
+      }
+      if (!res.ok) {
+        const text = await res.text().catch(() => '');
+        console.error(`[AC] ${method} ${path} → ${res.status}: ${text.slice(0, 300)}`);
+        return null;
+      }
+      return (await res.json()) as T;
+    } catch (err) {
+      console.error(`[AC] ${method} ${path} threw:`, err);
       return null;
     }
-    return (await res.json()) as T;
-  } catch (err) {
-    console.error(`[AC] ${method} ${path} threw:`, err);
-    return null;
   }
+  console.error(`[AC] ${method} ${path} → gave up after 429 retries`);
+  return null;
+}
+
+async function ac<T = any>(path: string, method: string, body?: unknown): Promise<T | null> {
+  if (!acEnabled()) return null;
+  return acRaw<T>(path, method, body);
 }
 
 // ── Caches (warm server keeps these across requests) ─────────────────────────
