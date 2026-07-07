@@ -333,7 +333,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
     startHereKeys[0] ??
     firstPrioritizeKey;
 
-  // Free = "Brand Snapshot" (diagnosis). Paid/preview unlocks the full roadmap.
+  // Free = the roadmap's route + first move (diagnosis). Paid/preview unlocks every move.
   const unlocked = results.paid === true || previewFull;
   const goUnlock = () => { window.location.href = `/start/report/${shortId}?preview=full`; };
 
