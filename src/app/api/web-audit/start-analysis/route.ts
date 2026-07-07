@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { sql } from '@/lib/db';
 import { generateAnalysisPrompt, type FounderIntake } from '@/lib/website-audit-service';
-import { PILLARS, normalizeStatus, type AreaKey, type AreaEval, type PillarKey, type RoadmapResults } from '@/lib/roadmap-types';
+import { PILLARS, AREA_LABELS, normalizeStatus, type AreaKey, type AreaEval, type PillarKey, type RoadmapResults } from '@/lib/roadmap-types';
+import { syncRoadmapContact } from '@/lib/activecampaign';
 
 // Coerce the model's parsed JSON into the canonical RoadmapResults shape:
 // validate statuses, guarantee all nine areas exist, and stringify prose.
@@ -666,6 +667,12 @@ async function performAnalysisWithTimeout(
 
     console.log(`[WEB-AUDIT] Analysis completed for ${shortId} in ${Date.now() - startTime}ms`);
 
+    // Tag the contact in ActiveCampaign for the upsell drip. Best-effort and
+    // fire-and-forget — never let an AC hiccup affect the finished report.
+    void syncRoadmapToActiveCampaign(shortId, analysisResults).catch((e) =>
+      console.error(`[WEB-AUDIT] AC sync error for ${shortId}:`, e)
+    );
+
   } catch (error) {
     console.error(`[WEB-AUDIT] Analysis failed for ${shortId}:`, error);
     
@@ -681,6 +688,53 @@ async function performAnalysisWithTimeout(
       WHERE short_id = ${shortId}
     `;
   }
+}
+
+// Derive the priority pillar + start-here area from the finished roadmap (same
+// logic the report UI uses) and push the contact to ActiveCampaign so the
+// upsell drip can branch on it. Fresh reports are always unpaid.
+async function syncRoadmapToActiveCampaign(shortId: string, results: RoadmapResults): Promise<void> {
+  const rows = await sql<{ name: string | null; email: string | null }[]>`
+    SELECT l.name, l.email
+    FROM shared_reports sr
+    LEFT JOIN website_audit_leads l ON l.id = sr.lead_id
+    WHERE sr.short_id = ${shortId}
+    LIMIT 1
+  `;
+  const email = rows[0]?.email;
+  if (!email) return; // nothing to sync without a contact
+
+  // Highest-pressure pillar drives the track (Prioritize = 2, Refine = 1).
+  let priorityKey: PillarKey = PILLARS[0].key;
+  let topPressure = -1;
+  let startHereLabel = '';
+  let firstPrioritizeLabel = '';
+  for (const p of PILLARS) {
+    let pressure = 0;
+    for (const a of p.areas) {
+      const ev = results.pillars?.[p.key]?.areas?.[a];
+      if (!ev) continue;
+      pressure += ev.status === 'Prioritize' ? 2 : ev.status === 'Refine' ? 1 : 0;
+      if (ev.startHere && !startHereLabel) startHereLabel = AREA_LABELS[a];
+      if (ev.status === 'Prioritize' && !firstPrioritizeLabel) firstPrioritizeLabel = AREA_LABELS[a];
+    }
+    if (pressure > topPressure) { topPressure = pressure; priorityKey = p.key; }
+  }
+  const priorityLabel = PILLARS.find((p) => p.key === priorityKey)?.label ?? 'Get Clear';
+
+  const domain = process.env.RAILWAY_PUBLIC_DOMAIN || 'roadmap.leftrightlabs.com';
+  const reportUrl = `https://${domain}/start/report/${shortId}`;
+
+  await syncRoadmapContact({
+    email,
+    name: rows[0]?.name ?? '',
+    priorityPillarKey: priorityKey,
+    priorityPillarLabel: priorityLabel,
+    startHereArea: startHereLabel || firstPrioritizeLabel,
+    nudge: results.roadmapNudge ?? '',
+    reportUrl,
+    paid: false,
+  });
 }
 
 async function updateProgress(shortId: string, progress: number, currentStep: number) {
