@@ -389,7 +389,7 @@ export default function StartPage() {
         >
           <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}>
-              <Eyebrow lime>A Free Brand Roadmap From Left Right Labs</Eyebrow>
+              <Eyebrow lime>A Free Brand Snapshot From Left Right Labs</Eyebrow>
             </motion.div>
 
             <motion.div
@@ -425,11 +425,11 @@ export default function StartPage() {
               transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
               style={{ fontFamily: SANS, fontSize: 20, lineHeight: 1.8, color: "rgba(255,255,255,0.82)", maxWidth: 660, margin: 0 }}
             >
-              Get a personalized Brand Advantage™ Roadmap … the specific moves
-              to make so your brand stops costing you the clients you&apos;ve
-              already earned and starts connecting with the ones you want next.
-              Sequenced, prioritized, and ready to act on the moment it lands
-              in your inbox.
+              Get a personalized Brand Advantage™ Snapshot … a clear read on
+              where your brand is quietly costing you the clients you&apos;ve
+              already earned, the one place to start, and your first move
+              spelled out in full. On your screen in minutes, and in your inbox
+              to keep.
             </motion.p>
 
             <motion.div
@@ -448,7 +448,7 @@ export default function StartPage() {
               transition={{ duration: 0.6, delay: 0.75 }}
               style={{ display: "flex", flexWrap: "wrap", gap: "12px 28px", marginTop: 4 }}
             >
-              {["No credit card", "60 seconds to start", "Roadmap in your inbox"].map((item) => (
+              {["Free to start", "About 2 minutes", "On screen + in your inbox"].map((item) => (
                 <span
                   key={item}
                   style={{
@@ -506,10 +506,10 @@ export default function StartPage() {
                 actually want to attract.
               </p>
               <p style={{ fontFamily: SANS, fontSize: 20, lineHeight: 1.8, color: "rgba(17,34,72,0.72)", margin: 0 }}>
-                This assessment gives you the strategic clarity to close that
-                gap … with specific, actionable recommendations from the brand
-                strategists behind some of the most recognized names in the
-                industry.
+                This Snapshot gives you the strategic clarity to see that gap …
+                where your brand is drifting, the one place to start, and your
+                first move spelled out in full, from the brand strategists
+                behind some of the most recognized names in the industry.
               </p>
             </div>
           </div>
@@ -604,9 +604,10 @@ export default function StartPage() {
               With
             </ScotchH2>
             <p style={{ fontFamily: SANS, fontSize: 20, lineHeight: 1.8, color: "rgba(255,255,255,0.82)", maxWidth: 680, margin: 0 }}>
-              Not a score. Not a critique. A sequenced set of specific moves
-              for re-aligning your brand with the leader you&apos;ve become …
-              and the clients you want next.
+              Not a score. Not a critique. A clear diagnosis of where your brand
+              is leaking, the one place to start, and your first move spelled
+              out in full … free. Your complete step-by-step roadmap is ready to
+              unlock whenever you want it.
             </p>
           </motion.div>
 
@@ -617,9 +618,9 @@ export default function StartPage() {
             style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", borderTop: "1px solid rgba(255,255,255,0.14)", marginTop: "clamp(40px, 5vw, 72px)" }}
           >
             {[
-              { num: "01", h3: "Where Your Brand Is Leaking Clients", p: "The exact places your messaging, positioning, or visual identity is sending the wrong signal … and what it's costing you in clients who never reach out." },
-              { num: "02", h3: "The Re-Alignment Moves", p: "Specific changes to your messaging, visuals, and positioning that bring your brand back in line with the leader you've become … and the audience you actually want to attract." },
-              { num: "03", h3: "Your Step-by-Step Plan", p: "Not a generic checklist. A sequenced roadmap with the exact first move, second move, and third move … so you know what to do, in what order, and why each one matters." },
+              { num: "01", h3: "Where Your Brand Is Leaking Clients", p: "A read across all nine areas of your brand … the exact places your messaging, positioning, or visual identity is sending the wrong signal, and what it's costing you in clients who never reach out." },
+              { num: "02", h3: "Your #1 Priority, First Move Unlocked", p: "We pinpoint the single place to start and hand you that first move in full … the specific, actionable change to make, spelled out for your brand and not a template." },
+              { num: "03", h3: "Your Full Step-by-Step Roadmap", p: "Your complete thirty, sixty, ninety day plan with every move sequenced by impact. You'll see exactly what it covers in your Snapshot, ready to unlock in full whenever you want it." },
             ].map((card, i) => (
               <div key={i} style={{ padding: "44px 40px 48px", display: "flex", flexDirection: "column", gap: 18, borderLeft: i === 0 ? "none" : "1px solid rgba(255,255,255,0.14)" }}>
                 <p style={{ fontFamily: SERIF, fontWeight: 700, fontStyle: "italic", fontSize: "clamp(48px, 6vw, 80px)", lineHeight: 1, color: LIME, margin: "0 0 8px" }}>
@@ -660,8 +661,9 @@ export default function StartPage() {
               How It <em style={{ fontStyle: "italic", fontWeight: 400 }}>Works</em>
             </ScotchH2>
             <p style={{ fontFamily: SANS, fontSize: 20, lineHeight: 1.8, color: "rgba(17,34,72,0.72)", margin: 0 }}>
-              Three steps. Sixty seconds to start. Your personalized roadmap
-              lands in your inbox shortly after.
+              Three steps. About two minutes to start. Your personalized
+              Snapshot appears on screen the moment it&apos;s ready, and a link
+              lands in your inbox to keep.
             </p>
           </motion.div>
 
@@ -671,9 +673,9 @@ export default function StartPage() {
             style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", borderTop: "1px solid rgba(17,34,72,0.12)", marginTop: "clamp(40px, 5vw, 72px)" }}
           >
             {[
-              { num: "01", h3: "Tell Us Where To Look", p: "Your name, email, and website URL. That's it. No quiz, no survey … we already know what to analyze and how to read it." },
-              { num: "02", h3: "We Map Your Brand", p: "Our AI runs your brand through the Brand Advantage™ framework … the same lens we apply to A-list clients … to find where your brand is misaligned and what to do about it." },
-              { num: "03", h3: "Get Your Roadmap", p: "A personalized roadmap lands in your inbox with prioritized next moves, sequenced by impact … so you know exactly where to start and what to do next." },
+              { num: "01", h3: "Tell Us About Your Brand", p: "Your website, your contact details, and five quick questions about your goals and your ideal client. Those questions are what make your roadmap genuinely yours instead of generic." },
+              { num: "02", h3: "We Map Your Brand", p: "Our AI runs your brand through the Brand Advantage™ framework … the same Get Clear, Get Noticed, Get Paid lens we apply to A-list clients … to find where your brand is misaligned and what to do about it." },
+              { num: "03", h3: "See Your Snapshot", p: "Your personalized Snapshot appears on screen in about two minutes, with a link in your inbox to keep. You'll see where your brand is leaking, your top priority, and your first move in full." },
             ].map((card, i) => (
               <div key={i} style={{ padding: "44px 40px 48px", display: "flex", flexDirection: "column", gap: 18, borderLeft: i === 0 ? "none" : "1px solid rgba(17,34,72,0.12)" }}>
                 <p style={{ fontFamily: SERIF, fontWeight: 700, fontStyle: "italic", fontSize: "clamp(48px, 6vw, 80px)", lineHeight: 1, color: LIME, margin: "0 0 8px" }}>
@@ -755,7 +757,7 @@ export default function StartPage() {
             style={{ fontFamily: SANS, fontSize: 20, lineHeight: 1.8, color: "rgba(255,255,255,0.78)", maxWidth: 760, margin: "48px 0 0" }}
           >
             These leaders came to Left Right Labs for full brand strategy
-            engagements. The assessment you&apos;re about to take is built on
+            engagements. The free Snapshot you&apos;re about to take is built on
             the same strategic methodology … the fastest way to see where your
             brand stands, before committing to anything.
           </motion.p>
@@ -825,11 +827,11 @@ export default function StartPage() {
             initial="hidden" whileInView="visible" variants={rv} viewport={vp}
             style={{ marginTop: "clamp(40px, 5vw, 64px)", borderTop: "1px solid rgba(17,34,72,0.12)", maxWidth: 900 }}
           >
-            <FaqItem q="Is This Actually" qEm="Free?" a="Yes. Completely free. No credit card, no payment plan, no catch. You enter your details, we build your personalized Brand Roadmap, and it lands in your inbox in minutes. That's it." defaultOpen />
-            <FaqItem q="Will I Be Pitched At" qEm="The End?" a="No hard sell. Your roadmap is yours to act on, with us or without us. If it makes sense to keep working together after you've seen what's possible, we'll make that path clear … but the value is yours to keep regardless." />
+            <FaqItem q="Is This Actually" qEm="Free?" a="The Brand Snapshot is free. No credit card to start. You get a full diagnosis of where your brand is leaking, your number one priority, and your first move spelled out in full … on screen in minutes and in your inbox to keep. When you want the complete step-by-step roadmap, every move for all nine areas plus your full thirty, sixty, ninety day plan and a downloadable version, that's an optional $97 upgrade. No pressure either way." defaultOpen />
+            <FaqItem q="Will I Be Pitched At" qEm="The End?" a="No pressure, ever. Your Snapshot is yours to keep and act on. When you want more, there's an optional $97 upgrade to the full roadmap, and when it makes sense to work together we'll make that path clear. Nothing is gated behind a sales call, and the value is yours regardless." />
             <FaqItem q="How Is This Different From A Generic" qEm="Online Quiz?" a="A quiz gives you a score. A roadmap gives you a plan. Your brand is analyzed the way Left Right Labs analyzes A-list clients, and what comes back is a sequenced set of specific moves … not a generic critique." />
             <FaqItem q="I've Already Invested In Branding. Why Would I" qEm="Need This?" a="Because the brand that got you here often hasn't kept pace with who you've become. The roadmap shows you exactly where your current brand has drifted, what to realign, and what to do first … so the work you've already invested in starts paying off again." />
-            <FaqItem q="How Much Time Does This" qEm="Actually Take?" a="About sixty seconds on your end … just your name, email, and website. Our AI does the heavy lifting, and your personalized roadmap lands in your inbox shortly after." />
+            <FaqItem q="How Much Time Does This" qEm="Actually Take?" a="About two to three minutes … your website, your details, and five quick questions about your goals and ideal client. Our AI does the heavy lifting, and your Snapshot appears on screen shortly after, with a link in your inbox." />
             <FaqItem q="How Does AI Fit" qEm="Into This?" a="It's human-led and AI-assisted. AI handles the analysis at speed; the framework, the judgment about what matters, and the sequencing of moves come from the same team behind some of the most recognized brands in the industry." />
           </motion.div>
         </div>
@@ -856,21 +858,21 @@ export default function StartPage() {
 
             <p style={{ fontFamily: SANS, fontSize: 20, lineHeight: 1.8, color: "rgba(255,255,255,0.82)", maxWidth: 600, margin: 0 }}>
               You&apos;ve spent years building credibility that commands rooms.
-              This is sixty seconds to get the roadmap that closes the gap
-              between the leader you&apos;ve become and what your brand says
-              about you.
+              This is a couple of minutes to get the Snapshot that shows where
+              your brand is leaking, the one place to start, and your first
+              move in full.
             </p>
 
             <p style={{ fontFamily: SANS, fontSize: 15, lineHeight: 1.6, color: "rgba(255,255,255,0.78)", maxWidth: 560, margin: 0 }}>
-              Free. No pitch. Personalized roadmap delivered to your inbox.
+              Free to start. No pressure. Your Snapshot on screen and in your inbox.
             </p>
 
             <ul style={{ listStyle: "none", padding: 0, margin: "4px 0 0", display: "flex", flexDirection: "column", gap: 14 }}>
               {[
-                "Your personalized Brand Advantage™ Roadmap, delivered in minutes",
-                "Specific moves, sequenced by impact … not a generic checklist",
-                "The exact first action to take, with a clear ‘why'",
-                "Free. No credit card. No sales call.",
+                "Your personalized Brand Advantage™ Snapshot, on screen in minutes",
+                "A clear read on where your brand is leaking, across all nine areas",
+                "Your #1 priority, with the first move unlocked in full",
+                "Free to start. No credit card. Full roadmap optional at $97.",
               ].map((item) => (
                 <li key={item} style={{ display: "flex", gap: 12, alignItems: "flex-start", fontFamily: SANS, fontSize: 16, lineHeight: 1.5, color: "#fff" }}>
                   <span style={{ color: LIME, flexShrink: 0, lineHeight: 1.5 }}>✦</span>
@@ -888,7 +890,7 @@ export default function StartPage() {
             </AccentBtn>
 
             <p style={{ fontFamily: SANS, fontSize: 14, letterSpacing: "0.06em", color: "rgba(255,255,255,0.78)", margin: 0 }}>
-              No credit card required&nbsp;&nbsp;•&nbsp;&nbsp;60 seconds to start
+              No credit card to start&nbsp;&nbsp;•&nbsp;&nbsp;About 2 minutes
             </p>
           </motion.div>
         </div>
