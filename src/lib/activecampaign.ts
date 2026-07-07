@@ -119,11 +119,27 @@ async function findOrCreateTag(name: string): Promise<string | null> {
   return null;
 }
 
+// Paginate through ALL custom fields. Accounts can have well over 100 fields,
+// and `?limit=100` only returns the first page — so a single fetch can miss
+// existing fields, causing us to try (and fail) to recreate them.
+async function fetchAllFields(): Promise<{ id: string; title: string }[]> {
+  const all: { id: string; title: string }[] = [];
+  for (let offset = 0; offset < 2000; offset += 100) {
+    const page = await ac<{ fields?: { id: string; title: string }[] }>(
+      `/fields?limit=100&offset=${offset}`,
+      'GET'
+    );
+    const arr = page?.fields ?? [];
+    all.push(...arr);
+    if (arr.length < 100) break;
+  }
+  return all;
+}
+
 async function resolveFieldIds(): Promise<Record<string, string>> {
   const out: Record<string, string> = {};
-  // One list fetch covers all fields.
-  const list = await ac<{ fields?: { id: string; title: string }[] }>('/fields?limit=100', 'GET');
-  const byTitle = new Map((list?.fields ?? []).map((f) => [f.title, f.id]));
+  const list = await fetchAllFields();
+  const byTitle = new Map(list.map((f) => [f.title, f.id]));
   for (const f of AC_FIELDS) {
     const cached = fieldIdCache.get(f.key);
     if (cached) { out[f.key] = cached; continue; }
