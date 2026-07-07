@@ -79,6 +79,15 @@ const STATUS_UI: Record<AreaStatus, { text: string; border: string; bg: string }
   Prioritize: { text: "#b53e1c", border: "#E0552E", bg: "rgba(224,85,46,0.15)" },
 };
 
+// Curiosity-gap teaser: the opening of the (paid) next move, cut off mid-thought
+// at a word boundary. Enough to make the reader want it, not enough to execute.
+function moveTeaser(text: string, max = 68): string {
+  const firstSentence = (text || "").trim().split(/(?<=[.!?])\s/)[0] || "";
+  if (firstSentence.length <= max) return firstSentence;
+  const cut = firstSentence.slice(0, max);
+  return cut.slice(0, cut.lastIndexOf(" ")).trim();
+}
+
 function StrengthBar({ status }: { status: AreaStatus }) {
   const { segments, color } = STATUS_STYLE[status];
   return (
@@ -298,20 +307,31 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
 
   // "Start here" areas (weakest) and the pillar carrying the most weight — used
   // for the free directional nudge so the diagnosis still points somewhere.
+  const startHereKeys: AreaKey[] = [];
   const startHereLabels: string[] = [];
   const pillarPressure: Record<string, number> = {};
+  let firstPrioritizeKey: AreaKey | null = null;
   PILLARS.forEach((p) => {
     let pressure = 0;
     p.areas.forEach((a) => {
       const ev = results.pillars?.[p.key]?.areas?.[a];
       if (!ev) return;
-      if (ev.startHere) startHereLabels.push(AREA_LABELS[a]);
+      if (ev.startHere) { startHereKeys.push(a); startHereLabels.push(AREA_LABELS[a]); }
+      if (ev.status === "Prioritize" && !firstPrioritizeKey) firstPrioritizeKey = a;
       pressure += ev.status === "Prioritize" ? 2 : ev.status === "Refine" ? 1 : 0;
     });
     pillarPressure[p.key] = pressure;
   });
   const priorityPillar =
     [...PILLARS].sort((a, b) => (pillarPressure[b.key] ?? 0) - (pillarPressure[a.key] ?? 0))[0] ?? PILLARS[0];
+
+  // The one area we fully unlock for free — the "sample lesson." Prefer a
+  // start-here area inside the priority pillar (so it matches the nudge), then
+  // any start-here area, then the first Prioritize area as a fallback.
+  const freeSampleAreaKey: AreaKey | null =
+    priorityPillar.areas.find((a) => startHereKeys.includes(a)) ??
+    startHereKeys[0] ??
+    firstPrioritizeKey;
 
   // Free = "Brand Snapshot" (diagnosis). Paid/preview unlocks the full roadmap.
   const unlocked = results.paid === true || previewFull;
@@ -415,7 +435,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
                       </div>
                     )}
                   </div>
-                  <p className="text-white/45 text-[15px] mt-6">Your specific moves — the exact what, where, and how — are laid out in the full roadmap below.</p>
+                  <p className="text-white/45 text-[15px] mt-6">We&apos;ve unlocked your first move in full below — look for the <span className="text-[#a7c140] font-semibold">Unlocked free</span> tag. The exact next step for every other area is in your complete roadmap.</p>
                 </div>
               </motion.div>
             </div>
@@ -446,6 +466,9 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
                       if (!ev) return null;
                       const ui = STATUS_UI[ev.status];
                       const stripColor = STATUS_STYLE[ev.status].color;
+                      // One area is fully unlocked for free — the "sample lesson."
+                      const isFreeSample = !unlocked && areaKey === freeSampleAreaKey;
+                      const showFull = unlocked || isFreeSample;
                       return (
                         <motion.div key={areaKey} id={areaKey} variants={fadeUp} whileHover={{ y: -4 }} className="scroll-mt-24 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
                           {/* priority color strip */}
@@ -459,6 +482,9 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
                               {ev.startHere && (
                                 <span className="text-[10px] font-bold uppercase tracking-[0.08em] px-2.5 py-1 rounded-full" style={{ border: `1px solid ${ui.border}`, color: ui.text }}>Start here</span>
                               )}
+                              {isFreeSample && (
+                                <span className="text-[10px] font-bold uppercase tracking-[0.08em] px-2.5 py-1 rounded-full bg-[#a7c140] text-[#112248]">Unlocked free</span>
+                              )}
                             </div>
 
                             {/* two lanes: situation (read + what good) | action (next move + example) */}
@@ -466,8 +492,8 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
                               {/* situation lane */}
                               <div>
                                 <p className="text-[13px] font-bold uppercase tracking-[0.12em] text-gray-400 mb-2">The read</p>
-                                <p className="text-gray-700 text-[20px] leading-[1.6]">{unlocked ? ev.evaluation : ev.shortRead}</p>
-                                {unlocked && ev.whatGoodLooksLike && (
+                                <p className="text-gray-700 text-[20px] leading-[1.6]">{showFull ? ev.evaluation : ev.shortRead}</p>
+                                {showFull && ev.whatGoodLooksLike && (
                                   <div className="mt-6">
                                     <p className="text-[13px] font-bold uppercase tracking-[0.12em] text-gray-400 mb-2">What good looks like</p>
                                     <p className="text-gray-700 text-[20px] leading-[1.6]">{ev.whatGoodLooksLike}</p>
@@ -477,7 +503,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
 
                               {/* action lane */}
                               <div className="flex flex-col gap-4">
-                                {unlocked ? (
+                                {showFull ? (
                                   <div className="rounded-xl p-5" style={{ background: "rgba(167,193,64,0.12)", border: "1px solid rgba(167,193,64,0.45)" }}>
                                     <div className="flex items-center gap-2 mb-2.5">
                                       <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#a7c140]">
@@ -488,20 +514,22 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
                                     <p className="text-[#112248] text-[20px] leading-[1.6] font-medium">{ev.nextMove}</p>
                                   </div>
                                 ) : (
-                                  <button onClick={goUnlock} className="w-full text-left rounded-xl p-5 border border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 transition-colors">
+                                  <button onClick={goUnlock} className="w-full text-left rounded-xl p-5 border border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 transition-colors group">
                                     <div className="flex items-center gap-2 mb-3 text-[#112248]">
                                       <Lock className="w-4 h-4" />
                                       <h4 className="text-[13px] font-bold uppercase tracking-[0.12em]">Your next move</h4>
                                     </div>
-                                    <div className="space-y-1.5 mb-3" aria-hidden="true">
-                                      <div className="h-2.5 rounded bg-gray-200" />
-                                      <div className="h-2.5 rounded bg-gray-200 w-[85%]" />
-                                      <div className="h-2.5 rounded bg-gray-200 w-[60%]" />
+                                    {/* curiosity gap: real opening of the move, cut off mid-thought */}
+                                    <div className="relative mb-3">
+                                      <p className="text-gray-700 text-[17px] leading-[1.55]">
+                                        {moveTeaser(ev.nextMove)}<span className="text-gray-400"> …</span>
+                                      </p>
+                                      <span className="pointer-events-none absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-gray-50 to-transparent" aria-hidden="true" />
                                     </div>
-                                    <span className="text-sm font-bold uppercase tracking-wider text-[#5f7d18]">Unlock →</span>
+                                    <span className="inline-flex items-center gap-1 text-sm font-bold uppercase tracking-wider text-[#5f7d18] group-hover:gap-2 transition-all">Unlock the full move →</span>
                                   </button>
                                 )}
-                                {unlocked && ev.exampleRewrite && (
+                                {showFull && ev.exampleRewrite && (
                                   <div className="rounded-xl p-4 border border-gray-200">
                                     <p className="text-[13px] font-bold uppercase tracking-[0.12em] text-gray-400 mb-1.5">Example, in your voice</p>
                                     <p className="text-gray-600 text-[20px] leading-[1.6] italic">{ev.exampleRewrite}</p>
