@@ -38,11 +38,23 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'This roadmap has expired' }, { status: 410 });
     }
 
+    // Publishable key is returned to the client so it can init Stripe.js at
+    // runtime (NEXT_PUBLIC_* would be baked at build, which the Docker build
+    // can't do). Safe to expose.
+    const publishableKey = process.env.STRIPE_PUBLISHABLE_KEY;
+    if (!publishableKey) {
+      return NextResponse.json({ error: 'Payments are not fully configured yet.' }, { status: 503 });
+    }
+
     const domain = process.env.RAILWAY_PUBLIC_DOMAIN || 'roadmap.leftrightlabs.com';
     const base = `https://${domain}`;
 
+    // Embedded checkout: the form renders inside our own branded modal, so the
+    // buyer never leaves the site. On completion Stripe redirects the page to
+    // return_url, where the existing ?checkout=success polling takes over.
     const session = await getStripe().checkout.sessions.create({
       mode: 'payment',
+      ui_mode: 'embedded_page',
       ...(report.email ? { customer_email: report.email } : {}),
       line_items: [
         {
@@ -62,11 +74,10 @@ export async function POST(request: NextRequest) {
       // contact we tagged at report completion (Stripe lets the buyer edit the
       // email field, so we don't rely on customer_details for AC).
       metadata: { shortId, leadEmail: report.email ?? '' },
-      success_url: `${base}/start/report/${shortId}?checkout=success`,
-      cancel_url: `${base}/start/report/${shortId}?checkout=cancel#unlock`,
+      return_url: `${base}/start/report/${shortId}?checkout=success`,
     });
 
-    return NextResponse.json({ url: session.url });
+    return NextResponse.json({ clientSecret: session.client_secret, publishableKey });
   } catch (err) {
     console.error('[CREATE-CHECKOUT] error:', err);
     return NextResponse.json({ error: 'Could not start checkout' }, { status: 500 });

@@ -8,6 +8,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Share2, AlertTriangle, Globe, Copy, ArrowRight, Play, Lock, Check } from "lucide-react";
 
 import { BrandVenn } from "@/components/brand-venn";
+import { CheckoutModal } from "@/components/checkout-modal";
 import {
   PILLARS,
   AREA_LABELS,
@@ -141,6 +142,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
   // and poll until that lands. There is no client-side unlock bypass.
   const [checkoutReturn, setCheckoutReturn] = useState(false);
   const [isUnlocking, setIsUnlocking] = useState(false);
+  const [checkoutData, setCheckoutData] = useState<{ clientSecret: string; publishableKey: string } | null>(null);
 
   useEffect(() => {
     const getParams = async () => {
@@ -347,7 +349,11 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
         body: JSON.stringify({ shortId }),
       });
       const data = await res.json();
-      if (res.ok && data.url) { window.location.href = data.url; return; }
+      if (res.ok && data.clientSecret && data.publishableKey) {
+        setCheckoutData({ clientSecret: data.clientSecret, publishableKey: data.publishableKey });
+        setIsUnlocking(false);
+        return;
+      }
       if (data.alreadyPaid) { window.location.reload(); return; }
       toast({ title: "Couldn't start checkout", description: data.error || "Please try again.", variant: "destructive" });
     } catch {
@@ -683,6 +689,14 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
           </motion.div>
         </div>
       </footer>
+
+      {checkoutData && (
+        <CheckoutModal
+          clientSecret={checkoutData.clientSecret}
+          publishableKey={checkoutData.publishableKey}
+          onClose={() => setCheckoutData(null)}
+        />
+      )}
     </div>
   );
 }
