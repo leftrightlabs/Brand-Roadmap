@@ -136,9 +136,11 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
   const [isSharing, setIsSharing] = useState(false);
   const [ogImageUrl, setOgImageUrl] = useState<string | null>(null);
   const [shortId, setShortId] = useState<string>("");
-  // Temporary preview unlock (?preview=full) for testing the paid view before
-  // payment is wired. The real gate is the `paid` flag on the report.
-  const [previewFull, setPreviewFull] = useState(false);
+  // Set from ?checkout=success after returning from Stripe. The webhook is the
+  // real gate (it flips `paid`); this just lets us show a "finalizing" state
+  // and poll until that lands. There is no client-side unlock bypass.
+  const [checkoutReturn, setCheckoutReturn] = useState(false);
+  const [isUnlocking, setIsUnlocking] = useState(false);
 
   useEffect(() => {
     const getParams = async () => {
@@ -149,12 +151,38 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
   }, [params]);
 
   useEffect(() => {
-    setPreviewFull(new URLSearchParams(window.location.search).get("preview") === "full");
+    setCheckoutReturn(new URLSearchParams(window.location.search).get("checkout") === "success");
   }, []);
 
   useEffect(() => {
     if (shortId) loadResults();
   }, [shortId]);
+
+  // After returning from Stripe (?checkout=success), the webhook can take a
+  // couple of seconds to flip `paid`. Poll check-results until it does, then
+  // swap in the unlocked view.
+  useEffect(() => {
+    if (!checkoutReturn || !shortId || results?.paid) return;
+    let tries = 0;
+    const id = setInterval(async () => {
+      tries += 1;
+      try {
+        const r = await fetch(`/api/web-audit/check-results/${shortId}`);
+        if (r.ok) {
+          const d = await r.json();
+          if (d.status === "completed" && d.results?.paid) {
+            setResults(d.results);
+            toast({ title: "Unlocked", description: "Your full Brand Roadmap is ready." });
+            clearInterval(id);
+            return;
+          }
+        }
+      } catch { /* keep polling */ }
+      if (tries >= 12) clearInterval(id);
+    }, 2500);
+    return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [checkoutReturn, shortId, results?.paid]);
 
   const loadResults = async () => {
     setIsLoading(true);
@@ -334,8 +362,25 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
     firstPrioritizeKey;
 
   // Free = the roadmap's route + first move (diagnosis). Paid/preview unlocks every move.
-  const unlocked = results.paid === true || previewFull;
-  const goUnlock = () => { window.location.href = `/start/report/${shortId}?preview=full`; };
+  const unlocked = results.paid === true;
+  const goUnlock = async () => {
+    if (isUnlocking) return;
+    setIsUnlocking(true);
+    try {
+      const res = await fetch("/api/web-audit/create-checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ shortId }),
+      });
+      const data = await res.json();
+      if (res.ok && data.url) { window.location.href = data.url; return; }
+      if (data.alreadyPaid) { window.location.reload(); return; }
+      toast({ title: "Couldn't start checkout", description: data.error || "Please try again.", variant: "destructive" });
+    } catch {
+      toast({ title: "Couldn't start checkout", description: "Please try again in a moment.", variant: "destructive" });
+    }
+    setIsUnlocking(false);
+  };
 
   return (
     <div className="min-h-screen bg-white report-page">
@@ -391,6 +436,11 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
       </nav>
 
       <main>
+        {checkoutReturn && !unlocked && (
+          <div className="bg-[#a7c140] text-[#112248] text-center text-[13px] font-bold uppercase tracking-[0.12em] py-3 px-4">
+            Payment received … unlocking your full roadmap. This can take a few seconds.
+          </div>
+        )}
         {/* ── OVERVIEW ── */}
         <section id="overview" className="scroll-mt-16" style={LIGHT_BAND}>
           <div className={`${CONTENT} py-14 md:py-20`}>
@@ -635,10 +685,10 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
                     </li>
                   ))}
                 </ul>
-                <Button onClick={goUnlock} size="lg" className="bg-[#a7c140] hover:bg-[#96ad39] text-[#112248] font-bold uppercase tracking-wider text-base px-8 py-6">
-                  Unlock your full roadmap — {FULL_PRICE}
+                <Button onClick={goUnlock} disabled={isUnlocking} size="lg" className="bg-[#a7c140] hover:bg-[#96ad39] text-[#112248] font-bold uppercase tracking-wider text-base px-8 py-6">
+                  {isUnlocking ? "Starting checkout…" : `Unlock your full roadmap · ${FULL_PRICE}`}
                 </Button>
-                <p className="text-white/40 text-sm mt-4">One-time · Instant access</p>
+                <p className="text-white/40 text-sm mt-4">One-time · Instant access · Secure checkout by Stripe</p>
               </motion.div>
             </div>
           </section>
