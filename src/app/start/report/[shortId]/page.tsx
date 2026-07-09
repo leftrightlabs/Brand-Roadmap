@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion, type Variants } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { Share2, Download, AlertTriangle, Globe, Copy, ArrowRight, Play, Lock, Check } from "lucide-react";
+import { Share2, AlertTriangle, Globe, Copy, ArrowRight, Play, Lock, Check } from "lucide-react";
 
 import { BrandVenn } from "@/components/brand-venn";
 import {
@@ -270,32 +270,6 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
     }
   };
 
-  const handleDownloadPDF = async () => {
-    try {
-      if (!results) throw new Error("No results available for download");
-      const domain = new URL(results.websiteUrl).hostname.replace("www.", "");
-      const filename = `Brand-Roadmap-${domain}.pdf`;
-      const response = await fetch(`/api/web-audit/download-pdf/${shortId}`);
-      if (response.ok) {
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-        toast({ title: "PDF Downloaded", description: "Your Brand Roadmap has been downloaded." });
-      } else {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to download PDF");
-      }
-    } catch (error) {
-      toast({ title: "Download Failed", description: error instanceof Error ? error.message : "Failed to download the PDF. Please try again.", variant: "destructive" });
-    }
-  };
-
   const scrollToArea = (area: AreaKey) => {
     document.getElementById(area)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
@@ -400,9 +374,6 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
                 </Button>
                 <Button onClick={handleCopyLink} className="bg-[#a7c140] hover:bg-[#96ad39] text-[#112248] border-0 font-bold uppercase tracking-wider text-sm">
                   <Copy className="w-4 h-4 mr-2" />Copy Link
-                </Button>
-                <Button onClick={handleDownloadPDF} variant="outline" className="border-white/30 text-white hover:bg-white/10 font-bold uppercase tracking-wider text-sm">
-                  <Download className="w-4 h-4 mr-2" />PDF
                 </Button>
               </div>
               <p className="text-white/40 text-sm">This roadmap will expire in 7 days.</p>
