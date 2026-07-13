@@ -493,8 +493,8 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
                 </motion.div>
 
                 <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-60px" }} variants={stagger}>
-                  {/* Pillar lesson video — free for everyone, shown once a URL is set. */}
-                  {pillar.videoUrl && <VideoBlock label={pillar.label} url={pillar.videoUrl} dark={dark} />}
+                  {/* Pillar lesson video — always shown, free and paid alike. */}
+                  <VideoBlock label={pillar.label} url={pillar.videoUrl} dark={dark} />
 
                   <div className="grid grid-cols-1 gap-6">
                     {pillar.areas.map((areaKey) => {
