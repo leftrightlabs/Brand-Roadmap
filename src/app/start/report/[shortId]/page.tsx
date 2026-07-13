@@ -485,7 +485,8 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
                 </motion.div>
 
                 <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-60px" }} variants={stagger}>
-                  {unlocked && <VideoBlock label={pillar.label} url={pillar.videoUrl} dark={dark} />}
+                  {/* Pillar lesson video — free for everyone, shown once a URL is set. */}
+                  {pillar.videoUrl && <VideoBlock label={pillar.label} url={pillar.videoUrl} dark={dark} />}
 
                   <div className="grid grid-cols-1 gap-6">
                     {pillar.areas.map((areaKey) => {
@@ -653,9 +654,9 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
               )}
 
               <motion.div id="unlock" initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp} className="max-w-3xl mx-auto text-center scroll-mt-16">
-                <p className="text-white/60 text-lg mb-8">Unlock the specific next move for all nine areas — plus deeper analysis, example rewrites in your voice, the Get Clear / Noticed / Paid lessons, your full 30/60/90-day plan, and a downloadable PDF.</p>
+                <p className="text-white/60 text-lg mb-8">Unlock the specific next move for all nine areas — plus deeper analysis, example rewrites in your voice, your full 30/60/90-day plan, and a downloadable PDF.</p>
                 <ul className="text-left max-w-md mx-auto space-y-3 mb-10">
-                  {["The specific next move for all 9 areas", "Deeper analysis + what ‘good’ looks like", "Example rewrites in your brand voice", "Get Clear / Noticed / Paid lessons", "Every step of your 30/60/90-day plan", "Downloadable, shareable PDF"].map((f) => (
+                  {["The specific next move for all 9 areas", "Deeper analysis + what ‘good’ looks like", "Example rewrites in your brand voice", "Every step of your 30/60/90-day plan", "Downloadable, shareable PDF"].map((f) => (
                     <li key={f} className="flex items-center gap-3 text-white/85 text-[16px]">
                       <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#a7c140] flex-shrink-0"><Check className="w-3.5 h-3.5 text-[#112248]" /></span>
                       {f}
