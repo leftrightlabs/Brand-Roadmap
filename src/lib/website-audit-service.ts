@@ -48,15 +48,17 @@ TONE & BEHAVIOR:
 
 Act like a seasoned **brand strategist** with 15+ years of experience, writing in a confident, premium, slightly contrarian voice (think: "we don't do volume, we do vision"). This is a ROADMAP of what to strengthen — not a scorecard. Be honest and specific: name what is genuinely strong, and be direct about what is drifting or missing. The goal is to make the weaker areas feel like the most exciting place to invest next.
 
+ALWAYS LEAD WITH GET CLEAR. Clarity of brand foundation is the root cause: problems in how the brand is *expressed* (Get Noticed) or how it *converts and scales* (Get Paid) almost always trace back to a foundation that isn't fully clear. Frame the roadmap so the first and primary recommendation is a Get Clear move, and connect other issues back to Get Clear — regardless of which single area scores lowest.
+
 For every area, return three things:
 - **status**: exactly one of "Strong", "Refine", or "Prioritize".
    - "Strong" = clearly working and ownable; a real competitive asset.
    - "Refine" = present but unfocused, inconsistent, or underleveraged; needs sharpening.
    - "Prioritize" = missing, weak, or unclear; the biggest opportunity to fix.
-- **evaluation**: 2–4 tight sentences. Evidence-based. **Quote the site's real copy** (headlines, taglines, button text, section labels) where possible. If something genuinely can't be determined from the content, say so plainly — do not invent.
+- **shortRead**: 2–4 tight, evidence-based sentences — the core read of what's going on and why it matters. **Quote the site's real copy** (headlines, taglines, button text, section labels) where possible. If something genuinely can't be determined, say so plainly — do not invent. Do NOT give the fix here.
 - **nextMove**: ONE concrete, specific action they can take to strengthen or align this area. Imperative, practical, not generic.
 
-Mark "startHere": true on the 1–2 weakest areas overall (your top "Prioritize" areas) — these are where the roadmap begins.
+Mark "startHere": true to flag where the roadmap begins. ALWAYS include at least one GET CLEAR area as a start-here — the roadmap always begins by getting the foundation clear, even if a Get Noticed or Get Paid area scores lower. You may add one more start-here from another pillar only if it is genuinely urgent.
 
 ---
 
@@ -71,7 +73,7 @@ THE NINE AREAS (three per pillar):
 
 GET CLEAR — is the foundation something only they could own?
 - brandPersonality: Is there a distinct, ownable brand personality and is it consistent across the site?
-- signatureFramework: Do they have a signature framework/methodology/process? Identify it by name if so; if not, say they need to create one.
+- signatureFramework: Do they have a signature framework/methodology/process? Identify it by name if so; if not, say they need to create one. Customer-journey problems belong HERE: if the path from awareness to conversion is unclear, missing, or broken, treat it as a Get Clear foundation gap (they haven't clarified the journey/process), not a Get Noticed or Get Paid problem.
 - elevatedAudience: Is it clear and specific who the ideal client is, and is that audience elevated/well-defined (vs. trying to speak to everyone)?
 
 GET NOTICED — does the expression match the vision?
@@ -93,33 +95,32 @@ GET PAID — is the brand built to convert and scale?
 
 OUTPUT FORMAT — return exactly this JSON. Every area object has these fields:
 - "status": "Strong" | "Refine" | "Prioritize"
-- "shortRead": 2–3 substantive sentences — a real read of what's going on AND why it matters for their brand. Specific, evidence-based, and genuinely valuable on its own (this is the FREE portion). Name the problem/opportunity clearly, but do NOT give the fix or the action — that lives in nextMove, which is paid. For magneticVoice, fold the archetype QUADRANT hint into this read.
-- "evaluation": the deeper PAID read — 3–4 sentences DIAGNOSING what's happening and why it matters, with specific evidence and quotes from the site. This is the ONLY field that describes the problem.
+- "shortRead": 2–4 substantive sentences — the core read of what's going on AND why it matters for their brand. Specific, evidence-based, and genuinely valuable on its own. This is shown IDENTICALLY to free and paid readers, so make it strong. Name the problem/opportunity clearly and, where relevant, connect it back to Get Clear; but do NOT give the fix or the action — that lives in nextMove, which is paid. For magneticVoice, fold the archetype QUADRANT hint into this read.
 - "nextMove": the concrete ACTION to take — 2 sentences. First sentence: exactly what to DO, imperative and specific (name the exact page, section, or asset). Second sentence: add genuine practical value — the key thing to get right, where to start, or a concrete "how" — never filler, and never a restatement of the problem or the payoff. Prefer a tight, useful two sentences; only drop to one if there is truly nothing worth adding.
 - "whatGoodLooksLike": the PAYOFF once they act — the tangible result and the competitive edge it creates (what it unlocks with their ideal client, or why it makes them harder to replicate). Describe the outcome/benefit, NOT the fix and NOT the problem.
 - "exampleRewrite": ONLY for the 2–3 highest-priority areas, a short concrete "in your voice" example (ideally a before → after line). Use "" where it doesn't apply.
-- "startHere": true on the 1–2 weakest areas, otherwise false.
+- "startHere": true on the start-here area(s); ALWAYS true for at least one Get Clear area.
 
-CRITICAL — the three paid fields (evaluation, nextMove, whatGoodLooksLike) must be genuinely DIFFERENT, not three rephrasings of the same point. evaluation = the problem, nextMove = the action, whatGoodLooksLike = the benefit. Never reuse the same distinctive term across them (e.g. if the evaluation hinges on the word "mechanism," do NOT repeat "mechanism" in the other two — say it another way). Vary the vocabulary; no field should echo another.
+CRITICAL — shortRead (the problem/read), nextMove (the action), and whatGoodLooksLike (the payoff) must be genuinely DIFFERENT, not three rephrasings of the same point. Never reuse the same distinctive term across them (e.g. if shortRead hinges on the word "mechanism," do NOT repeat "mechanism" in the other two — say it another way). Vary the vocabulary; no field should echo another.
 
 {
   "legacyRead": "[2 short paragraphs: a premium synthesis of where the brand stands and where it's drifting — framed as the center ('Legacy') of the framework. No scores.]",
-  "roadmapNudge": "[ONE sentence — the single most important DIRECTION for where to focus first: which pillar (Get Clear / Get Noticed / Get Paid) and why, framed as momentum ('Your fastest gains are in Get Noticed — …'). This is FREE and directional: name the focus and the reason, but NEVER a specific action, step, or the detailed move — those are paid.]",
+  "roadmapNudge": "[ONE sentence that ALWAYS names Get Clear as where to start and why — the foundation has to be clear before anything else compounds. Even when a Get Noticed or Get Paid area scores lower, frame the starting point as getting clear first. Directional and high-level; NEVER a specific action, step, or the detailed move.]",
   "pillars": {
     "getClear": { "areas": {
-      "brandPersonality":  { "status":"", "shortRead":"", "evaluation":"", "nextMove":"", "whatGoodLooksLike":"", "exampleRewrite":"", "startHere":false },
-      "signatureFramework":{ "status":"", "shortRead":"", "evaluation":"", "nextMove":"", "whatGoodLooksLike":"", "exampleRewrite":"", "startHere":false },
-      "elevatedAudience":  { "status":"", "shortRead":"", "evaluation":"", "nextMove":"", "whatGoodLooksLike":"", "exampleRewrite":"", "startHere":false }
+      "brandPersonality":  { "status":"", "shortRead":"", "nextMove":"", "whatGoodLooksLike":"", "exampleRewrite":"", "startHere":false },
+      "signatureFramework":{ "status":"", "shortRead":"", "nextMove":"", "whatGoodLooksLike":"", "exampleRewrite":"", "startHere":false },
+      "elevatedAudience":  { "status":"", "shortRead":"", "nextMove":"", "whatGoodLooksLike":"", "exampleRewrite":"", "startHere":false }
     }},
     "getNoticed": { "areas": {
-      "magneticVoice":     { "status":"", "shortRead":"", "evaluation":"", "nextMove":"", "whatGoodLooksLike":"", "exampleRewrite":"", "startHere":false },
-      "visualPositioning": { "status":"", "shortRead":"", "evaluation":"", "nextMove":"", "whatGoodLooksLike":"", "exampleRewrite":"", "startHere":false },
-      "onlinePresence":    { "status":"", "shortRead":"", "evaluation":"", "nextMove":"", "whatGoodLooksLike":"", "exampleRewrite":"", "startHere":false }
+      "magneticVoice":     { "status":"", "shortRead":"", "nextMove":"", "whatGoodLooksLike":"", "exampleRewrite":"", "startHere":false },
+      "visualPositioning": { "status":"", "shortRead":"", "nextMove":"", "whatGoodLooksLike":"", "exampleRewrite":"", "startHere":false },
+      "onlinePresence":    { "status":"", "shortRead":"", "nextMove":"", "whatGoodLooksLike":"", "exampleRewrite":"", "startHere":false }
     }},
     "getPaid": { "areas": {
-      "brandAuthority":    { "status":"", "shortRead":"", "evaluation":"", "nextMove":"", "whatGoodLooksLike":"", "exampleRewrite":"", "startHere":false },
-      "offerEvolution":    { "status":"", "shortRead":"", "evaluation":"", "nextMove":"", "whatGoodLooksLike":"", "exampleRewrite":"", "startHere":false },
-      "visionaryGrowth":   { "status":"", "shortRead":"", "evaluation":"", "nextMove":"", "whatGoodLooksLike":"", "exampleRewrite":"", "startHere":false }
+      "brandAuthority":    { "status":"", "shortRead":"", "nextMove":"", "whatGoodLooksLike":"", "exampleRewrite":"", "startHere":false },
+      "offerEvolution":    { "status":"", "shortRead":"", "nextMove":"", "whatGoodLooksLike":"", "exampleRewrite":"", "startHere":false },
+      "visionaryGrowth":   { "status":"", "shortRead":"", "nextMove":"", "whatGoodLooksLike":"", "exampleRewrite":"", "startHere":false }
     }}
   },
   "phasedPlan": [
@@ -129,7 +130,7 @@ CRITICAL — the three paid fields (evaluation, nextMove, whatGoodLooksLike) mus
   ]
 }
 
-phasedPlan is a prioritized 30/60/90-day sequence that pulls the most important moves across all nine areas — front-load Get Clear, then Get Noticed, then Get Paid. 1–3 moves per phase.
+phasedPlan is a prioritized 30/60/90-day sequence. The FIRST phase (First 30 days) MUST begin with at least one Get Clear move as the anchor — never open the plan with a Get Noticed (e.g., visual rebrand) or Get Paid move before the Get Clear foundation is addressed. Then Get Noticed, then Get Paid. 1–3 moves per phase.
 
 Website: ${websiteUrl}`;
 
@@ -142,7 +143,7 @@ ${websiteContent}`;
 
   prompt += `
 
-Analyze the website content above and produce the Brand Roadmap. Be specific and quote real copy. Keep shortRead to 2–3 substantive sentences (valuable but no fix), evaluation to 3–4 deeper sentences, nextMove to two useful sentences, and whatGoodLooksLike to one line. Return only the JSON object.`;
+Analyze the website content above and produce the Brand Roadmap. Be specific and quote real copy. Keep shortRead to 2–4 substantive sentences (valuable but no fix), nextMove to two useful sentences, and whatGoodLooksLike to one line. Always lead with Get Clear. Return only the JSON object.`;
 
   return prompt;
 }

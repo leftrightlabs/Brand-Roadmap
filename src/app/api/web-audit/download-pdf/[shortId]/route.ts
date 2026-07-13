@@ -159,7 +159,7 @@ function generateRoadmapPDF(
       doc.text(label, pageW - margin, y, { align: 'right' });
       y += 6;
 
-      paragraph(ev.evaluation, 10, 5);
+      paragraph(ev.shortRead, 10, 5);
       y += 2;
 
       doc.setFont('helvetica', 'bold');

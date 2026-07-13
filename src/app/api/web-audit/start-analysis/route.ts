@@ -19,8 +19,9 @@ function buildRoadmapResults(parsed: any): RoadmapResults {
       const a = srcAreas?.[areaKey] ?? {};
       areas[areaKey] = {
         status: normalizeStatus(a.status),
+        // Single consolidated read, shown identically to free and paid.
+        // Fall back to legacy `evaluation` for any older payloads.
         shortRead: str(a.shortRead, str(a.evaluation, 'Data Temporarily Unavailable.')),
-        evaluation: str(a.evaluation, 'Data Temporarily Unavailable.'),
         nextMove: str(a.nextMove, 'Review this area with your brand strategist.'),
         whatGoodLooksLike: str(a.whatGoodLooksLike, ''),
         exampleRewrite: str(a.exampleRewrite, ''),
@@ -56,8 +57,7 @@ function fallbackRoadmap(): RoadmapResults {
     for (const areaKey of pillar.areas) {
       areas[areaKey] = {
         status: 'Refine',
-        shortRead: 'We hit a snag formatting this part of your roadmap.',
-        evaluation: 'We hit a snag formatting this part of your roadmap. Please regenerate or contact support.',
+        shortRead: 'We hit a snag formatting this part of your roadmap. Please regenerate or contact support.',
         nextMove: 'Regenerate your roadmap, or reach out and we will rebuild it for you.',
       };
     }
@@ -704,23 +704,24 @@ async function syncRoadmapToActiveCampaign(shortId: string, results: RoadmapResu
   const email = rows[0]?.email;
   if (!email) return; // nothing to sync without a contact
 
-  // Highest-pressure pillar drives the track (Prioritize = 2, Refine = 1).
-  let priorityKey: PillarKey = PILLARS[0].key;
-  let topPressure = -1;
-  let startHereLabel = '';
+  // The roadmap always leads with Get Clear, so the drip does too — the
+  // priority tag is fixed to get-clear. We still surface their specific
+  // start-here area as the personalization token (prefer a Get Clear
+  // start-here area, then any start-here, then the first Prioritize area).
+  const priorityKey: PillarKey = 'getClear';
+  const priorityLabel = 'Get Clear';
+  let getClearStartHere = '';
+  let anyStartHere = '';
   let firstPrioritizeLabel = '';
   for (const p of PILLARS) {
-    let pressure = 0;
     for (const a of p.areas) {
       const ev = results.pillars?.[p.key]?.areas?.[a];
       if (!ev) continue;
-      pressure += ev.status === 'Prioritize' ? 2 : ev.status === 'Refine' ? 1 : 0;
-      if (ev.startHere && !startHereLabel) startHereLabel = AREA_LABELS[a];
+      if (ev.startHere && !anyStartHere) anyStartHere = AREA_LABELS[a];
+      if (ev.startHere && p.key === 'getClear' && !getClearStartHere) getClearStartHere = AREA_LABELS[a];
       if (ev.status === 'Prioritize' && !firstPrioritizeLabel) firstPrioritizeLabel = AREA_LABELS[a];
     }
-    if (pressure > topPressure) { topPressure = pressure; priorityKey = p.key; }
   }
-  const priorityLabel = PILLARS.find((p) => p.key === priorityKey)?.label ?? 'Get Clear';
 
   const domain = process.env.RAILWAY_PUBLIC_DOMAIN || 'roadmap.leftrightlabs.com';
   const reportUrl = `https://${domain}/start/report/${shortId}`;
@@ -730,7 +731,7 @@ async function syncRoadmapToActiveCampaign(shortId: string, results: RoadmapResu
     name: rows[0]?.name ?? '',
     priorityPillarKey: priorityKey,
     priorityPillarLabel: priorityLabel,
-    startHereArea: startHereLabel || firstPrioritizeLabel,
+    startHereArea: getClearStartHere || anyStartHere || firstPrioritizeLabel,
     nudge: results.roadmapNudge ?? '',
     reportUrl,
     paid: false,

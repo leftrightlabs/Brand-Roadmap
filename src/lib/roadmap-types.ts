@@ -13,17 +13,15 @@ export type AreaStatus = 'Strong' | 'Refine' | 'Prioritize';
 
 export interface AreaEval {
   status: AreaStatus;
-  /** FREE — one-sentence read of what's going on. */
+  /** FREE — the core diagnostic read, shown identically to free and paid. */
   shortRead: string;
-  /** PAID — deeper 2–4 sentence evaluation. */
-  evaluation: string;
-  /** PAID — the specific action. */
-  nextMove: string;
-  /** PAID — one line describing the target state. */
+  /** FREE — one line describing the target state / payoff. */
   whatGoodLooksLike?: string;
+  /** PAID — the specific action (the gated "next move" box). */
+  nextMove: string;
   /** PAID — a concrete "in your voice" example, for priority areas. */
   exampleRewrite?: string;
-  /** Set on the 1–2 weakest areas to surface a "Start here" flag. */
+  /** Set on the start-here area(s) to surface a "Start here" flag. */
   startHere?: boolean;
 }
 

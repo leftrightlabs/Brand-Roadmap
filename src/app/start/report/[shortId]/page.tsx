@@ -309,33 +309,30 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
     if (ev) statuses[a] = ev.status;
   }));
 
-  // "Start here" areas (weakest) and the pillar carrying the most weight — used
-  // for the free directional nudge so the diagnosis still points somewhere.
+  // "Start here" areas, used for the free directional nudge.
   const startHereKeys: AreaKey[] = [];
   const startHereLabels: string[] = [];
-  const pillarPressure: Record<string, number> = {};
-  let firstPrioritizeKey: AreaKey | null = null;
   PILLARS.forEach((p) => {
-    let pressure = 0;
     p.areas.forEach((a) => {
       const ev = results.pillars?.[p.key]?.areas?.[a];
-      if (!ev) return;
-      if (ev.startHere) { startHereKeys.push(a); startHereLabels.push(AREA_LABELS[a]); }
-      if (ev.status === "Prioritize" && !firstPrioritizeKey) firstPrioritizeKey = a;
-      pressure += ev.status === "Prioritize" ? 2 : ev.status === "Refine" ? 1 : 0;
+      if (ev?.startHere) { startHereKeys.push(a); startHereLabels.push(AREA_LABELS[a]); }
     });
-    pillarPressure[p.key] = pressure;
   });
-  const priorityPillar =
-    [...PILLARS].sort((a, b) => (pillarPressure[b.key] ?? 0) - (pillarPressure[a.key] ?? 0))[0] ?? PILLARS[0];
 
-  // The one area we fully unlock for free — the "sample lesson." Prefer a
-  // start-here area inside the priority pillar (so it matches the nudge), then
-  // any start-here area, then the first Prioritize area as a fallback.
+  // The roadmap always leads with Get Clear — that's the pillar we anchor to,
+  // and the free "sample" move always comes from Get Clear.
+  const getClearPillar = PILLARS.find((p) => p.key === "getClear") ?? PILLARS[0];
+  const priorityPillar = getClearPillar;
+  const gcArea = (status: AreaStatus) =>
+    getClearPillar.areas.find((a) => results.pillars?.getClear?.areas?.[a]?.status === status);
+  // Prefer a Get Clear start-here area, then the weakest Get Clear area, then
+  // simply the first Get Clear area — so we always unlock a Get Clear move free.
   const freeSampleAreaKey: AreaKey | null =
-    priorityPillar.areas.find((a) => startHereKeys.includes(a)) ??
-    startHereKeys[0] ??
-    firstPrioritizeKey;
+    getClearPillar.areas.find((a) => startHereKeys.includes(a) && a in (results.pillars?.getClear?.areas ?? {})) ??
+    gcArea("Prioritize") ??
+    gcArea("Refine") ??
+    getClearPillar.areas[0] ??
+    null;
 
   // Free = the roadmap's route + first move (diagnosis). Paid/preview unlocks every move.
   const unlocked = results.paid === true;
@@ -418,6 +415,17 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
             Payment received … unlocking your full roadmap. This can take a few seconds.
           </div>
         )}
+        {/* Skip-to: take free readers straight to their unlocked move. */}
+        {!unlocked && freeSampleAreaKey && (
+          <button
+            onClick={() => scrollToArea(freeSampleAreaKey)}
+            className="w-full bg-[#112248] text-white py-3 px-4 flex items-center justify-center gap-2 text-[13px] font-bold uppercase tracking-[0.12em] hover:bg-[#0e1c3a] transition-colors"
+          >
+            <Check className="w-4 h-4 text-[#a7c140]" />
+            Your first move is unlocked free
+            <span className="text-[#a7c140]">— jump to it ↓</span>
+          </button>
+        )}
         {/* ── OVERVIEW ── */}
         <section id="overview" className="scroll-mt-16" style={LIGHT_BAND}>
           <div className={`${CONTENT} py-14 md:py-20`}>
@@ -498,20 +506,22 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
                       const isFreeSample = !unlocked && areaKey === freeSampleAreaKey;
                       const showFull = unlocked || isFreeSample;
                       return (
-                        <motion.div key={areaKey} id={areaKey} variants={fadeUp} whileHover={{ y: -4 }} className="scroll-mt-24 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+                        <motion.div key={areaKey} id={areaKey} variants={fadeUp} className="scroll-mt-24 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
                           {/* priority color strip */}
                           <div style={{ height: 8, background: stripColor }} />
                           <div className="p-6 md:p-8">
                             {/* header row — status + title on one line (no empty left column) */}
                             <div className="flex items-center gap-x-3 gap-y-2 flex-wrap mb-6">
-                              <h3 className="text-2xl md:text-[28px] font-heading text-[#112248] leading-tight mr-1">{AREA_LABELS[areaKey]}</h3>
+                              <h3 className="text-2xl md:text-[28px] font-heading text-[#112248] leading-tight mr-1 cursor-default select-text">{AREA_LABELS[areaKey]}</h3>
                               <StrengthBar status={ev.status} />
                               <span className="text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full" style={{ background: ui.bg, color: ui.text }}>{ev.status}</span>
                               {ev.startHere && (
                                 <span className="text-[10px] font-bold uppercase tracking-[0.08em] px-2.5 py-1 rounded-full" style={{ border: `1px solid ${ui.border}`, color: ui.text }}>Start here</span>
                               )}
                               {isFreeSample && (
-                                <span className="text-[10px] font-bold uppercase tracking-[0.08em] px-2.5 py-1 rounded-full bg-[#a7c140] text-[#112248]">Unlocked free</span>
+                                <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.08em] px-2.5 py-1 rounded-full bg-[#112248] text-white">
+                                  <Check className="w-3 h-3 text-[#a7c140]" /> Your free move
+                                </span>
                               )}
                             </div>
 
@@ -520,8 +530,9 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
                               {/* situation lane */}
                               <div>
                                 <p className="text-[13px] font-bold uppercase tracking-[0.12em] text-gray-400 mb-2">The read</p>
-                                <p className="text-gray-700 text-[20px] leading-[1.6]">{showFull ? ev.evaluation : ev.shortRead}</p>
-                                {showFull && ev.whatGoodLooksLike && (
+                                {/* Identical for free and paid — the diagnosis is never gated. */}
+                                <p className="text-gray-700 text-[20px] leading-[1.6]">{ev.shortRead}</p>
+                                {ev.whatGoodLooksLike && (
                                   <div className="mt-6">
                                     <p className="text-[13px] font-bold uppercase tracking-[0.12em] text-gray-400 mb-2">What good looks like</p>
                                     <p className="text-gray-700 text-[20px] leading-[1.6]">{ev.whatGoodLooksLike}</p>
@@ -654,6 +665,8 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
               )}
 
               <motion.div id="unlock" initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp} className="max-w-3xl mx-auto text-center scroll-mt-16">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/images/people-networking.webp" alt="Founders building elevated brands with Left Right Labs" className="w-full max-w-lg mx-auto rounded-2xl mb-8 shadow-xl border border-white/10" />
                 <p className="text-white/60 text-lg mb-8">Unlock the specific next move for all nine areas — plus deeper analysis, example rewrites in your voice, your full 30/60/90-day plan, and a downloadable PDF.</p>
                 <ul className="text-left max-w-md mx-auto space-y-3 mb-10">
                   {["The specific next move for all 9 areas", "Deeper analysis + what ‘good’ looks like", "Example rewrites in your brand voice", "Every step of your 30/60/90-day plan", "Downloadable, shareable PDF"].map((f) => (
@@ -684,8 +697,8 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
             <p className="text-base md:text-lg text-white/60 mb-8 max-w-xl mx-auto">Let&apos;s turn this roadmap into a brand that speaks before you do, sells with integrity, and scales without chaos.</p>
             <Button onClick={() => (window.location.href = "https://leftrightlabs.com/start")} size="lg" className="bg-[#a7c140] hover:bg-[#96ad39] text-[#112248] font-bold uppercase tracking-wider">Let&apos;s Elevate Your Brand Advantage</Button>
             <p className="text-xs text-white/40 max-w-xl mx-auto leading-relaxed mt-10">
-              This roadmap was generated using AI analysis of publicly available website content. It may occasionally misinterpret layout, messaging, or functionality — especially on sites with dynamic or complex content. For the most accurate, tailored assessment, {""}
-              <a href="https://leftrightlabs.com/contact" target="_blank" rel="noopener noreferrer" className="text-[#a7c140] underline hover:opacity-80 transition-opacity">contact us</a>{" "} to book an in-depth consultation.
+              This roadmap was generated using AI analysis of publicly available website content. It may occasionally misinterpret layout, messaging, or functionality — especially on sites with dynamic or complex content.{unlocked && (<>{" "}For the most accurate, tailored assessment, {""}
+              <a href="https://leftrightlabs.com/contact" target="_blank" rel="noopener noreferrer" className="text-[#a7c140] underline hover:opacity-80 transition-opacity">contact us</a>{" "} to book an in-depth consultation.</>)}
             </p>
           </motion.div>
         </div>
