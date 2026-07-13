@@ -60,9 +60,13 @@ export async function GET(request: NextRequest) {
       signal: controller.signal,
       redirect: 'follow',
       headers: {
+        // Many sites sit behind bot filters that 403 unknown crawler UAs
+        // (but let real browsers through). Link-preview fetchers use a
+        // browser-like UA for exactly this reason.
         'User-Agent':
-          'Mozilla/5.0 (compatible; BrandRoadmapBot/1.0; +https://roadmap.leftrightlabs.com)',
-        Accept: 'text/html,application/xhtml+xml',
+          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
+        Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.9',
       },
     });
     clearTimeout(timer);
