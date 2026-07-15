@@ -143,6 +143,9 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
   const [checkoutReturn, setCheckoutReturn] = useState(false);
   const [isUnlocking, setIsUnlocking] = useState(false);
   const [checkoutData, setCheckoutData] = useState<{ clientSecret: string; publishableKey: string } | null>(null);
+  // ?view=free forces the free view even on a paid report (for previews/demos).
+  // Safe by construction: it only ever HIDES paid content, never reveals it.
+  const [forceFree, setForceFree] = useState(false);
 
   useEffect(() => {
     const getParams = async () => {
@@ -153,7 +156,9 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
   }, [params]);
 
   useEffect(() => {
-    setCheckoutReturn(new URLSearchParams(window.location.search).get("checkout") === "success");
+    const params = new URLSearchParams(window.location.search);
+    setCheckoutReturn(params.get("checkout") === "success");
+    setForceFree(params.get("view") === "free");
   }, []);
 
   useEffect(() => {
@@ -335,7 +340,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
     null;
 
   // Free = the roadmap's route + first move (diagnosis). Paid/preview unlocks every move.
-  const unlocked = results.paid === true;
+  const unlocked = results.paid === true && !forceFree;
   const goUnlock = async () => {
     if (isUnlocking) return;
     setIsUnlocking(true);
