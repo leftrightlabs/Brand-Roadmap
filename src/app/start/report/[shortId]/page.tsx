@@ -587,13 +587,6 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
                     })}
                   </div>
                 </motion.div>
-
-                <div className="mt-10 text-center">
-                  <a href="https://leftrightlabs.com/contact" target="_blank" rel="noopener noreferrer" className={`inline-flex items-center gap-2 font-bold uppercase tracking-wider text-sm transition-opacity hover:opacity-70 ${dark ? "text-white" : "text-[#112248]"}`}>
-                    Strengthen your {pillar.label} foundation
-                    <ArrowRight className="w-4 h-4 text-[#a7c140]" />
-                  </a>
-                </div>
               </div>
             </section>
           );
