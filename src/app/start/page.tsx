@@ -596,6 +596,20 @@ export default function StartPage() {
             </p>
           </motion.div>
 
+          {/* Process diagram — the framework at a glance. Its navy background
+              matches this band, so it sits flush with no visible edges. */}
+          <motion.div
+            initial="hidden" whileInView="visible" variants={rv} viewport={vp}
+            style={{ display: "flex", justifyContent: "center", marginTop: "clamp(40px, 5vw, 64px)" }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/brand-framework-venn.png"
+              alt="The Left Right Labs Brand Advantage framework — Get Clear, Get Noticed, and Get Paid — with nine pillars (Brand Personality, Signature Framework, Elevated Audience, Magnetic Voice, Visual Positioning, Online Presence, Brand Authority, Offer Evolution, Visionary Growth) around a central Legacy."
+              style={{ width: "100%", maxWidth: 640, height: "auto", display: "block" }}
+            />
+          </motion.div>
+
           <motion.div
             initial="hidden" whileInView="visible" variants={rv} viewport={vp}
             className="cards3"
