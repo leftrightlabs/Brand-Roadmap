@@ -355,7 +355,7 @@ export default function StartPage() {
               );
             })}
             <AccentBtn onClick={handleCTA} disabled={isLoading}>
-              {isLoading ? "Loading…" : "Get My Brand Roadmap"}
+              {isLoading ? "Loading…" : "Get My Free Brand Roadmap"}
             </AccentBtn>
           </nav>
         </div>
@@ -389,7 +389,7 @@ export default function StartPage() {
         >
           <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}>
-              <Eyebrow lime>Your Free Brand Roadmap From Left Right Labs</Eyebrow>
+              <Eyebrow lime>A Free Brand Roadmap From Left Right Labs</Eyebrow>
             </motion.div>
 
             <motion.div
@@ -412,9 +412,8 @@ export default function StartPage() {
                 }}
               >
                 <Scaley>
-                  Your Brand Is{" "}
-                  <em style={{ fontStyle: "italic", fontWeight: 400 }}>Costing</em>{" "}
-                  You The Clients You&apos;ve Already Earned.
+                  People Say &ldquo;I Love What You Do.&rdquo;{" "}
+                  <em style={{ fontStyle: "italic", fontWeight: 400 }}>So Why Aren&apos;t They Buying?</em>
                 </Scaley>
               </h1>
             </motion.div>
@@ -425,11 +424,10 @@ export default function StartPage() {
               transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
               style={{ fontFamily: SANS, fontSize: 20, lineHeight: 1.8, color: "rgba(255,255,255,0.82)", maxWidth: 660, margin: 0 }}
             >
-              Get your personalized Brand Advantage™ Roadmap … the sequenced
-              route to stop your brand from costing you the clients you&apos;ve
-              already earned. See the whole map, the one place to start, and
-              your first move spelled out in full, free. On your screen in
-              minutes, and in your inbox to keep.
+              Your free Brand Roadmap shows you exactly where your brand is
+              losing people, and hands you your first fixes on the spot. It&apos;s
+              built on the same process JJ Virgin and Laila Ali paid us thousands
+              for, and it takes less than 5 minutes to complete.
             </motion.p>
 
             <motion.div
@@ -438,7 +436,7 @@ export default function StartPage() {
               transition={{ duration: 0.7, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
             >
               <AccentBtn onClick={handleCTA} disabled={isLoading}>
-                {isLoading ? "Loading…" : <>Get My Brand Roadmap&nbsp;→</>}
+                {isLoading ? "Loading…" : <>Get My Free Brand Roadmap&nbsp;→</>}
               </AccentBtn>
             </motion.div>
 
@@ -448,7 +446,7 @@ export default function StartPage() {
               transition={{ duration: 0.6, delay: 0.75 }}
               style={{ display: "flex", flexWrap: "wrap", gap: "12px 28px", marginTop: 4 }}
             >
-              {["Free to start", "About 2 minutes", "On screen + in your inbox"].map((item) => (
+              {["Free to start", "About 2 minutes", "First fixes included"].map((item) => (
                 <span
                   key={item}
                   style={{
@@ -485,32 +483,30 @@ export default function StartPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
             <Eyebrow>The Problem</Eyebrow>
             <ScotchH2>
-              You&apos;ve <em style={{ fontStyle: "italic", fontWeight: 400 }}>Outgrown</em> Your Brand
+              Your Brand Is <em style={{ fontStyle: "italic", fontWeight: 400 }}>Playing Smaller</em> Than You Are
             </ScotchH2>
             <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
               <p style={{ fontFamily: SANS, fontSize: 20, lineHeight: 1.8, color: "rgba(17,34,72,0.72)", margin: 0 }}>
-                You&apos;ve built something real. Your expertise is proven, your
-                clients get results, and your reputation precedes you. But when
-                someone lands on your website for the first time, does your brand
-                reflect the leader you&apos;ve become?
+                You know you&apos;re good. Your clients know you&apos;re good. The
+                problem is everyone who hasn&apos;t met you yet. They land on your
+                website, look around for about eight seconds, and decide what
+                you&apos;re worth.
               </p>
               <p style={{ fontFamily: SANS, fontSize: 20, lineHeight: 1.8, color: "rgba(17,34,72,0.72)", margin: 0 }}>
-                For most established experts, the answer is no.{" "}
+                When your brand looks homemade, they assume your work is too. When
+                your message is fuzzy, they keep scrolling. When your positioning
+                blends in, you get compared on price instead of chosen on value.{" "}
                 <strong style={{ color: "#000", fontWeight: 600 }}>
-                  The brand that got you here wasn&apos;t designed for where
-                  you&apos;re going.
-                </strong>{" "}
-                Your messaging may be strong in person but diluted online. Your
-                visual presence may feel polished without feeling premium. Your
-                positioning may be clear to you but invisible to the clients you
-                actually want to attract.
+                  The frustrating part is that you already do the work at a level
+                  your brand has never once shown.
+                </strong>
               </p>
               <p style={{ fontFamily: SANS, fontSize: 20, lineHeight: 1.8, color: "rgba(17,34,72,0.72)", margin: 0 }}>
-                Your Brand Roadmap gives you the strategic clarity to close that
-                gap … where your brand is drifting, the order to fix it in, the
-                one place to start, and your first move spelled out in full,
-                from the brand strategists behind some of the most recognized
-                names in the industry.
+                You don&apos;t need to start with a $50,000 rebrand to fix that. You
+                need a clear first step: exactly where your brand is losing people,
+                and what to change first. That&apos;s what your Brand Roadmap gives
+                you, free. It&apos;s the first step to getting clear, getting
+                noticed, and getting paid what you&apos;re actually worth.
               </p>
             </div>
           </div>
@@ -559,31 +555,144 @@ export default function StartPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
             <Eyebrow>The Methodology</Eyebrow>
             <ScotchH2>
-              The Strategic Lens{" "}
-              <em style={{ fontStyle: "italic", fontWeight: 400 }}>Behind</em>{" "}
-              Your Roadmap
+              The Same Process The Big Names{" "}
+              <em style={{ fontStyle: "italic", fontWeight: 400 }}>Paid Thousands</em>{" "}
+              For
             </ScotchH2>
             <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
               <p style={{ fontFamily: SANS, fontSize: 20, lineHeight: 1.8, color: "rgba(17,34,72,0.72)", margin: 0 }}>
-                Your roadmap is built on the same methodology Left Right Labs
-                has applied to leaders like JJ Virgin, Laila Ali, and other
-                top-tier thought leaders … the Brand Advantage™ framework that
-                examines messaging, positioning, and visual identity the way a
-                brand strategist would.
+                This isn&apos;t a generic AI prompt. Our AI-assisted analysis takes
+                a deep dive into your entire online brand presence and runs it
+                through the same Brand Advantage™ framework we&apos;ve used with
+                leaders like JJ Virgin and Laila Ali in private strategy
+                engagements. What comes back is a customized action plan built
+                specifically for your brand, and it follows a very specific order:{" "}
+                <strong style={{ color: "#000", fontWeight: 600 }}>
+                  Get Clear first, then Get Noticed, then Get Paid.
+                </strong>
               </p>
               <p style={{ fontFamily: SANS, fontSize: 20, lineHeight: 1.8, color: "rgba(17,34,72,0.72)", margin: 0 }}>
-                Your brand is analyzed through that strategic lens, and the
-                output isn&apos;t a score or a generic critique.{" "}
-                <strong style={{ color: "#000", fontWeight: 600 }}>
-                  It&apos;s a sequenced set of moves
-                </strong>{" "}
-                … the exact changes to make, in the order to make them, so
-                your brand stops drifting and starts attracting the clients
-                you actually want.
+                That sequence isn&apos;t optional. You can&apos;t get noticed for a
+                message that isn&apos;t clear yet, and you can&apos;t get paid what
+                you&apos;re worth until people actually notice you. So we start you
+                at the foundation and build from there.
               </p>
             </div>
           </div>
         </motion.div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════════
+          THE THREE TIERS … navy, 3 columns of pillars
+      ════════════════════════════════════════════════════════ */}
+      <section style={{ background: NAVY, ...sectionPad }}>
+        <div style={container}>
+          <motion.div
+            initial="hidden" whileInView="visible" variants={rv} viewport={vp}
+            style={{ display: "flex", flexDirection: "column", gap: 22, alignItems: "center", textAlign: "center", maxWidth: 820, margin: "0 auto" }}
+          >
+            <Eyebrow lime center>The Framework</Eyebrow>
+            <ScotchH2 white center>
+              Get Clear. Get Noticed.{" "}
+              <em style={{ fontStyle: "italic", fontWeight: 400 }}>Get Paid.</em>
+            </ScotchH2>
+            <p style={{ fontFamily: SANS, fontSize: 20, lineHeight: 1.8, color: "rgba(255,255,255,0.82)", maxWidth: 720, margin: 0 }}>
+              Our methodology moves in one deliberate order: Get Clear, then Get
+              Noticed, then Get Paid. Each tier builds on the one before it, across
+              nine areas of your brand.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial="hidden" whileInView="visible" variants={rv} viewport={vp}
+            className="cards3"
+            style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", borderTop: "1px solid rgba(255,255,255,0.14)", marginTop: "clamp(40px, 5vw, 72px)" }}
+          >
+            {[
+              {
+                num: "01", tier: "Get Clear",
+                lead: "First, get crystal clear on your business, your model, and exactly who your ideal client is. Everything else is built on this foundation.",
+                pillars: [
+                  ["Brand Personality", "The traits and essence that make your brand unmistakably you."],
+                  ["Signature Framework", "The approach that's yours and yours alone."],
+                  ["Elevated Audience", "A real, refined picture of who you serve at the highest level."],
+                ],
+              },
+              {
+                num: "02", tier: "Get Noticed",
+                lead: "Next, get noticed by the right people and position yourself as the expert they instantly recognize and remember.",
+                pillars: [
+                  ["Magnetic Voice", "The way your brand talks, so it actually sounds like you."],
+                  ["Visual Positioning", "The identity system that makes you instantly recognizable, no logo needed."],
+                  ["Online Presence", "How easy you are to find and recognize wherever your people already hang out."],
+                ],
+              },
+              {
+                num: "03", tier: "Get Paid",
+                lead: "Finally, get paid what you're actually worth and scale it, with the authority and offers to back it up.",
+                pillars: [
+                  ["Brand Authority", "The credibility that makes you the obvious choice before anyone even asks."],
+                  ["Offer Evolution", "Lining up your services, pricing, and ladder so clients move through your work the way it's meant to flow."],
+                  ["Visionary Growth", "The strategic guidance that grows with you as your leadership expands."],
+                ],
+              },
+            ].map((col, i) => (
+              <div key={i} style={{ padding: "44px 40px 48px", display: "flex", flexDirection: "column", gap: 20, borderLeft: i === 0 ? "none" : "1px solid rgba(255,255,255,0.14)" }}>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 14 }}>
+                  <span style={{ fontFamily: SERIF, fontWeight: 700, fontStyle: "italic", fontSize: "clamp(34px, 4vw, 52px)", lineHeight: 1, color: LIME }}>
+                    <span style={{ display: "inline-block", transform: "scaleY(1.2)", transformOrigin: "top left" }}>{col.num}</span>
+                  </span>
+                  <h3 style={{ fontFamily: SERIF, fontWeight: 700, fontSize: "clamp(24px, 2.6vw, 34px)", lineHeight: 1, color: "#fff", margin: 0 }}>{col.tier}</h3>
+                </div>
+                <p style={{ fontFamily: SANS, fontSize: 16, lineHeight: 1.65, color: "rgba(255,255,255,0.78)", margin: 0 }}>{col.lead}</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 16, marginTop: 6 }}>
+                  {col.pillars.map(([name, desc]) => (
+                    <div key={name} style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                      <span style={{ fontFamily: SANS, fontWeight: 600, fontSize: 14, letterSpacing: "0.04em", color: "#fff" }}>{name}</span>
+                      <span style={{ fontFamily: SANS, fontSize: 15, lineHeight: 1.55, color: "rgba(255,255,255,0.66)" }}>{desc}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════════
+          METHOD VIDEO … white, explainer (PLACEHOLDER embed)
+      ════════════════════════════════════════════════════════ */}
+      <section style={{ background: "#fff", ...sectionPad }}>
+        <div style={container}>
+          <motion.div
+            initial="hidden" whileInView="visible" variants={rv} viewport={vp}
+            style={{ display: "flex", flexDirection: "column", gap: 22, maxWidth: 800, marginBottom: "clamp(32px, 4vw, 56px)" }}
+          >
+            <Eyebrow>Watch First</Eyebrow>
+            <ScotchH2>
+              Why Your Roadmap Is The <em style={{ fontStyle: "italic", fontWeight: 400 }}>First Step</em>
+            </ScotchH2>
+            <p style={{ fontFamily: SANS, fontSize: 20, lineHeight: 1.8, color: "rgba(17,34,72,0.72)", margin: 0 }}>
+              A quick walk-through of the method behind your roadmap … why getting
+              clear has to come before getting noticed or getting paid, and how
+              this one free step changes everything that follows.
+            </p>
+          </motion.div>
+
+          {/* ⬇ PLACEHOLDER — replace this block with the video embed (YouTube /
+              Vimeo / Wistia <iframe>). Keep the 16:9 wrapper for responsiveness. */}
+          <motion.div
+            initial="hidden" whileInView="visible" variants={rv} viewport={vp}
+            style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", background: NAVY, overflow: "hidden", borderTop: `4px solid ${LIME}` }}
+          >
+            <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 20 }}>
+              <div style={{ width: 88, height: 88, borderRadius: 999, background: LIME, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <span style={{ width: 0, height: 0, borderTop: "16px solid transparent", borderBottom: "16px solid transparent", borderLeft: `26px solid ${NAVY}`, marginLeft: 6 }} />
+              </div>
+              <p style={{ fontFamily: SANS, fontSize: 13, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.6)", margin: 0 }}>Method Video — Coming Soon</p>
+            </div>
+          </motion.div>
+        </div>
       </section>
 
       {/* ════════════════════════════════════════════════════════
@@ -598,17 +707,15 @@ export default function StartPage() {
             initial="hidden" whileInView="visible" variants={rv} viewport={vp}
             style={{ display: "flex", flexDirection: "column", gap: 22, alignItems: "center", textAlign: "center", maxWidth: 800, margin: "0 auto" }}
           >
-            <Eyebrow lime center>Your Roadmap</Eyebrow>
+            <Eyebrow lime center>What You Get</Eyebrow>
             <ScotchH2 white center>
-              What You&apos;ll{" "}
-              <em style={{ fontStyle: "italic", fontWeight: 400 }}>Walk Away</em>{" "}
-              With
+              Here&apos;s{" "}
+              <em style={{ fontStyle: "italic", fontWeight: 400 }}>Everything</em>{" "}
+              You Get
             </ScotchH2>
             <p style={{ fontFamily: SANS, fontSize: 20, lineHeight: 1.8, color: "rgba(255,255,255,0.82)", maxWidth: 680, margin: 0 }}>
-              Not a score. Not a critique. It&apos;s your Brand Roadmap … the
-              whole route mapped across all nine areas, the order to follow, and
-              your first move unlocked in full. Free to start. Every remaining
-              move unlocks whenever you&apos;re ready.
+              Free to start, with real fixes included. The complete plan is $97,
+              fully guaranteed.
             </p>
           </motion.div>
 
@@ -619,9 +726,9 @@ export default function StartPage() {
             style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", borderTop: "1px solid rgba(255,255,255,0.14)", marginTop: "clamp(40px, 5vw, 72px)" }}
           >
             {[
-              { num: "01", h3: "Where Your Brand Is Leaking Clients", p: "A read across all nine areas of your brand … the exact places your messaging, positioning, or visual identity is sending the wrong signal, and what it's costing you in clients who never reach out." },
-              { num: "02", h3: "Your #1 Priority, First Move Unlocked", p: "We pinpoint the single place to start and hand you that first move in full … the specific, actionable change to make, spelled out for your brand and not a template." },
-              { num: "03", h3: "Every Move, In The Right Order", p: "Your complete thirty, sixty, ninety day plan, sequenced the way it actually works … Get Clear, then Get Noticed, then Get Paid, starting at your biggest gap. You'll see the full route mapped, ready to unlock move by move whenever you want it." },
+              { num: "01", h3: "Where Your Brand Is Losing People", p: "A straight read across all nine areas of your brand. You'll see exactly which areas are working for you and which ones are quietly turning people away." },
+              { num: "02", h3: "Your Highest-Leverage Action, Free", p: "We're so confident in the results that we hand you the single highest-leverage move for your brand right now, completely free. One real, specific action you can take today, before you've spent a dime." },
+              { num: "03", h3: "Your Full 90-Day Game Plan", p: "When you're ready, $97 unlocks every move across all three tiers, your complete 30/60/90-day plan in the exact order to work it, and a downloadable copy to keep." },
             ].map((card, i) => (
               <div key={i} style={{ padding: "44px 40px 48px", display: "flex", flexDirection: "column", gap: 18, borderLeft: i === 0 ? "none" : "1px solid rgba(255,255,255,0.14)" }}>
                 <p style={{ fontFamily: SERIF, fontWeight: 700, fontStyle: "italic", fontSize: "clamp(48px, 6vw, 80px)", lineHeight: 1, color: LIME, margin: "0 0 8px" }}>
@@ -633,16 +740,28 @@ export default function StartPage() {
             ))}
           </motion.div>
 
-          {/* Pull quote + CTA */}
+          {/* Price / value stack + CTA */}
           <motion.div
             initial="hidden" whileInView="visible" variants={rv} viewport={vp}
-            style={{ marginTop: "clamp(48px, 6vw, 84px)", textAlign: "center", display: "flex", flexDirection: "column", gap: 28, alignItems: "center" }}
+            style={{ marginTop: "clamp(48px, 6vw, 84px)", textAlign: "center", display: "flex", flexDirection: "column", gap: 22, alignItems: "center" }}
           >
-            <p style={{ fontFamily: SERIF, fontStyle: "italic", fontWeight: 400, fontSize: "clamp(24px, 3vw, 40px)", lineHeight: 1.25, color: "#fff", maxWidth: 880, margin: 0, textWrap: "balance" as React.CSSProperties["textWrap"] }}>
-              Your expertise built the business. Now let your brand carry the weight … so you don&apos;t have to.
+            {/* PLACEHOLDER: swap in a real anchor price (e.g. Intensive / VIP rate) once confirmed. */}
+            <p style={{ fontFamily: SANS, fontSize: 16, letterSpacing: "0.04em", color: "rgba(255,255,255,0.7)", margin: 0 }}>
+              Our 1:1 clients invest thousands in this exact process.
+            </p>
+            <div style={{ display: "flex", alignItems: "baseline", gap: 12, justifyContent: "center" }}>
+              <span style={{ fontFamily: SERIF, fontWeight: 700, fontSize: "clamp(56px, 8vw, 96px)", lineHeight: 1, color: LIME }}>
+                <span style={{ display: "inline-block", transform: "scaleY(1.2)", transformOrigin: "center" }}>$97</span>
+              </span>
+              <span style={{ fontFamily: SANS, fontSize: 16, color: "rgba(255,255,255,0.7)" }}>for the complete plan</span>
+            </div>
+            <p style={{ fontFamily: SANS, fontSize: 17, lineHeight: 1.7, color: "rgba(255,255,255,0.82)", maxWidth: 620, margin: 0 }}>
+              Every remaining move, your full 90-day sequence, and a downloadable
+              copy. Refunded within 14 days if it doesn&apos;t feel like the most
+              obvious $97 you&apos;ve spent.
             </p>
             <AccentBtn onClick={handleCTA} disabled={isLoading}>
-              {isLoading ? "Loading…" : <>Get My Brand Roadmap&nbsp;→</>}
+              {isLoading ? "Loading…" : <>Get My Free Brand Roadmap&nbsp;→</>}
             </AccentBtn>
           </motion.div>
         </div>
@@ -662,9 +781,9 @@ export default function StartPage() {
               How It <em style={{ fontStyle: "italic", fontWeight: 400 }}>Works</em>
             </ScotchH2>
             <p style={{ fontFamily: SANS, fontSize: 20, lineHeight: 1.8, color: "rgba(17,34,72,0.72)", margin: 0 }}>
-              Three steps. About two minutes to start. Your personalized Brand
-              Roadmap appears on screen the moment it&apos;s ready, and a link
-              lands in your inbox to keep.
+              Three steps, less than five minutes. Your personalized Roadmap
+              appears on screen in about two minutes, with a link in your inbox
+              to keep.
             </p>
           </motion.div>
 
@@ -674,9 +793,9 @@ export default function StartPage() {
             style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", borderTop: "1px solid rgba(17,34,72,0.12)", marginTop: "clamp(40px, 5vw, 72px)" }}
           >
             {[
-              { num: "01", h3: "Tell Us About Your Brand", p: "Your website, your contact details, and five quick questions about your goals and your ideal client. Those questions are what make your roadmap genuinely yours instead of generic." },
-              { num: "02", h3: "We Map Your Brand", p: "Our AI runs your brand through the Brand Advantage™ framework … the same Get Clear, Get Noticed, Get Paid lens we apply to A-list clients … to find where your brand is misaligned and what to do about it." },
-              { num: "03", h3: "See Your Roadmap", p: "Your personalized Brand Roadmap appears on screen in about two minutes, with a link in your inbox to keep. You'll see the full route in order, where your brand is leaking, your top priority, and your first move in full." },
+              { num: "01", h3: "Tell Us About Your Brand", p: "Your website, contact details, and five quick questions about your goals and ideal client." },
+              { num: "02", h3: "We Map Your Brand", p: "Our AI runs your brand through the Brand Advantage™ framework to find where it's misaligned." },
+              { num: "03", h3: "See Your Roadmap", p: "Your Roadmap appears on screen in about two minutes, with a link in your inbox to keep." },
             ].map((card, i) => (
               <div key={i} style={{ padding: "44px 40px 48px", display: "flex", flexDirection: "column", gap: 18, borderLeft: i === 0 ? "none" : "1px solid rgba(17,34,72,0.12)" }}>
                 <p style={{ fontFamily: SERIF, fontWeight: 700, fontStyle: "italic", fontSize: "clamp(48px, 6vw, 80px)", lineHeight: 1, color: LIME, margin: "0 0 8px" }}>
@@ -758,9 +877,7 @@ export default function StartPage() {
             style={{ fontFamily: SANS, fontSize: 20, lineHeight: 1.8, color: "rgba(255,255,255,0.78)", maxWidth: 760, margin: "48px 0 0" }}
           >
             These leaders came to Left Right Labs for full brand strategy
-            engagements. The free Brand Roadmap you&apos;re about to get is
-            built on the same strategic methodology … the fastest way to see
-            where your brand stands, before committing to anything.
+            engagements. The free Brand Roadmap is built on the same methodology.
           </motion.p>
         </div>
       </section>
@@ -828,7 +945,8 @@ export default function StartPage() {
             initial="hidden" whileInView="visible" variants={rv} viewport={vp}
             style={{ marginTop: "clamp(40px, 5vw, 64px)", borderTop: "1px solid rgba(17,34,72,0.12)", maxWidth: 900 }}
           >
-            <FaqItem q="Is This Actually" qEm="Free?" a="Your Brand Roadmap is free to start. No credit card. You get the whole route mapped … where your brand is leaking across all nine areas, the order to fix it in, your number one priority, and your first move spelled out in full, on screen in minutes and in your inbox to keep. Unlocking every remaining move, your full thirty, sixty, ninety day plan, and a downloadable version is an optional $97 upgrade. No pressure either way." defaultOpen />
+            <FaqItem q="Is This Actually" qEm="Free?" a="Yep. No credit card, no catch, no fine print hiding a surprise charge later. You get a full read across all nine areas of your brand, plus your single highest-leverage action unlocked free. Unlocking every remaining move and your full 90-day plan runs $97, whenever you're ready for it." defaultOpen />
+            <FaqItem q="What If The $97 Upgrade" qEm="Isn't Useful?" a="Fair question. If it doesn't feel like the most obvious $97 you've spent on your business, tell us within 14 days and we'll refund every cent. No hoops to jump through." />
             <FaqItem q="Will I Be Pitched At" qEm="The End?" a="No pressure, ever. Your roadmap is yours to keep and act on. When you want the rest, unlocking every move is an optional $97 upgrade, and when it makes sense to work together we'll make that path clear. Nothing is gated behind a sales call, and the value is yours regardless." />
             <FaqItem q="How Is This Different From A Generic" qEm="Online Quiz?" a="A quiz gives you a score. A roadmap gives you a plan. Your brand is analyzed the way Left Right Labs analyzes A-list clients, and what comes back is a sequenced set of specific moves … not a generic critique." />
             <FaqItem q="Why Do You Fix Things In A Specific" qEm="Order?" a="Because brand problems compound in sequence. Get Clear comes first … when your positioning and message are settled, every decision downstream gets easier. Then Get Noticed, so the right people actually see you. Then Get Paid, so it converts and scales. Your roadmap starts you at your biggest gap and moves in the order that makes each step build on the last, instead of fixing things at random." />
@@ -853,42 +971,19 @@ export default function StartPage() {
             <Eyebrow lime>Your Next Move</Eyebrow>
 
             <ScotchH2 white>
-              Get The Exact Moves That Will{" "}
-              <em style={{ fontStyle: "italic", fontWeight: 400 }}>Re-Align</em>{" "}
-              Your Brand
+              See What&apos;s Been{" "}
+              <em style={{ fontStyle: "italic", fontWeight: 400 }}>Holding</em>{" "}
+              Your Brand Back
             </ScotchH2>
 
             <p style={{ fontFamily: SANS, fontSize: 20, lineHeight: 1.8, color: "rgba(255,255,255,0.82)", maxWidth: 600, margin: 0 }}>
-              You&apos;ve spent years building credibility that commands rooms.
-              This is a couple of minutes to get the Brand Roadmap that shows
-              where your brand is leaking, the order to fix it in, and your
-              first move in full.
-            </p>
-
-            <p style={{ fontFamily: SANS, fontSize: 15, lineHeight: 1.6, color: "rgba(255,255,255,0.78)", maxWidth: 560, margin: 0 }}>
-              Free to start. No pressure. Your roadmap on screen and in your inbox.
-            </p>
-
-            <ul style={{ listStyle: "none", padding: 0, margin: "4px 0 0", display: "flex", flexDirection: "column", gap: 14 }}>
-              {[
-                "Your personalized Brand Advantage™ Roadmap, on screen in minutes",
-                "The whole route mapped, in order, across all nine areas",
-                "Your #1 priority, with the first move unlocked in full",
-                "Free to start. No credit card. Every move unlocks at $97.",
-              ].map((item) => (
-                <li key={item} style={{ display: "flex", gap: 12, alignItems: "flex-start", fontFamily: SANS, fontSize: 16, lineHeight: 1.5, color: "#fff" }}>
-                  <span style={{ color: LIME, flexShrink: 0, lineHeight: 1.5 }}>✦</span>
-                  {item}
-                </li>
-              ))}
-            </ul>
-
-            <p style={{ fontFamily: SANS, fontSize: 15, lineHeight: 1.6, color: "rgba(255,255,255,0.78)", maxWidth: 560, margin: 0 }}>
-              You&apos;ve built the reputation. This is where you get the plan to make your brand carry it.
+              Two minutes from now, you could be looking at the exact reasons your
+              brand isn&apos;t landing the way you do in person, with your first
+              fixes already in hand. Free.
             </p>
 
             <AccentBtn onClick={handleCTA} disabled={isLoading}>
-              {isLoading ? "Loading…" : <>Get My Brand Roadmap&nbsp;→</>}
+              {isLoading ? "Loading…" : <>Get My Free Brand Roadmap&nbsp;→</>}
             </AccentBtn>
 
             <p style={{ fontFamily: SANS, fontSize: 14, letterSpacing: "0.06em", color: "rgba(255,255,255,0.78)", margin: 0 }}>
