@@ -388,10 +388,6 @@ export default function StartPage() {
           }}
         >
           <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}>
-              <Eyebrow lime>A Free Brand Roadmap From Left Right Labs</Eyebrow>
-            </motion.div>
-
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -481,7 +477,6 @@ export default function StartPage() {
           viewport={vp}
         >
           <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
-            <Eyebrow>The Problem</Eyebrow>
             <ScotchH2>
               Your Brand Is <em style={{ fontStyle: "italic", fontWeight: 400 }}>Playing Smaller</em> Than You Are
             </ScotchH2>
@@ -553,7 +548,6 @@ export default function StartPage() {
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
-            <Eyebrow>The Methodology</Eyebrow>
             <ScotchH2>
               The Same Process The Big Names{" "}
               <em style={{ fontStyle: "italic", fontWeight: 400 }}>Paid Thousands</em>{" "}
@@ -591,7 +585,6 @@ export default function StartPage() {
             initial="hidden" whileInView="visible" variants={rv} viewport={vp}
             style={{ display: "flex", flexDirection: "column", gap: 22, alignItems: "center", textAlign: "center", maxWidth: 820, margin: "0 auto" }}
           >
-            <Eyebrow lime center>The Framework</Eyebrow>
             <ScotchH2 white center>
               Get Clear. Get Noticed.{" "}
               <em style={{ fontStyle: "italic", fontWeight: 400 }}>Get Paid.</em>
@@ -668,7 +661,6 @@ export default function StartPage() {
             initial="hidden" whileInView="visible" variants={rv} viewport={vp}
             style={{ display: "flex", flexDirection: "column", gap: 22, maxWidth: 800, marginBottom: "clamp(32px, 4vw, 56px)" }}
           >
-            <Eyebrow>Watch First</Eyebrow>
             <ScotchH2>
               Why Your Roadmap Is The <em style={{ fontStyle: "italic", fontWeight: 400 }}>First Step</em>
             </ScotchH2>
@@ -707,7 +699,6 @@ export default function StartPage() {
             initial="hidden" whileInView="visible" variants={rv} viewport={vp}
             style={{ display: "flex", flexDirection: "column", gap: 22, alignItems: "center", textAlign: "center", maxWidth: 800, margin: "0 auto" }}
           >
-            <Eyebrow lime center>What You Get</Eyebrow>
             <ScotchH2 white center>
               Here&apos;s{" "}
               <em style={{ fontStyle: "italic", fontWeight: 400 }}>Everything</em>{" "}
@@ -776,7 +767,6 @@ export default function StartPage() {
             initial="hidden" whileInView="visible" variants={rv} viewport={vp}
             style={{ display: "flex", flexDirection: "column", gap: 22, maxWidth: 800 }}
           >
-            <Eyebrow>The Process</Eyebrow>
             <ScotchH2>
               How It <em style={{ fontStyle: "italic", fontWeight: 400 }}>Works</em>
             </ScotchH2>
@@ -818,7 +808,6 @@ export default function StartPage() {
             initial="hidden" whileInView="visible" variants={rv} viewport={vp}
             style={{ display: "flex", flexDirection: "column", gap: 22 }}
           >
-            <Eyebrow lime>Proof</Eyebrow>
             <ScotchH2 white>
               What Leaders <em style={{ fontStyle: "italic", fontWeight: 400 }}>Say</em>
             </ScotchH2>
@@ -935,7 +924,6 @@ export default function StartPage() {
             initial="hidden" whileInView="visible" variants={rv} viewport={vp}
             style={{ display: "flex", flexDirection: "column", gap: 22, maxWidth: 800 }}
           >
-            <Eyebrow>Questions</Eyebrow>
             <ScotchH2>
               Your Questions, <em style={{ fontStyle: "italic", fontWeight: 400 }}>Answered</em>
             </ScotchH2>
@@ -968,7 +956,6 @@ export default function StartPage() {
             initial="hidden" whileInView="visible" variants={rv} viewport={vp}
             style={{ display: "flex", flexDirection: "column", gap: 30, alignItems: "flex-start", maxWidth: 640 }}
           >
-            <Eyebrow lime>Your Next Move</Eyebrow>
 
             <ScotchH2 white>
               See What&apos;s Been{" "}
