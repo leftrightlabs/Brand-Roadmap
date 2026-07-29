@@ -685,18 +685,18 @@ export default function StartPage() {
             </p>
           </motion.div>
 
-          {/* ⬇ PLACEHOLDER — replace this block with the video embed (YouTube /
-              Vimeo / Wistia <iframe>). Keep the 16:9 wrapper for responsiveness. */}
+          {/* Method video — Vimeo unlisted (player URL + `h=` privacy hash). */}
           <motion.div
             initial="hidden" whileInView="visible" variants={rv} viewport={vp}
             style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", background: NAVY, overflow: "hidden", borderTop: `4px solid ${LIME}` }}
           >
-            <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 20 }}>
-              <div style={{ width: 88, height: 88, borderRadius: 999, background: LIME, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <span style={{ width: 0, height: 0, borderTop: "16px solid transparent", borderBottom: "16px solid transparent", borderLeft: `26px solid ${NAVY}`, marginLeft: 6 }} />
-              </div>
-              <p style={{ fontFamily: SANS, fontSize: 13, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.6)", margin: 0 }}>Method Video — Coming Soon</p>
-            </div>
+            <iframe
+              src="https://player.vimeo.com/video/1213335065?h=b0f9f53887&title=0&byline=0&portrait=0"
+              title="Why your Brand Roadmap is the first step"
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", border: 0 }}
+              allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+              allowFullScreen
+            />
           </motion.div>
         </div>
       </section>
