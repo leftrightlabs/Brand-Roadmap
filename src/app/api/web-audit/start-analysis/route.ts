@@ -708,7 +708,6 @@ async function syncRoadmapToActiveCampaign(shortId: string, results: RoadmapResu
   // priority tag is fixed to get-clear. We still surface their specific
   // start-here area as the personalization token (prefer a Get Clear
   // start-here area, then any start-here, then the first Prioritize area).
-  const priorityKey: PillarKey = 'getClear';
   const priorityLabel = 'Get Clear';
   let getClearStartHere = '';
   let anyStartHere = '';
@@ -729,7 +728,6 @@ async function syncRoadmapToActiveCampaign(shortId: string, results: RoadmapResu
   await syncRoadmapContact({
     email,
     name: rows[0]?.name ?? '',
-    priorityPillarKey: priorityKey,
     priorityPillarLabel: priorityLabel,
     startHereArea: getClearStartHere || anyStartHere || firstPrioritizeLabel,
     nudge: results.roadmapNudge ?? '',

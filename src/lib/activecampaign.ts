@@ -19,15 +19,18 @@ const API_KEY = process.env.ACTIVECAMPAIGN_API_KEY;
 const LIST_ID = process.env.ACTIVECAMPAIGN_LIST_ID;
 
 // ── Tag vocabulary (the contract between this app and AC automations) ────────
+// Names must match the tags the ActiveCampaign automations trigger on, exactly
+// (including capitalisation and the space after the colon) — a mismatch creates
+// a duplicate tag in AC and the automation silently never fires.
+//   `completed` is the entry trigger for the nurture automation.
+//   `paid` is the entry trigger for the post-purchase (Book a Call) automation,
+//   and the Jump To condition that stops the $97 nudge track.
+// `Status: Nurturing` is applied by the automation itself, not here, so it can
+// be changed without a deploy.
 export const AC_TAGS = {
-  completed: 'roadmap-report-completed',
-  paid: 'roadmap-paid',
-  unpaid: 'roadmap-unpaid',
-  pillar: {
-    getClear: 'roadmap-priority-get-clear',
-    getNoticed: 'roadmap-priority-get-noticed',
-    getPaid: 'roadmap-priority-get-paid',
-  } as Record<string, string>,
+  completed: 'Roadmap: Nurture Started',
+  paid: 'Roadmap: Paid Upgrade',
+  unpaid: 'Roadmap: No Upgrade',
 };
 
 // ── Custom field titles (auto-created if missing; merge with %FIELD_NAME%) ───
@@ -200,9 +203,7 @@ function splitName(name: string): { firstName: string; lastName: string } {
 export interface RoadmapContactSync {
   email: string;
   name: string;
-  /** Tag key: 'getClear' | 'getNoticed' | 'getPaid'. */
-  priorityPillarKey: string;
-  /** Human label, e.g. "Get Noticed". */
+  /** Human label for the `Brand Roadmap Priority` field — always "Get Clear". */
   priorityPillarLabel: string;
   /** Human label of the start-here area, e.g. "Visual positioning". */
   startHereArea: string;
@@ -236,8 +237,6 @@ export async function syncRoadmapContact(data: RoadmapContactSync): Promise<void
     if (!contactId) return;
 
     await addTag(contactId, AC_TAGS.completed);
-    const pillarTag = AC_TAGS.pillar[data.priorityPillarKey];
-    if (pillarTag) await addTag(contactId, pillarTag);
     if (data.paid) {
       await addTag(contactId, AC_TAGS.paid);
       await removeTag(contactId, AC_TAGS.unpaid);
