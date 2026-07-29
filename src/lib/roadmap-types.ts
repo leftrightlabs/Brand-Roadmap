@@ -87,7 +87,8 @@ export const PILLARS: PillarMeta[] = [
     label: 'Get Clear',
     tagline: 'Is the foundation something only you could own?',
     areas: ['brandPersonality', 'signatureFramework', 'elevatedAudience'],
-    videoUrl: undefined, // TODO: paste the Get Clear lesson embed URL
+    // Vimeo unlisted video: player URL + `h=` privacy hash from the share link.
+    videoUrl: 'https://player.vimeo.com/video/1213333895?h=d123a76518&title=0&byline=0&portrait=0',
     bgImage: '/images/Architecture-Bird.webp',
   },
   {
@@ -95,7 +96,7 @@ export const PILLARS: PillarMeta[] = [
     label: 'Get Noticed',
     tagline: 'Does the expression match the vision?',
     areas: ['magneticVoice', 'visualPositioning', 'onlinePresence'],
-    videoUrl: undefined, // TODO: paste the Get Noticed lesson embed URL
+    videoUrl: 'https://player.vimeo.com/video/1213333893?h=bcb88ea84f&title=0&byline=0&portrait=0',
     bgImage: '/images/people-networking.webp',
   },
   {
@@ -103,7 +104,7 @@ export const PILLARS: PillarMeta[] = [
     label: 'Get Paid',
     tagline: 'Is the brand built to convert and scale?',
     areas: ['brandAuthority', 'offerEvolution', 'visionaryGrowth'],
-    videoUrl: undefined, // TODO: paste the Get Paid lesson embed URL
+    videoUrl: 'https://player.vimeo.com/video/1213333892?h=4070ac74c4&title=0&byline=0&portrait=0',
     bgImage: '/images/blurred-hotel.webp',
   },
 ];
