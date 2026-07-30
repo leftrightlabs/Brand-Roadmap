@@ -86,6 +86,9 @@ export async function GET(
           shortId,
           websiteUrl: report.website_url,
           paid: report.paid === true,
+          // Surfaced so the report can show the real remaining time instead of
+          // a hardcoded "7 days". Paid reports are pushed far into the future.
+          expiresAt: report.expires_at,
           leadName: report.lead_name ?? undefined,
           leadEmail: report.lead_email ?? undefined,
         },

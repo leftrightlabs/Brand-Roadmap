@@ -28,6 +28,7 @@ interface AssessmentResults extends Partial<RoadmapResults> {
   error?: string;
   generatedAt?: string;
   paid?: boolean;
+  expiresAt?: string;
 }
 
 const FULL_PRICE = "$97";
@@ -345,6 +346,23 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
 
   // Free = the roadmap's route + first move (diagnosis). Paid/preview unlocks every move.
   const unlocked = results.paid === true && !forceFree;
+
+  // Paid reports don't expire (the webhook pushes expires_at far out), so the
+  // notice has to reflect that rather than always claiming "7 days". For free
+  // reports, show the real time left instead of a hardcoded number.
+  const daysLeft = results.expiresAt
+    ? Math.ceil((new Date(results.expiresAt).getTime() - Date.now()) / 86_400_000)
+    : null;
+  const expiryNotice =
+    results.paid === true
+      ? "This roadmap is yours permanently."
+      : daysLeft === null
+        ? "This roadmap will expire in 7 days."
+        : daysLeft <= 0
+          ? "This roadmap expires today."
+          : daysLeft === 1
+            ? "This roadmap expires tomorrow."
+            : `This roadmap expires in ${daysLeft} days.`;
   const goUnlock = async () => {
     if (isUnlocking) return;
     setIsUnlocking(true);
@@ -388,7 +406,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
                   <Copy className="w-4 h-4 mr-2" />Copy Link
                 </Button>
               </div>
-              <p className="text-white/40 text-sm">This roadmap will expire in 7 days.</p>
+              <p className="text-white/40 text-sm">{expiryNotice}</p>
             </div>
             <div className="hidden md:block">
               {ogImageUrl ? (
