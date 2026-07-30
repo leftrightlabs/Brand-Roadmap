@@ -19,9 +19,9 @@ export async function POST(request: NextRequest) {
     }
 
     const rows = await sql<
-      { paid: boolean; expires_at: string; email: string | null }[]
+      { paid: boolean; email: string | null }[]
     >`
-      SELECT sr.paid, sr.expires_at, l.email
+      SELECT sr.paid, l.email
       FROM shared_reports sr
       LEFT JOIN website_audit_leads l ON l.id = sr.lead_id
       WHERE sr.short_id = ${shortId}
@@ -34,9 +34,7 @@ export async function POST(request: NextRequest) {
     if (report.paid) {
       return NextResponse.json({ error: 'Already unlocked', alreadyPaid: true }, { status: 409 });
     }
-    if (new Date() > new Date(report.expires_at)) {
-      return NextResponse.json({ error: 'This roadmap has expired' }, { status: 410 });
-    }
+    // No expiry gate: someone who decides to upgrade months later can still pay.
 
     // Publishable key is returned to the client so it can init Stripe.js at
     // runtime (NEXT_PUBLIC_* would be baked at build, which the Docker build

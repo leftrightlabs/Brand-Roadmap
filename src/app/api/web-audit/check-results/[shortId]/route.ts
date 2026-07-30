@@ -63,18 +63,9 @@ export async function GET(
       report.analysis_results?.status
     );
 
-    // Expiration check
-    if (new Date() > new Date(report.expires_at)) {
-      return NextResponse.json(
-        {
-          error: 'Report has expired',
-          expired: true,
-          shortId,
-          websiteUrl: report.website_url,
-        },
-        { status: 410 }
-      );
-    }
+    // Reports no longer expire, so there is no expiry gate here. Dropping the
+    // check also revives reports created under the old 7-day TTL, which is
+    // intentional: every link we ever emailed keeps working.
 
     const analysisResults = report.analysis_results;
 
@@ -86,9 +77,6 @@ export async function GET(
           shortId,
           websiteUrl: report.website_url,
           paid: report.paid === true,
-          // Surfaced so the report can show the real remaining time instead of
-          // a hardcoded "7 days". Paid reports are pushed far into the future.
-          expiresAt: report.expires_at,
           leadName: report.lead_name ?? undefined,
           leadEmail: report.lead_email ?? undefined,
         },

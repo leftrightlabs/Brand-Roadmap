@@ -28,7 +28,6 @@ interface AssessmentResults extends Partial<RoadmapResults> {
   error?: string;
   generatedAt?: string;
   paid?: boolean;
-  expiresAt?: string;
 }
 
 const FULL_PRICE = "$97";
@@ -347,22 +346,11 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
   // Free = the roadmap's route + first move (diagnosis). Paid/preview unlocks every move.
   const unlocked = results.paid === true && !forceFree;
 
-  // Paid reports don't expire (the webhook pushes expires_at far out), so the
-  // notice has to reflect that rather than always claiming "7 days". For free
-  // reports, show the real time left instead of a hardcoded number.
-  const daysLeft = results.expiresAt
-    ? Math.ceil((new Date(results.expiresAt).getTime() - Date.now()) / 86_400_000)
+  // Roadmaps don't expire. We note the generation date instead, since a brand
+  // analysis does go stale as their site changes, and invite a fresh run.
+  const generatedOn = results.generatedAt
+    ? new Date(results.generatedAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
     : null;
-  const expiryNotice =
-    results.paid === true
-      ? "This roadmap is yours permanently."
-      : daysLeft === null
-        ? "This roadmap will expire in 7 days."
-        : daysLeft <= 0
-          ? "This roadmap expires today."
-          : daysLeft === 1
-            ? "This roadmap expires tomorrow."
-            : `This roadmap expires in ${daysLeft} days.`;
   const goUnlock = async () => {
     if (isUnlocking) return;
     setIsUnlocking(true);
@@ -406,7 +394,11 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
                   <Copy className="w-4 h-4 mr-2" />Copy Link
                 </Button>
               </div>
-              <p className="text-white/40 text-sm">{expiryNotice}</p>
+              <p className="text-white/40 text-sm">
+                {generatedOn
+                  ? <>This roadmap reflects your site as of {generatedOn}. Changed things since? <button onClick={() => router.push("/start")} className="underline hover:text-white/70 transition-colors">Run a fresh one.</button></>
+                  : "This roadmap is yours to keep."}
+              </p>
             </div>
             <div className="hidden md:block">
               {ogImageUrl ? (
@@ -687,9 +679,9 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
               <motion.div id="unlock" initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp} className="max-w-3xl mx-auto text-center scroll-mt-16">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/images/people-networking.webp" alt="Founders building elevated brands with Left Right Labs" className="w-full max-w-lg mx-auto rounded-2xl mb-8 shadow-xl border border-white/10" />
-                <p className="text-white/60 text-lg mb-8">Unlock the specific next move for all nine areas — plus example rewrites in your voice, your full 30/60/90-day plan, and a roadmap that never expires.</p>
+                <p className="text-white/60 text-lg mb-8">Unlock the specific next move for all nine areas, plus example rewrites in your voice and your full 30/60/90-day plan in the order that actually builds.</p>
                 <ul className="text-left max-w-md mx-auto space-y-3 mb-10">
-                  {["The specific next move for all 9 areas", "Example rewrites in your brand voice", "Every step of your 30/60/90-day plan", "Your roadmap never expires (free links come down after 7 days)", "Shareable link, so your team can work from it too"].map((f) => (
+                  {["The specific next move for all 9 areas", "Example rewrites in your brand voice", "Every step of your 30/60/90-day plan", "The exact order to work it, so nothing gets fixed out of sequence", "Shareable link, so your team can work from it too"].map((f) => (
                     <li key={f} className="flex items-center gap-3 text-white/85 text-[16px]">
                       <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#a7c140] flex-shrink-0"><Check className="w-3.5 h-3.5 text-[#112248]" /></span>
                       {f}
