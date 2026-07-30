@@ -733,7 +733,7 @@ export default function StartPage() {
             {[
               { num: "01", h3: "Where Your Brand Is Losing People", p: "A straight read across all nine areas of your brand. You'll see exactly which areas are working for you and which ones are quietly turning people away." },
               { num: "02", h3: "Your Highest-Leverage Action, Free", p: "We're so confident in the results that we hand you the single highest-leverage move for your brand right now, completely free. One real, specific action you can take today, before you've spent a dime." },
-              { num: "03", h3: "Your Full 90-Day Game Plan", p: "When you're ready, $97 unlocks every move across all three tiers, your complete 30/60/90-day plan in the exact order to work it, and a downloadable copy to keep." },
+              { num: "03", h3: "Your Full 90-Day Game Plan", p: "When you're ready, $97 unlocks every move across all three tiers and your complete 30/60/90-day plan in the exact order to work it. Your roadmap also stops expiring, so it stays yours to work from." },
             ].map((card, i) => (
               <div key={i} style={{ padding: "44px 40px 48px", display: "flex", flexDirection: "column", gap: 18, borderLeft: i === 0 ? "none" : "1px solid rgba(255,255,255,0.14)" }}>
                 <p style={{ fontFamily: SERIF, fontWeight: 700, fontStyle: "italic", fontSize: "clamp(48px, 6vw, 80px)", lineHeight: 1, color: LIME, margin: "0 0 8px" }}>
@@ -761,9 +761,9 @@ export default function StartPage() {
               <span style={{ fontFamily: SANS, fontSize: 16, color: "rgba(255,255,255,0.7)" }}>for the complete plan</span>
             </div>
             <p style={{ fontFamily: SANS, fontSize: 17, lineHeight: 1.7, color: "rgba(255,255,255,0.82)", maxWidth: 620, margin: 0 }}>
-              Every remaining move, your full 90-day sequence, and a downloadable
-              copy. Refunded within 14 days if it doesn&apos;t feel like the most
-              obvious $97 you&apos;ve spent.
+              Every remaining move and your full 90-day sequence, yours to keep
+              instead of expiring. Refunded within 14 days if it doesn&apos;t feel
+              like the most obvious $97 you&apos;ve spent.
             </p>
             <AccentBtn onClick={handleCTA} disabled={isLoading}>
               {isLoading ? "Loading…" : <>Get My Free Brand Roadmap&nbsp;→</>}
