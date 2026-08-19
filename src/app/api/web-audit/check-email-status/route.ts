@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
       if (status === 'completed') {
         return NextResponse.json(
           {
-            error: 'You have already received a Brand Roadmap for this email address.',
+            error: 'You have already received a Brand Elevation Roadmap for this email address.',
             existingShortId: report.short_id,
             message: 'You can view your existing roadmap or contact us if you need a new one.',
           },
@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
       if (status === 'processing') {
         return NextResponse.json(
           {
-            error: 'You have a Brand Roadmap in progress for this email address.',
+            error: 'You have a Brand Elevation Roadmap in progress for this email address.',
             existingShortId: report.short_id,
             message: 'Please wait for your current roadmap to finish, or contact support if it has been stuck.',
           },

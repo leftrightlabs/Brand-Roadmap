@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
             currency: 'usd',
             unit_amount: FULL_ROADMAP_PRICE_CENTS,
             product_data: {
-              name: 'Brand Roadmap: Full Unlock',
+              name: 'Brand Elevation Roadmap: Full Unlock',
               description:
                 'Every move for all nine areas, your full 30/60/90-day plan, example rewrites, and a downloadable PDF.',
             },

@@ -1,5 +1,5 @@
 /**
- * Canonical types + render metadata for the Brand Roadmap report.
+ * Canonical types + render metadata for the Brand Elevation Roadmap report.
  *
  * The report is organized around LRL's Get Clear → Get Noticed → Get Paid
  * framework, evaluated across nine areas (three per pillar). Each area gets a

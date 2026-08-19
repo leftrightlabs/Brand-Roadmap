@@ -37,7 +37,7 @@ WHAT THE FOUNDER TOLD US — use this to TAILOR the roadmap, not just the websit
 ${intakeLines.join("\n")}`
     : "";
 
-  let prompt = `You are generating a personalized Brand Roadmap from a website analysis, using Left Right Labs' signature framework: Get Clear → Get Noticed → Get Paid.
+  let prompt = `You are generating a personalized Brand Elevation Roadmap from a website analysis, using Left Right Labs' signature framework: Get Clear → Get Noticed → Get Paid.
 ${intakeBlock}
 
 You must return the output as a **valid JSON object only** — not Markdown, not plain text, and not a mix. Start with { and end with }.
@@ -143,7 +143,7 @@ ${websiteContent}`;
 
   prompt += `
 
-Analyze the website content above and produce the Brand Roadmap. Be specific and quote real copy. Keep shortRead to 2–4 substantive sentences (valuable but no fix), nextMove to two useful sentences, and whatGoodLooksLike to one line. Always lead with Get Clear. Return only the JSON object.`;
+Analyze the website content above and produce the Brand Elevation Roadmap. Be specific and quote real copy. Keep shortRead to 2–4 substantive sentences (valuable but no fix), nextMove to two useful sentences, and whatGoodLooksLike to one line. Always lead with Get Clear. Return only the JSON object.`;
 
   return prompt;
 }

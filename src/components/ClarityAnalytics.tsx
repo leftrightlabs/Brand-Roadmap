@@ -4,7 +4,7 @@ import { useGeolocationConsent } from '@/lib/use-geolocation-consent';
 import Script from 'next/script';
 
 // Microsoft Clarity tracking. Honors EU/UK consent rules via geolocation hook.
-// Default project ID is the Brand Roadmap project — pass projectId to override.
+// Default project ID is the Brand Elevation Roadmap project — pass projectId to override.
 
 interface ClarityAnalyticsProps {
   projectId?: string;

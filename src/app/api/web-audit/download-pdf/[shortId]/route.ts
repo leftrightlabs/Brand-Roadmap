@@ -55,7 +55,7 @@ export async function GET(
     return new NextResponse(new Uint8Array(pdfBuffer), {
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="Brand-Roadmap-${domain}.pdf"`,
+        'Content-Disposition': `attachment; filename="Brand-Elevation-Roadmap-${domain}.pdf"`,
       },
     });
   } catch (error) {
@@ -110,7 +110,7 @@ function generateRoadmapPDF(
   doc.setTextColor(255, 255, 255);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(24);
-  doc.text('Your Brand Roadmap', margin, 28);
+  doc.text('Your Brand Elevation Roadmap', margin, 28);
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(11);
   doc.text(`The sequenced moves to re-align ${websiteUrl}`, margin, 38);
@@ -217,7 +217,7 @@ function generateRoadmapPDF(
     doc.setFontSize(8);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(120, 120, 120);
-    doc.text('© 2026 Brand Roadmap™ by Left Right Labs. All rights reserved.', margin, 290);
+    doc.text('© 2026 Brand Elevation Roadmap™ by Left Right Labs. All rights reserved.', margin, 290);
     doc.text(`Page ${i} of ${pageCount}`, pageW - margin, 290, { align: 'right' });
   }
 

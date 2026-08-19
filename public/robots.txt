@@ -1,7 +1,7 @@
 # robots.txt for roadmap.leftrightlabs.com
 #
 # Default policy: allow all standard search engines. We also explicitly allow
-# AI crawlers — the Brand Roadmap helps brands show up in AI answers, so we
+# AI crawlers — the Brand Elevation Roadmap helps brands show up in AI answers, so we
 # want our own marketing pages to be readable by AI.
 #
 # Per-lead report pages are no-indexed via per-page meta robots, not

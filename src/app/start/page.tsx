@@ -355,7 +355,7 @@ export default function StartPage() {
               );
             })}
             <AccentBtn onClick={handleCTA} disabled={isLoading}>
-              {isLoading ? "Loading…" : "Get My Free Brand Roadmap"}
+              {isLoading ? "Loading…" : "Get My Free Brand Elevation Roadmap"}
             </AccentBtn>
           </nav>
         </div>
@@ -420,7 +420,7 @@ export default function StartPage() {
               transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
               style={{ fontFamily: SANS, fontSize: 20, lineHeight: 1.8, color: "rgba(255,255,255,0.82)", maxWidth: 660, margin: 0 }}
             >
-              Your free Brand Roadmap shows you exactly where your brand is
+              Your free Brand Elevation Roadmap shows you exactly where your brand is
               losing people, and hands you your first fixes on the spot. It&apos;s
               built on the same process JJ Virgin and Laila Ali paid us thousands
               for, and it takes less than 5 minutes to complete.
@@ -432,7 +432,7 @@ export default function StartPage() {
               transition={{ duration: 0.7, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
             >
               <AccentBtn onClick={handleCTA} disabled={isLoading}>
-                {isLoading ? "Loading…" : <>Get My Free Brand Roadmap&nbsp;→</>}
+                {isLoading ? "Loading…" : <>Get My Free Brand Elevation Roadmap&nbsp;→</>}
               </AccentBtn>
             </motion.div>
 
@@ -499,7 +499,7 @@ export default function StartPage() {
               <p style={{ fontFamily: SANS, fontSize: 20, lineHeight: 1.8, color: "rgba(17,34,72,0.72)", margin: 0 }}>
                 You don&apos;t need to start with a $50,000 rebrand to fix that. You
                 need a clear first step: exactly where your brand is losing people,
-                and what to change first. That&apos;s what your Brand Roadmap gives
+                and what to change first. That&apos;s what your Brand Elevation Roadmap gives
                 you, free. It&apos;s the first step to getting clear, getting
                 noticed, and getting paid what you&apos;re actually worth.
               </p>
@@ -692,7 +692,7 @@ export default function StartPage() {
           >
             <iframe
               src="https://player.vimeo.com/video/1213335065?h=b0f9f53887&title=0&byline=0&portrait=0"
-              title="Why your Brand Roadmap is the first step"
+              title="Why your Brand Elevation Roadmap is the first step"
               style={{ position: "absolute", inset: 0, width: "100%", height: "100%", border: 0 }}
               allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
               allowFullScreen
@@ -766,7 +766,7 @@ export default function StartPage() {
               doesn&apos;t feel like the most obvious $97 you&apos;ve spent.
             </p>
             <AccentBtn onClick={handleCTA} disabled={isLoading}>
-              {isLoading ? "Loading…" : <>Get My Free Brand Roadmap&nbsp;→</>}
+              {isLoading ? "Loading…" : <>Get My Free Brand Elevation Roadmap&nbsp;→</>}
             </AccentBtn>
           </motion.div>
         </div>
@@ -880,7 +880,7 @@ export default function StartPage() {
             style={{ fontFamily: SANS, fontSize: 20, lineHeight: 1.8, color: "rgba(255,255,255,0.78)", maxWidth: 760, margin: "48px 0 0" }}
           >
             These leaders came to Left Right Labs for full brand strategy
-            engagements. The free Brand Roadmap is built on the same methodology.
+            engagements. The free Brand Elevation Roadmap is built on the same methodology.
           </motion.p>
         </div>
       </section>
@@ -984,7 +984,7 @@ export default function StartPage() {
             </p>
 
             <AccentBtn onClick={handleCTA} disabled={isLoading}>
-              {isLoading ? "Loading…" : <>Get My Free Brand Roadmap&nbsp;→</>}
+              {isLoading ? "Loading…" : <>Get My Free Brand Elevation Roadmap&nbsp;→</>}
             </AccentBtn>
 
             <p style={{ fontFamily: SANS, fontSize: 14, letterSpacing: "0.06em", color: "rgba(255,255,255,0.78)", margin: 0 }}>

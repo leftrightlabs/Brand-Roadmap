@@ -183,7 +183,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
           const d = await r.json();
           if (d.status === "completed" && d.results?.paid) {
             setResults(d.results);
-            toast({ title: "Unlocked", description: "Your full Brand Roadmap is ready." });
+            toast({ title: "Unlocked", description: "Your full Brand Elevation Roadmap is ready." });
             clearInterval(id);
             return;
           }
@@ -244,7 +244,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
     try {
       const url = `${window.location.origin}/start/report/${shortId}`;
       if (navigator.share && navigator.canShare && navigator.canShare({ text: "test" })) {
-        await navigator.share({ text: `🚀 Here's my Brand Roadmap!\n${url}\n\nGet your own at roadmap.leftrightlabs.com.` });
+        await navigator.share({ text: `🚀 Here's my Brand Elevation Roadmap!\n${url}\n\nGet your own at roadmap.leftrightlabs.com.` });
       } else {
         toast({ title: "Native Sharing Not Available", description: "Your browser doesn't support native sharing. Use 'Copy Link' instead.", variant: "destructive" });
       }
@@ -290,7 +290,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
       <div className="min-h-screen bg-[#112248] flex items-center justify-center">
         <motion.div className="text-center" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#a7c140] mx-auto mb-4" />
-          <p className="text-white/80">Loading your Brand Roadmap...</p>
+          <p className="text-white/80">Loading your Brand Elevation Roadmap...</p>
         </motion.div>
       </div>
     );
@@ -382,7 +382,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="grid md:grid-cols-[1fr_340px] gap-10 items-center">
             <div>
               <div className="font-heading-transform">
-                <h1 className="text-2xl md:text-[36px] font-heading text-white mb-2 whitespace-nowrap">Your Brand Roadmap™</h1>
+                <h1 className="text-2xl md:text-[34px] font-heading text-white mb-2 leading-tight text-balance">Your Brand Elevation Roadmap™</h1>
               </div>
               <div className="w-16 h-0.5 bg-[#a7c140] my-4" />
               <p className="text-base md:text-lg text-white/50 mb-6">The sequenced moves to re-align {results.websiteUrl}</p>

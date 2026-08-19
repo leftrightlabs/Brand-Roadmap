@@ -10,7 +10,7 @@ import { Loader2, Globe, Brain, MessageSquare, CheckCircle2 } from "lucide-react
 const ANALYSIS_STEPS = [
   { icon: Globe, label: "Gathering and reviewing your website's content and structure" },
   { icon: Brain, label: "Evaluating visual identity, tone, and overall brand consistency" },
-  { icon: MessageSquare, label: "Building your personalized Brand Advantage™ Roadmap with sequenced next moves" },
+  { icon: MessageSquare, label: "Building your personalized Brand Elevation Roadmap with sequenced next moves" },
 ];
 
 export default function AnalyzingPage() {
@@ -226,7 +226,7 @@ export default function AnalyzingPage() {
         if (response.status === 409 && errorData.existingShortId) {
           toast({
             title: "Roadmap Already Exists",
-            description: "You've already received your Brand Advantage™ Roadmap. Redirecting you to it now...",
+            description: "You've already received your Brand Elevation Roadmap. Redirecting you to it now...",
             variant: "destructive",
           });
           
@@ -351,7 +351,7 @@ export default function AnalyzingPage() {
           console.log("[ANALYZING] Report already exists:", errorData);
           toast({
             title: "Roadmap Already Exists",
-            description: errorData.message || "You already have a Brand Roadmap for this email address.",
+            description: errorData.message || "You already have a Brand Elevation Roadmap for this email address.",
             variant: "destructive",
           });
           router.push("/start/info");
@@ -365,7 +365,7 @@ export default function AnalyzingPage() {
             setIsAnalyzing(false);
             toast({
               title: "Roadmap Not Found",
-              description: "Your Brand Roadmap could not be found. Please start a new one.",
+              description: "Your Brand Elevation Roadmap could not be found. Please start a new one.",
               variant: "destructive",
             });
             router.push(getWebsiteInputUrl());
@@ -503,7 +503,7 @@ export default function AnalyzingPage() {
           transition={{ duration: 0.7, ease: "easeOut" }}
         >
           <h1 className="h1-form-title font-heading text-white mb-4 leading-tight">
-            Building Your Brand Roadmap
+            Building Your Brand Elevation Roadmap
           </h1>
           <div className="w-16 h-0.5 bg-[#a7c140] mx-auto mb-4" />
           <p className="text-base md:text-lg text-white/60 max-w-md mx-auto">

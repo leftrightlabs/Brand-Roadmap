@@ -147,7 +147,7 @@ export default function IntakeWizard() {
         {/* Eyebrow + progress */}
         <div className="text-center mb-6">
           <p style={{ fontSize: 12, fontWeight: 600, letterSpacing: "0.28em", textTransform: "uppercase", color: LIME, marginBottom: 16 }}>
-            Your Brand Roadmap™
+            Your Brand Elevation Roadmap™
           </p>
           <div style={{ width: "100%", height: 4, background: "rgba(255,255,255,0.12)", borderRadius: 999, overflow: "hidden" }}>
             <motion.div animate={{ width: `${progress}%` }} transition={{ duration: 0.4, ease: "easeOut" }} style={{ height: "100%", background: LIME }} />

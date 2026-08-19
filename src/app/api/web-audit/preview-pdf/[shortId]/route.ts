@@ -412,7 +412,7 @@ function generateHTMLContent(auditData: any, parsedResults: any, ogImageUrl?: st
             This report was generated using advanced AI analysis based on publicly available website content. While care is taken to provide accurate and relevant insights, this report may contain errors, omissions, or generalized recommendations. For tailored strategy or functionality recommendations, we recommend a human-led review with our expert brand strategists. Contact us to book your in-depth consultation.
           </div>
           <div class="brand-footer">
-            © 2026 Brand Roadmap™ by Left Right Labs. All rights reserved.
+            © 2026 Brand Elevation Roadmap™ by Left Right Labs. All rights reserved.
           </div>
         </div>
       </div>
