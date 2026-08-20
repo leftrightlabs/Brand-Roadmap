@@ -6,7 +6,7 @@ import ClarityAnalytics from "@/components/ClarityAnalytics";
 import CookieConsentBanner from "@/components/CookieConsentBanner";
 import GeolocationInitializer from "@/components/GeolocationInitializer";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://roadmap.leftrightlabs.com';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://roadmap.brandelevation.ai';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

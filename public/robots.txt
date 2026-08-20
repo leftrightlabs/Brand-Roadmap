@@ -1,4 +1,4 @@
-# robots.txt for roadmap.leftrightlabs.com
+# robots.txt for roadmap.brandelevation.ai
 #
 # Default policy: allow all standard search engines. We also explicitly allow
 # AI crawlers — the Brand Elevation Roadmap helps brands show up in AI answers, so we
@@ -58,4 +58,4 @@ Allow: /
 User-agent: FacebookBot
 Allow: /
 
-Sitemap: https://roadmap.leftrightlabs.com/sitemap.xml
+Sitemap: https://roadmap.brandelevation.ai/sitemap.xml

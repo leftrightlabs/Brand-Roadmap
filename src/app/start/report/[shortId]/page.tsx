@@ -244,7 +244,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
     try {
       const url = `${window.location.origin}/start/report/${shortId}`;
       if (navigator.share && navigator.canShare && navigator.canShare({ text: "test" })) {
-        await navigator.share({ text: `🚀 Here's my Brand Elevation Roadmap!\n${url}\n\nGet your own at roadmap.leftrightlabs.com.` });
+        await navigator.share({ text: `🚀 Here's my Brand Elevation Roadmap!\n${url}\n\nGet your own at roadmap.brandelevation.ai.` });
       } else {
         toast({ title: "Native Sharing Not Available", description: "Your browser doesn't support native sharing. Use 'Copy Link' instead.", variant: "destructive" });
       }

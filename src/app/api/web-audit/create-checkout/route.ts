@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sql } from '@/lib/db';
 import { getStripe, stripeEnabled, FULL_ROADMAP_PRICE_CENTS } from '@/lib/stripe';
+import { canonicalOrigin } from '@/lib/site-url';
 
 export const runtime = 'nodejs';
 
@@ -44,8 +45,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Payments are not fully configured yet.' }, { status: 503 });
     }
 
-    const domain = process.env.RAILWAY_PUBLIC_DOMAIN || 'roadmap.leftrightlabs.com';
-    const base = `https://${domain}`;
+    const base = canonicalOrigin();
 
     // Embedded checkout: the form renders inside our own branded modal, so the
     // buyer never leaves the site. On completion Stripe redirects the page to

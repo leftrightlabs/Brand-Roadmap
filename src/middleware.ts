@@ -12,6 +12,32 @@ const NOINDEX_PREFIXES = ['/start/report', '/start/analyzing', '/start/info', '/
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
 
+  // ── Canonical-host redirect (domain move) ──
+  // Inert until CANONICAL_HOST is set, so this can ship before DNS is cut over
+  // and be rolled back by clearing the variable. Once set, any other public
+  // host 301s to the same path here, which is what keeps already-emailed
+  // report links alive after the move.
+  //
+  // Two exclusions matter. Railway's own *.up.railway.app hostname is left
+  // alone so platform health checks aren't redirected, and /api/* never
+  // reaches this file at all (see the matcher below) so Stripe's webhook POST
+  // is never answered with a 301 — Stripe does not follow redirects and would
+  // record it as a delivery failure.
+  const canonicalHost = process.env.CANONICAL_HOST?.trim()
+  if (canonicalHost) {
+    const host = request.headers.get('host')?.split(':')[0]?.toLowerCase()
+    if (
+      host &&
+      host !== canonicalHost.toLowerCase() &&
+      !host.endsWith('.up.railway.app') &&
+      host !== 'localhost' &&
+      host !== '127.0.0.1'
+    ) {
+      const target = new URL(request.nextUrl.pathname + request.nextUrl.search, `https://${canonicalHost}`)
+      return NextResponse.redirect(target, 301)
+    }
+  }
+
   // Send root to /start
   if (pathname === '/' || pathname === '') {
     const redirectUrl = new URL('/start', request.url)

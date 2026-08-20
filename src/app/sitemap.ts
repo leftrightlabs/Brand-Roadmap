@@ -4,7 +4,7 @@ import type { MetadataRoute } from 'next'
 // Only the public landing page is listed. The form funnel + per-lead reports
 // have no value to a search engine.
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://roadmap.leftrightlabs.com'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://roadmap.brandelevation.ai'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [

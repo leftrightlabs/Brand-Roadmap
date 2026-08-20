@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://roadmap.leftrightlabs.com';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://roadmap.brandelevation.ai';
 
 export const metadata: Metadata = {
   title: "Brand Elevation Roadmap™ | Left Right Labs",

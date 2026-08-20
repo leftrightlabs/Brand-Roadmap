@@ -4,6 +4,7 @@ import { sql } from '@/lib/db';
 import { generateAnalysisPrompt, type FounderIntake } from '@/lib/website-audit-service';
 import { PILLARS, AREA_LABELS, normalizeStatus, type AreaKey, type AreaEval, type PillarKey, type RoadmapResults } from '@/lib/roadmap-types';
 import { syncRoadmapContact } from '@/lib/activecampaign';
+import { canonicalOrigin } from '@/lib/site-url';
 
 // Coerce the model's parsed JSON into the canonical RoadmapResults shape:
 // validate statuses, guarantee all nine areas exist, and stringify prose.
@@ -727,8 +728,7 @@ async function syncRoadmapToActiveCampaign(shortId: string, results: RoadmapResu
     }
   }
 
-  const domain = process.env.RAILWAY_PUBLIC_DOMAIN || 'roadmap.leftrightlabs.com';
-  const reportUrl = `https://${domain}/start/report/${shortId}`;
+  const reportUrl = `${canonicalOrigin()}/start/report/${shortId}`;
 
   await syncRoadmapContact({
     email,
