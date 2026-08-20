@@ -707,7 +707,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
             </div>
             <div className="w-16 h-0.5 bg-[#a7c140] mx-auto my-6" />
             <p className="text-base md:text-lg text-white/60 mb-8 max-w-xl mx-auto">Let&apos;s turn this roadmap into a brand that speaks before you do, sells with integrity, and scales without chaos.</p>
-            <Button onClick={() => window.open(BOOKING_URL, "_blank", "noopener,noreferrer")} size="lg" className="bg-[#a7c140] hover:bg-[#96ad39] text-[#112248] font-bold uppercase tracking-wider">Let&apos;s Elevate Your Brand Advantage</Button>
+            <Button onClick={() => window.open(BOOKING_URL, "_blank", "noopener,noreferrer")} size="lg" className="bg-[#a7c140] hover:bg-[#96ad39] text-[#112248] font-bold uppercase tracking-wider">Let&apos;s Elevate Your Brand</Button>
             <p className="text-xs text-white/40 max-w-xl mx-auto leading-relaxed mt-10">
               This roadmap was generated using AI analysis of publicly available website content. It may occasionally misinterpret layout, messaging, or functionality — especially on sites with dynamic or complex content.{unlocked && (<>{" "}For the most accurate, tailored assessment, {""}
               <a href="https://leftrightlabs.com/contact" target="_blank" rel="noopener noreferrer" className="text-[#a7c140] underline hover:opacity-80 transition-opacity">contact us</a>{" "} to book an in-depth consultation.</>)}

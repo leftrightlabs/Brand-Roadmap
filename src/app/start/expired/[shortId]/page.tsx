@@ -48,7 +48,7 @@ export default function ExpiredReportPage({ params }: { params: Promise<{ shortI
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
               >
-                Brand Advantage™ reports are available for 7 days. This report is no longer accessible.
+                Brand Elevation Roadmap reports are available for 7 days. This report is no longer accessible.
               </motion.p>
 
               <motion.div
@@ -142,7 +142,7 @@ export default function ExpiredReportPage({ params }: { params: Promise<{ shortI
                 transition={{ duration: 0.6, delay: 0.3 }}
                 viewport={{ once: true }}
               >
-                Your brand evolves. Your strategy should too. Run a new Brand Advantage™ assessment to get an updated analysis of your messaging, visual identity, and positioning.
+                Your brand evolves. Your strategy should too. Run a new Brand Elevation Roadmap to get an updated analysis of your messaging, visual identity, and positioning.
               </motion.p>
               <motion.p
                 className="text-xl text-gray-700 leading-relaxed"

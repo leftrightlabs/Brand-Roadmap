@@ -557,7 +557,7 @@ export default function StartPage() {
               <p style={{ fontFamily: SANS, fontSize: 20, lineHeight: 1.8, color: "rgba(17,34,72,0.72)", margin: 0 }}>
                 This isn&apos;t a generic AI prompt. Our AI-assisted analysis takes
                 a deep dive into your entire online brand presence and runs it
-                through the same Brand Advantage™ framework we&apos;ve used with
+                through the same Brand Elevation™ framework we&apos;ve used with
                 leaders like JJ Virgin and Laila Ali in private strategy
                 engagements. What comes back is a customized action plan built
                 specifically for your brand, and it follows a very specific order:{" "}
@@ -605,7 +605,7 @@ export default function StartPage() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/images/brand-framework-venn.png"
-              alt="The Left Right Labs Brand Advantage framework — Get Clear, Get Noticed, and Get Paid — with nine pillars (Brand Personality, Signature Framework, Elevated Audience, Magnetic Voice, Visual Positioning, Online Presence, Brand Authority, Offer Evolution, Visionary Growth) around a central Legacy."
+              alt="The Left Right Labs Brand Elevation framework — Get Clear, Get Noticed, and Get Paid — with nine pillars (Brand Personality, Signature Framework, Elevated Audience, Magnetic Voice, Visual Positioning, Online Presence, Brand Authority, Offer Evolution, Visionary Growth) around a central Legacy."
               style={{ width: "100%", maxWidth: 640, height: "auto", display: "block" }}
             />
           </motion.div>
@@ -798,7 +798,7 @@ export default function StartPage() {
           >
             {[
               { num: "01", h3: "Tell Us About Your Brand", p: "Your website, contact details, and five quick questions about your goals and ideal client." },
-              { num: "02", h3: "We Map Your Brand", p: "Our AI runs your brand through the Brand Advantage™ framework to find where it's misaligned." },
+              { num: "02", h3: "We Map Your Brand", p: "Our AI runs your brand through the Brand Elevation™ framework to find where it's misaligned." },
               { num: "03", h3: "See Your Roadmap", p: "Your Roadmap appears on screen in about two minutes, with a link in your inbox to keep." },
             ].map((card, i) => (
               <div key={i} style={{ padding: "44px 40px 48px", display: "flex", flexDirection: "column", gap: 18, borderLeft: i === 0 ? "none" : "1px solid rgba(17,34,72,0.12)" }}>
@@ -1037,7 +1037,7 @@ export default function StartPage() {
             }}
           >
             <span>© 2026 Left Right Labs. All rights reserved.</span>
-            <span>Your Brand Advantage™ · Dallas, TX</span>
+            <span>Brand Elevation™ · Dallas, TX</span>
           </div>
         </div>
       </footer>
