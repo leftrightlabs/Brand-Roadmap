@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
             product_data: {
               name: 'Brand Elevation Roadmap: Full Unlock',
               description:
-                'Every move for all nine areas, your full 30/60/90-day plan, example rewrites, and a downloadable PDF.',
+                'Every move for all nine areas, example rewrites in your brand voice, and your full 30/60/90-day plan.',
             },
           },
         },

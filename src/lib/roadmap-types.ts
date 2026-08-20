@@ -6,7 +6,7 @@
  * qualitative status (no numeric scores) plus an evaluation and one next move.
  *
  * Shared by: the AI prompt (src/lib/website-audit-service.ts), the result
- * mapping (start-analysis route), the report UI, the Venn, and the PDF routes.
+ * mapping (start-analysis route), the report UI, and the Venn.
  */
 
 export type AreaStatus = 'Strong' | 'Refine' | 'Prioritize';

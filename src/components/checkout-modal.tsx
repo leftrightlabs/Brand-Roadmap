@@ -67,7 +67,7 @@ export function CheckoutModal({
             Unlock your full roadmap
           </p>
           <p className="text-white/60 text-sm mt-1.5 leading-relaxed">
-            Every move for all nine areas, your full 30 / 60 / 90-day plan, example rewrites, and a downloadable PDF.
+            Every move for all nine areas, example rewrites in your brand voice, and your full 30 / 60 / 90-day plan.
           </p>
         </div>
 
