@@ -1,4 +1,4 @@
-// Website audit prompt generator. The full toolkit version also handled
+// Website audit prompt generator. The full Brand Elevation Toolkit version also handled
 // brand-profile reads/writes from Supabase for authenticated users; that
 // machinery is irrelevant for the public roadmap funnel, so it's been
 // stripped. Only `generateAnalysisPrompt` is exported.
