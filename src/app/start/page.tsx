@@ -240,6 +240,8 @@ function AccentBtn({
         display: "inline-flex",
         alignItems: "center",
         gap: 10,
+        textAlign: "center",
+        textWrap: "balance",
         opacity: disabled ? 0.7 : 1,
         transition: "filter 160ms cubic-bezier(0.22,1,0.36,1)",
         textDecoration: "none",
@@ -355,7 +357,7 @@ export default function StartPage() {
               );
             })}
             <AccentBtn onClick={handleCTA} disabled={isLoading}>
-              {isLoading ? "Loading…" : "Get My Free Brand Elevation Roadmap"}
+              {isLoading ? "Loading…" : "Start Here"}
             </AccentBtn>
           </nav>
         </div>
