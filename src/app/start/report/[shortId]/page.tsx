@@ -346,11 +346,6 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
   // Free = the roadmap's route + first move (diagnosis). Paid/preview unlocks every move.
   const unlocked = results.paid === true && !forceFree;
 
-  // Roadmaps don't expire. We note the generation date instead, since a brand
-  // analysis does go stale as their site changes, and invite a fresh run.
-  const generatedOn = results.generatedAt
-    ? new Date(results.generatedAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
-    : null;
   const goUnlock = async () => {
     if (isUnlocking) return;
     setIsUnlocking(true);
@@ -394,11 +389,6 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
                   <Copy className="w-4 h-4 mr-2" />Copy Link
                 </Button>
               </div>
-              <p className="text-white/40 text-sm">
-                {generatedOn
-                  ? <>This roadmap reflects your site as of {generatedOn}. Changed things since? <button onClick={() => router.push("/start")} className="underline hover:text-white/70 transition-colors">Run a fresh one.</button></>
-                  : "This roadmap is yours to keep."}
-              </p>
             </div>
             <div className="hidden md:block">
               {ogImageUrl ? (
