@@ -609,6 +609,19 @@ export default function StartPage() {
       ════════════════════════════════════════════════════════ */}
       <section style={{ background: "#fff", paddingBottom: "clamp(80px, 11vw, 168px)" }}>
         <motion.div
+          style={{ ...container }}
+          initial="hidden"
+          whileInView="visible"
+          variants={rv}
+          viewport={vp}
+        >
+          <ScotchH2 center style={{ maxWidth: 900, margin: "0 auto clamp(40px, 6vw, 72px)" }}>
+            The Framework Behind the Brands You{" "}
+            <em style={{ fontStyle: "italic", fontWeight: 400 }}>Already Recognize</em>
+          </ScotchH2>
+        </motion.div>
+
+        <motion.div
           style={{ ...container, display: "grid", gap: "clamp(40px, 6vw, 96px)", alignItems: "center" }}
           className="split-grid split-grid--img-left"
           initial="hidden"
@@ -627,10 +640,6 @@ export default function StartPage() {
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
-            <ScotchH2>
-              The Framework Behind the Brands You{" "}
-              <em style={{ fontStyle: "italic", fontWeight: 400 }}>Already Recognize</em>
-            </ScotchH2>
             <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
               <p style={{ fontFamily: SANS, fontSize: 22, lineHeight: 1.35, color: "rgba(17,34,72,0.72)", margin: 0 }}>
                 Brand Elevation™ is the framework we&apos;ve used with JJ Virgin,
