@@ -486,7 +486,7 @@ export default function StartPage() {
 
           </div>
 
-          {/* Report mockup … the top of a real Roadmap (header, Legacy Read, the
+          {/* Report mockup … the top of a real Roadmap (header, What We See, the
               nine-lever wheel) so the product is visible before anyone scrolls. */}
           <motion.div
             className="hero-mockup"
@@ -497,7 +497,7 @@ export default function StartPage() {
           >
             <Image
               src="/images/report-mockup.png"
-              alt="A Brand Elevation Roadmap report, showing the Legacy Read and the nine-lever wheel"
+              alt="A Brand Elevation Roadmap report, showing the What We See summary and the nine-lever wheel"
               width={1000}
               height={673}
               priority

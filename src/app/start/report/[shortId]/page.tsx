@@ -409,7 +409,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
       <nav className="sticky top-0 z-20 bg-gray-50/95 backdrop-blur border-b border-gray-200 shadow-sm">
         <div className={CONTENT}>
           <div className="flex items-center gap-2 py-4 overflow-x-auto scrollbar-hide">
-            <a href="#overview" className="text-[13px] font-bold uppercase tracking-wider text-[#112248]/70 hover:text-[#112248] border-b-2 border-transparent hover:border-[#a7c140] transition-all whitespace-nowrap px-3 py-1">Overview</a>
+            <a href="#overview" className="text-[13px] font-bold uppercase tracking-wider text-[#112248]/70 hover:text-[#112248] border-b-2 border-transparent hover:border-[#a7c140] transition-all whitespace-nowrap px-3 py-1">What We See</a>
             {PILLARS.map((p) => (
               <a key={p.key} href={`#${p.key}`} className="text-[13px] font-bold uppercase tracking-wider text-[#112248]/70 hover:text-[#112248] border-b-2 border-transparent hover:border-[#a7c140] transition-all whitespace-nowrap px-3 py-1">{p.label}</a>
             ))}
@@ -443,7 +443,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
                 <BrandVenn statuses={statuses} onSegmentClick={scrollToArea} />
               </motion.div>
               <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp}>
-                <h2 className="text-4xl md:text-6xl font-heading text-[#112248]">The Legacy Read</h2>
+                <h2 className="text-4xl md:text-6xl font-heading text-[#112248]">What We See</h2>
                 <div className="w-12 h-0.5 bg-[#a7c140] mt-3 mb-6" />
                 <div className="space-y-5">
                   {results.legacyRead.split(/\n\n+/).filter(Boolean).map((para, i) => (
