@@ -462,9 +462,9 @@ export default function StartPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.75 }}
-              style={{ display: "flex", flexWrap: "wrap", gap: "12px 28px", marginTop: 4 }}
+              style={{ display: "flex", flexWrap: "wrap", gap: "12px 22px", marginTop: 4 }}
             >
-              {["Full assessment, free", "About five minutes", "Your first fix included"].map((item) => (
+              {["Full assessment, free", "Takes 5 minutes", "First fix included"].map((item) => (
                 <span
                   key={item}
                   style={{
@@ -474,6 +474,7 @@ export default function StartPage() {
                     fontFamily: SANS,
                     fontSize: 16,
                     letterSpacing: "0.04em",
+                    whiteSpace: "nowrap",
                     color: "rgba(255,255,255,0.78)",
                   }}
                 >
@@ -496,9 +497,9 @@ export default function StartPage() {
           >
             <Image
               src="/images/report-mockup.png"
-              alt="A Brand Elevation Roadmap report, opened to the Legacy Read and the nine-lever wheel"
+              alt="A Brand Elevation Roadmap report, showing the Legacy Read and the nine-lever wheel"
               width={1000}
-              height={905}
+              height={673}
               priority
               style={{
                 width: "100%",
@@ -1157,9 +1158,11 @@ export default function StartPage() {
           gap: clamp(40px, 5vw, 80px);
           align-items: center;
         }
-        @media (max-width: 960px) {
+        /* Stacks at 1240 rather than 960: below that the left column is too
+           narrow to keep the three hero badges on a single line. */
+        @media (max-width: 1240px) {
           .hero-grid { grid-template-columns: 1fr !important; }
-          .hero-mockup { max-width: 560px; }
+          .hero-mockup { max-width: 620px; }
         }
 
         /* Typography polish … avoid orphans everywhere, balance the short
