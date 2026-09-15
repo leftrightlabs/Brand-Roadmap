@@ -1089,6 +1089,15 @@ export default function StartPage() {
             are in your growth. What it looks for is whether your brand has kept pace
             with you.
           </p>
+          <p style={{ fontFamily: SANS, fontWeight: 600, fontSize: BODY, lineHeight: 1.45, color: "#fff", maxWidth: 800, margin: "18px auto 0", textAlign: "center" }}>
+            The Brand Elevation Roadmap answers this for you.
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 18, marginTop: 34 }}>
+            <AccentBtn onClick={handleCTA} disabled={isLoading}>
+              {isLoading ? "Loading…" : <>Get My Free Brand Elevation Roadmap&nbsp;→</>}
+            </AccentBtn>
+            <Badges />
+          </div>
         </motion.div>
       </section>
 
