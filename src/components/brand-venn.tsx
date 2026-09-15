@@ -164,7 +164,8 @@ export function BrandVenn({ statuses, onSegmentClick, className }: BrandVennProp
         </svg>
 
         <div style={{ display: "flex", gap: 22, flexWrap: "wrap", justifyContent: "center", marginTop: 16, fontSize: 12.5, color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>
-          {(["Strong", "Refine", "Prioritize"] as AreaStatus[]).map((s) => (
+          {/* Most urgent first, left to right: red, amber, green. */}
+          {(["Prioritize", "Refine", "Strong"] as AreaStatus[]).map((s) => (
             <span key={s} style={{ display: "flex", alignItems: "center", gap: 7 }}>
               <span style={{ width: 11, height: 11, borderRadius: "50%", background: STATUS_STYLE[s].color }} />
               {s}
