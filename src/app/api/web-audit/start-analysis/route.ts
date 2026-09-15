@@ -5,12 +5,22 @@ import { generateAnalysisPrompt, type FounderIntake } from '@/lib/website-audit-
 import { PILLARS, AREA_LABELS, normalizeStatus, type AreaKey, type AreaEval, type PillarKey, type RoadmapResults } from '@/lib/roadmap-types';
 import { syncRoadmapContact } from '@/lib/activecampaign';
 import { canonicalOrigin } from '@/lib/site-url';
+import { scrubVoice, type VoiceScrubHit } from '@/lib/voice-scrub';
 
 // Coerce the model's parsed JSON into the canonical RoadmapResults shape:
 // validate statuses, guarantee all nine areas exist, and stringify prose.
 function buildRoadmapResults(parsed: any): RoadmapResults {
-  const str = (v: unknown, fallback: string) =>
-    typeof v === 'string' && v.trim() ? v.trim() : fallback;
+  // Every generated string funnels through `str`, so the banned-terms scrub
+  // goes here rather than being trusted to the prompt. Hits are logged: if the
+  // model stops reaching for these words the log goes quiet, and if it starts
+  // reaching for something new we find out from real reports.
+  const voiceHits: VoiceScrubHit[] = [];
+  const str = (v: unknown, fallback: string) => {
+    if (typeof v !== 'string' || !v.trim()) return fallback;
+    const { text, hits } = scrubVoice(v.trim());
+    voiceHits.push(...hits);
+    return text || fallback;
+  };
 
   const pillars = {} as RoadmapResults['pillars'];
   for (const pillar of PILLARS) {
@@ -38,13 +48,29 @@ function buildRoadmapResults(parsed: any): RoadmapResults {
         .slice(0, 3)
         .map((p: any) => ({
           label: String(p.label),
-          moves: Array.isArray(p.moves) ? p.moves.filter((m: unknown) => typeof m === 'string' && m.trim()).slice(0, 3) : [],
+          moves: Array.isArray(p.moves)
+            ? p.moves
+                .filter((m: unknown): m is string => typeof m === 'string' && !!m.trim())
+                .slice(0, 3)
+                .map((m: string) => str(m, m.trim()))
+            : [],
         }))
     : [];
 
+  const legacyRead = str(parsed?.legacyRead, 'Your brand roadmap is ready below.');
+  const roadmapNudge = str(parsed?.roadmapNudge, '');
+
+  if (voiceHits.length) {
+    const tally = voiceHits.reduce<Record<string, number>>((acc, h) => {
+      acc[h.from] = (acc[h.from] ?? 0) + 1;
+      return acc;
+    }, {});
+    console.warn('[VOICE-SCRUB] corrected banned terms in generated copy:', tally);
+  }
+
   return {
-    legacyRead: str(parsed?.legacyRead, 'Your brand roadmap is ready below.'),
-    roadmapNudge: str(parsed?.roadmapNudge, ''),
+    legacyRead,
+    roadmapNudge,
     pillars,
     phasedPlan,
   };
