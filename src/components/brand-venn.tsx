@@ -111,14 +111,14 @@ export function BrandVenn({ statuses, onSegmentClick, className }: BrandVennProp
               >
                 <path
                   d={segmentPath(a0, a1)}
-                  fill={isHover ? style.ringHover : style.ring}
-                  stroke={style.color}
+                  fill={isHover ? style.hover : style.color}
+                  stroke={style.rim}
                   strokeOpacity={isHover ? 1 : 0.9}
                   strokeWidth={isHover ? 3 : 2}
                   style={{ transition: "fill 220ms ease, stroke-width 220ms ease" }}
                 />
                 <path id={id} d={labelPath(a0, a1, bottom)} fill="none" />
-                <text fill="#ffffff" fontSize="10" letterSpacing="0.4" fontFamily="'sweet-sans-pro', Arial, sans-serif">
+                <text fill={style.label} fontSize="10" fontWeight="600" letterSpacing="0.4" fontFamily="'sweet-sans-pro', Arial, sans-serif">
                   <textPath href={`#${id}`} startOffset="50%" textAnchor="middle">
                     {AREA_LABELS[area].toUpperCase()}
                   </textPath>

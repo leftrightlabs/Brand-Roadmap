@@ -126,27 +126,28 @@ export const VENN_SEGMENTS: { area: AreaKey; angle: number }[] = [
 ];
 
 export interface StatusStyle {
-  /** Identifying hue: legend dot, ring rim, strength bar, and the strip across
-   *  the top of each lever card. It has to read on navy *and* on white. */
+  /** Identifying hue: ring fill, legend dot, strength bar, and the strip across
+   *  the top of each lever card. Reads on navy and on white. */
   color: string;
-  /** Solid ring fill on navy. A finished colour rather than an alpha blend:
-   *  the old low-opacity warm fills averaged with the navy behind them and
-   *  came out mud (Refine rendered as olive-grey, Prioritize as plum). */
-  ring: string;
-  /** Ring fill on hover. Lifted, but still dark enough for white labels. */
-  ringHover: string;
+  /** Segment outline on navy: a lighter tint of `color`. */
+  rim: string;
+  /** Segment fill on hover. */
+  hover: string;
+  /** Segment label colour. Bright amber and green are far too light to carry
+   *  white text, so they take navy; only the red is dark enough for white. */
+  label: string;
   /** Filled segments out of 3 for the strength cue. */
   segments: number;
 }
 
+// Traffic light, kept bright. These are solid finished colours, not the old
+// low-opacity fills, which averaged with the navy behind them into mud.
+// The red is pitched deep enough that its white label clears 4.5:1; green and
+// amber are left vivid and take navy labels instead (7.4:1 and 8.8:1).
 export const STATUS_STYLE: Record<AreaStatus, StatusStyle> = {
-  // Lime is the brand accent; terracotta is the one warm alert, so the eye
-  // lands on what needs attention. Refine sits on a cool slate rather than
-  // gold: gold is retired in [CANON] Brand, and five gold segments shouted
-  // louder than the two that actually needed the reader.
-  Strong: { color: '#A7C140', ring: '#47632A', ringHover: '#5C8038', segments: 3 }, // lime
-  Refine: { color: '#6B7BA0', ring: '#39456A', ringHover: '#4C5B85', segments: 2 }, // slate
-  Prioritize: { color: '#E0552E', ring: '#96401F', ringHover: '#B85229', segments: 1 }, // terracotta
+  Strong: { color: '#93C13C', rim: '#B5DC5E', hover: '#A9D354', label: '#112248', segments: 3 }, // green
+  Refine: { color: '#F5B82B', rim: '#FFD263', hover: '#FFC94D', label: '#112248', segments: 2 }, // amber
+  Prioritize: { color: '#D93A21', rim: '#FF6B4A', hover: '#E2422A', label: '#FFFFFF', segments: 1 }, // red
 };
 
 export const VALID_STATUSES: AreaStatus[] = ['Strong', 'Refine', 'Prioritize'];
