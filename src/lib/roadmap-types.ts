@@ -126,18 +126,27 @@ export const VENN_SEGMENTS: { area: AreaKey; angle: number }[] = [
 ];
 
 export interface StatusStyle {
-  /** Solid brand color for dots, bars, text. */
+  /** Identifying hue: legend dot, ring rim, strength bar, and the strip across
+   *  the top of each lever card. It has to read on navy *and* on white. */
   color: string;
-  /** Ring-segment fill opacity (warm/weaker = hotter so gaps glow). */
-  fillOpacity: number;
+  /** Solid ring fill on navy. A finished colour rather than an alpha blend:
+   *  the old low-opacity warm fills averaged with the navy behind them and
+   *  came out mud (Refine rendered as olive-grey, Prioritize as plum). */
+  ring: string;
+  /** Ring fill on hover. Lifted, but still dark enough for white labels. */
+  ringHover: string;
   /** Filled segments out of 3 for the strength cue. */
   segments: number;
 }
 
 export const STATUS_STYLE: Record<AreaStatus, StatusStyle> = {
-  Strong: { color: '#A7C140', fillOpacity: 0.16, segments: 3 }, // lime green
-  Refine: { color: '#EAB43C', fillOpacity: 0.3, segments: 2 }, // gold-yellow
-  Prioritize: { color: '#E0552E', fillOpacity: 0.34, segments: 1 }, // orange-red
+  // Lime is the brand accent; terracotta is the one warm alert, so the eye
+  // lands on what needs attention. Refine sits on a cool slate rather than
+  // gold: gold is retired in [CANON] Brand, and five gold segments shouted
+  // louder than the two that actually needed the reader.
+  Strong: { color: '#A7C140', ring: '#47632A', ringHover: '#5C8038', segments: 3 }, // lime
+  Refine: { color: '#6B7BA0', ring: '#39456A', ringHover: '#4C5B85', segments: 2 }, // slate
+  Prioritize: { color: '#E0552E', ring: '#96401F', ringHover: '#B85229', segments: 1 }, // terracotta
 };
 
 export const VALID_STATUSES: AreaStatus[] = ['Strong', 'Refine', 'Prioritize'];
