@@ -682,6 +682,9 @@ export default function StartPage() {
             <ScotchH2 white center>
               Hear It From <em style={{ fontStyle: "italic", fontWeight: 400 }}>Them</em>
             </ScotchH2>
+            <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "rgba(255,255,255,0.82)", maxWidth: 720, margin: 0 }}>
+              Every founder here worked through the Brand Elevation™ Method, and your Roadmap runs on the same one.
+            </p>
           </motion.div>
 
           <motion.div
@@ -798,7 +801,7 @@ export default function StartPage() {
               style={{ width: "100%", maxWidth: 620, height: "auto", display: "block" }}
             />
             <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "rgba(255,255,255,0.82)", maxWidth: 620, margin: "clamp(20px, 2.4vw, 30px) 0 0", textAlign: "center" }}>
-              Your Roadmap is a snapshot of your website, lever by lever.
+              Each segment on the outer ring is a lever you can pull to elevate your brand. Your Roadmap reads all nine and shows you which one to pull first.
             </p>
           </motion.div>
 
@@ -957,8 +960,8 @@ export default function StartPage() {
               strategists.
             </p>
             <p className="bal" style={{ fontFamily: SANS, fontSize: 17, lineHeight: 1.5, color: "rgba(255,255,255,0.66)", maxWidth: 560, margin: 0 }}>
-              Fourteen days to decide it earned its place, or your $97 comes
-              right back.
+              You have fourteen days to decide whether the Roadmap earned its place,
+              or your money comes back, no questions asked.
             </p>
             <AccentBtn onClick={handleCTA} disabled={isLoading}>
               {isLoading ? "Loading…" : <>Get My Free Brand Elevation Roadmap&nbsp;→</>}
@@ -977,7 +980,7 @@ export default function StartPage() {
             style={{ display: "flex", flexDirection: "column", gap: 22, maxWidth: 800 }}
           >
             <ScotchH2>
-              Three Steps. <em style={{ fontStyle: "italic", fontWeight: 400 }}>About Five Minutes.</em>
+              Three Steps in <em style={{ fontStyle: "italic", fontWeight: 400 }}>About Five Minutes</em>
             </ScotchH2>
           </motion.div>
 
@@ -990,9 +993,9 @@ export default function StartPage() {
                 section above already runs 01/02/03 in cards, and these are a
                 sequence, so they should look like one. */}
             {[
-              { num: "1", h3: "Tell Us About Your Brand", p: "Your website, your details, and five questions about where you're headed and who you want in the room." },
-              { num: "2", h3: "We Read Your Brand", p: "Your online presence goes through the Brand Elevation™ framework, which is looking for the gap between what you actually deliver and what your brand is currently promising." },
-              { num: "3", h3: "See Your Roadmap", p: "On screen about two minutes later, with a link in your inbox to keep. It never expires." },
+              { num: "1", h3: "Tell Us About Your Brand", p: "You give us your website, a few details, and answers to five questions about where you're headed and who you want in the room." },
+              { num: "2", h3: "We Read Your Brand", p: "Your online presence goes through the Brand Elevation™ framework, which looks for the gap between what you actually deliver and what your brand is currently promising." },
+              { num: "3", h3: "See Your Roadmap", p: "It shows up on screen about two minutes later, with a link in your inbox to keep, and it never expires." },
             ].map((step, i) => (
               <div key={i} style={{ display: "flex", flexDirection: "column", gap: 16, paddingRight: 32 }}>
                 <div style={{ display: "flex", alignItems: "center" }}>
@@ -1022,12 +1025,16 @@ export default function StartPage() {
       <section style={{ background: NAVY, ...sectionPad }}>
         <div style={container}>
           <motion.div
+            className="ctr"
             initial="hidden" whileInView="visible" variants={rv} viewport={vp}
-            style={{ display: "flex", flexDirection: "column", gap: 22 }}
+            style={{ display: "flex", flexDirection: "column", gap: 22, alignItems: "center", textAlign: "center", maxWidth: 820, margin: "0 auto" }}
           >
-            <ScotchH2 white>
+            <ScotchH2 white center>
               What Leaders <em style={{ fontStyle: "italic", fontWeight: 400 }}>Say</em>
             </ScotchH2>
+            <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "rgba(255,255,255,0.82)", maxWidth: 720, margin: 0 }}>
+              Get the same framework these leaders used to transform their business.
+            </p>
           </motion.div>
 
           <motion.div
@@ -1041,12 +1048,6 @@ export default function StartPage() {
             ))}
           </motion.div>
 
-          <motion.p
-            initial="hidden" whileInView="visible" variants={rv} viewport={vp}
-            style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "rgba(255,255,255,0.78)", maxWidth: 760, margin: "48px 0 0" }}
-          >
-            Your Roadmap runs on the same framework theirs did.
-          </motion.p>
         </div>
       </section>
 
@@ -1081,11 +1082,12 @@ export default function StartPage() {
             <em style={{ fontStyle: "italic", fontWeight: 400, textTransform: "none" }}>(and aren&apos;t afraid to show it)</em>
           </ScotchH2>
           <p className="bal" style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "rgba(255,255,255,0.82)", maxWidth: 800, margin: "26px auto 0", textAlign: "center" }}>
-            Nearly two decades of telling founders the thing nobody else in the
-            room would say. Some of our clients arrived with a name you&apos;d recognize
-            and a brand that no longer matched it. Some arrived years before anyone
-            knew them. Where you are in your growth doesn&apos;t change the
-            framework. Whether your brand has kept pace with you does.
+            We&apos;ve spent nearly two decades telling founders the thing nobody else
+            in the room would say. Some of our clients arrived with a name you&apos;d
+            recognize and a brand that no longer matched it, and some arrived years
+            before anyone knew who they were. The framework doesn&apos;t care where you
+            are in your growth. What it looks for is whether your brand has kept pace
+            with you.
           </p>
         </motion.div>
       </section>
@@ -1112,7 +1114,7 @@ export default function StartPage() {
             <FaqItem q="What happens when the $97 plan" qEm="isn't for me?" a="Then it comes back to you. You have fourteen days to decide whether the plan earned its place, and when it hasn't, we refund it without a form to fill out or a reason to give. We'd much rather return the occasional $97 than have anyone carrying around a plan they never wanted to open. Your Roadmap stays online either way, and it never expires." />
             <FaqItem q="Will I be pitched at" qEm="the end?" a="You'll see the $97 option inside your free Roadmap, and we'll send a few emails over the following days, because we'd love for you to keep going and we're not shy about saying so. What you won't get is a sales call you didn't ask for, a countdown clock, or a stranger sliding into your DMs. Read the free version, pull your first lever, and take your time with the rest." />
             <FaqItem q="How is this different from an" qEm="online quiz?" a="A quiz asks you to describe your brand and then sorts you into a category. Your Roadmap skips the asking and goes to look. It reads your actual website and your public presence, runs everything it finds through the Brand Elevation framework, and hands back findings that only make sense for you, because they came from your words, your offers, and your prices. No two Roadmaps have ever matched, and we've checked." />
-            <FaqItem q="Why do you fix things in a specific" qEm="order?" a="Because the order is where most brand work quietly falls apart. Founders invest in visibility before the message has landed, or in a gorgeous new site before they know exactly who it's for, and then wonder why the beautiful new thing didn't move anything. Clarity goes first because everything else stands on it, so your Roadmap starts there too: Get Clear, then Get Noticed, then Get Paid. It's the same order every time, and that's on purpose." />
+            <FaqItem q="Why do you fix things in a specific" qEm="order?" a="Because the order is where most brand work falls apart. Founders invest in visibility before the message has landed, or in a gorgeous new site before they know exactly who it's for, and then wonder why the beautiful new thing didn't move anything. Clarity goes first because everything else stands on it, so your Roadmap starts there too: Get Clear, then Get Noticed, then Get Paid. It's the same order every time, and that's on purpose." />
             <FaqItem q="I've already invested in branding. Why would I" qEm="need this?" a="Then you already know how much the right read is worth, and this one is free. Brands don't hold still. You've grown since that last investment, your offers have shifted, your audience has moved up, and the brand you paid for is still describing the version of you it met back then. Think of your Roadmap as a check-in on that work: it shows you which parts are still earning their keep and which have drifted while you were busy being good at your job." />
             <FaqItem q="How much time does this" qEm="actually take?" a="About five minutes on your side. You'll give us your website, a few details, and answers to five questions about where you're headed and who you want to reach. Then we take about two minutes to read everything and build your Roadmap. It shows up on your screen and in your inbox, it lives online, and it never expires, so there's no PDF to lose in a downloads folder." />
             <FaqItem q="How does AI fit" qEm="into this?" a="AI does the reading, and it's very good at reading. It moves through your entire public presence in the time it would take one of us to open the first tab, and it holds everything it finds against the Brand Elevation framework we built over nearly two decades with real clients. The framework, and the judgment about what matters and in what order, came from us. AI is what lets you have that read in two minutes instead of two weeks." />
