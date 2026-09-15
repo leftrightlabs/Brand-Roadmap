@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { VideoTestimonial, type Testimonial } from "@/components/video-testimonial";
 
 // ─── Design tokens ───────────────────────────────────────────────────────────
 const NAVY = "#112248";
@@ -13,6 +14,58 @@ const SERIF = "scotch-display, 'Playfair Display', Georgia, serif";
 // (--text-m to --text-l). A fixed 22px gave 25-character lines at 375px.
 const BODY = "clamp(17px, 13px + 1.1vw, 22px)";
 const BODY_SM = "clamp(16px, 12.5px + 0.8vw, 19px)";
+
+// Quotes, names and titles are carried over verbatim from
+// leftrightlabs.com/testimonials so the two sites agree. Vimeo ids come from
+// TESTIMONIALS [DB]; posters are local stills, since nine live embeds would
+// each load a player before anyone pressed play.
+const TESTIMONIALS: Record<string, Testimonial> = {
+  jj: {
+    vimeoId: "833421705", poster: "/images/testimonials/jj-virgin.jpg",
+    quote: "They created a better brand image than I could have ever done for myself. I couldn\u2019t see it\u2026 Trina and her team pulled it out of me.",
+    name: "JJ Virgin", title: "4\u00d7 NYT Bestselling Author & Founder of Mindshare Collaborative",
+  },
+  laila: {
+    vimeoId: "514702076", poster: "/images/testimonials/laila-ali.jpg",
+    quote: "They wanted to know me. They took everything I said\u2026 my vision, what hadn\u2019t worked\u2026 and turned it into a winning strategy. We\u2019ve been winning ever since.",
+    name: "Laila Ali", title: "Boxing Champion, Entrepreneur & Wellness Brand Founder",
+  },
+  forrest: {
+    vimeoId: "818524362", poster: "/images/testimonials/forrest-sauer.jpg",
+    quote: "Our brand finally matches the level we\u2019re operating at. The quality of our leads, our client conversations\u2026 everything leveled up.",
+    name: "Dr. Forrest Sauer", title: "Founder of Twin Oaks Health",
+  },
+  geeta: {
+    vimeoId: "1117462656", poster: "/images/testimonials/geeta-sidhu-robb.jpg",
+    quote: "Working with Left Right Labs enabled the brand to be taken completely seriously. Within about a month and a half, we were at the United Nations in New York presenting the brand.",
+    name: "Geeta Sidhu-Robb", title: "Founder of WCorp",
+  },
+  brent: {
+    vimeoId: "1106929482", poster: "/images/testimonials/brent-weaver.jpg",
+    quote: "Their work has helped generate hundreds of thousands in sales.",
+    name: "Brent Weaver", title: "Founder of UGURUS",
+  },
+  darlene: {
+    vimeoId: "1181622528", poster: "/images/testimonials/darlene-mitchell.jpg",
+    quote: "With their help, I was able to elevate my audience to who I truly wanted to serve.",
+    name: "Darlene Mitchell", title: "Business Coach",
+  },
+  tim: {
+    vimeoId: "833418560", poster: "/images/testimonials/tim-organ.jpg",
+    quote: "We needed clarity\u2026 and Left Right Labs delivered crystal clear direction. Everything they did for us was truly exceptional.",
+    name: "Tim Organ", title: "CEO of Mindshare",
+  },
+  bonni: {
+    vimeoId: "1181654682", poster: "/images/testimonials/bonni-london.jpg",
+    quote: "I feel like I am more myself\u2026 all of my marketing reflects me now.",
+    name: "Bonni London", title: "Founder of London Wellness",
+  },
+  sherri: {
+    vimeoId: "1209633837", poster: "/images/testimonials/sherri-griggs.jpg",
+    quote: "Left Right Labs helped me put that into a voice that I can share with others and others can now understand and see what my brand is.",
+    name: "Sherri Griggs", title: "Founder of Balanced Body Medical",
+  },
+};
 
 // ─── Scroll reveal ───────────────────────────────────────────────────────────
 const rv = {
@@ -614,6 +667,36 @@ export default function StartPage() {
       </section>
 
       {/* ════════════════════════════════════════════════════════
+          PROOF … navy, three video testimonials
+          Sits between the problem and the method: the reader has just been
+          told their brand is misrepresenting them, so this is where they ask
+          whether it can actually be fixed.
+      ════════════════════════════════════════════════════════ */}
+      <section style={{ background: NAVY, ...sectionPad }}>
+        <div style={container}>
+          <motion.div
+            className="ctr"
+            initial="hidden" whileInView="visible" variants={rv} viewport={vp}
+            style={{ display: "flex", flexDirection: "column", gap: 22, alignItems: "center", textAlign: "center", maxWidth: 820, margin: "0 auto" }}
+          >
+            <ScotchH2 white center>
+              Hear It From <em style={{ fontStyle: "italic", fontWeight: 400 }}>Them</em>
+            </ScotchH2>
+          </motion.div>
+
+          <motion.div
+            initial="hidden" whileInView="visible" variants={rv} viewport={vp}
+            className="tgrid"
+            style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 34, marginTop: "clamp(40px, 5vw, 64px)" }}
+          >
+            {[TESTIMONIALS.jj, TESTIMONIALS.laila, TESTIMONIALS.forrest].map((t) => (
+              <VideoTestimonial key={t.vimeoId} t={t} dark />
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════════
           THE STRATEGIC LENS … white, image left / text right
       ════════════════════════════════════════════════════════ */}
       <section style={{ background: "#fff", paddingBottom: "clamp(80px, 11vw, 168px)" }}>
@@ -900,20 +983,33 @@ export default function StartPage() {
 
           <motion.div
             initial="hidden" whileInView="visible" variants={rv} viewport={vp}
-            className="cards3"
-            style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", borderTop: "1px solid rgba(17,34,72,0.12)", marginTop: "clamp(40px, 5vw, 72px)" }}
+            className="steps3"
+            style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", marginTop: "clamp(40px, 5vw, 72px)" }}
           >
+            {/* A connected stepper rather than a third numbered card grid: the
+                section above already runs 01/02/03 in cards, and these are a
+                sequence, so they should look like one. */}
             {[
-              { num: "01", h3: "Tell Us About Your Brand", p: "Your website, your details, and five questions about where you're headed and who you want in the room." },
-              { num: "02", h3: "We Read Your Brand", p: "Your online presence goes through the Brand Elevation™ framework, which is looking for the gap between what you actually deliver and what your brand is currently promising." },
-              { num: "03", h3: "See Your Roadmap", p: "On screen about two minutes later, with a link in your inbox to keep. It never expires." },
-            ].map((card, i) => (
-              <div key={i} style={{ padding: "44px 40px 48px", display: "flex", flexDirection: "column", gap: 18, borderLeft: i === 0 ? "none" : "1px solid rgba(17,34,72,0.12)" }}>
-                <p style={{ fontFamily: SERIF, fontWeight: 700, fontStyle: "italic", fontSize: "clamp(48px, 6vw, 80px)", lineHeight: 1, color: NAVY, margin: "0 0 8px" }}>
-                  <span style={{ display: "block", width: "fit-content", fontSize: "1.2em", lineHeight: 0.85, transform: "scaleX(0.8333)", transformOrigin: "left center" }}>{card.num}</span>
-                </p>
-                <h3 style={{ fontFamily: SERIF, fontWeight: 700, fontSize: "clamp(24px, 2.4vw, 32px)", lineHeight: 1.1, textTransform: "capitalize", color: NAVY, margin: 0 }}>{card.h3}</h3>
-                <p style={{ fontFamily: SANS, fontSize: BODY_SM, lineHeight: 1.5, color: "#000", margin: 0 }}>{card.p}</p>
+              { num: "1", h3: "Tell Us About Your Brand", p: "Your website, your details, and five questions about where you're headed and who you want in the room." },
+              { num: "2", h3: "We Read Your Brand", p: "Your online presence goes through the Brand Elevation™ framework, which is looking for the gap between what you actually deliver and what your brand is currently promising." },
+              { num: "3", h3: "See Your Roadmap", p: "On screen about two minutes later, with a link in your inbox to keep. It never expires." },
+            ].map((step, i) => (
+              <div key={i} style={{ display: "flex", flexDirection: "column", gap: 16, paddingRight: 32 }}>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <span
+                    style={{
+                      width: 48, height: 48, borderRadius: "50%", flexShrink: 0,
+                      border: `2px solid ${LIME}`, background: "#fff",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      fontFamily: SERIF, fontWeight: 700, fontStyle: "italic", fontSize: 22, color: NAVY,
+                    }}
+                  >
+                    {step.num}
+                  </span>
+                  {i < 2 && <span className="step-line" style={{ flex: 1, height: 1, background: "rgba(17,34,72,0.18)" }} />}
+                </div>
+                <h3 style={{ fontFamily: SERIF, fontWeight: 700, fontSize: "clamp(24px, 2.4vw, 32px)", lineHeight: 1.1, textTransform: "capitalize", color: NAVY, margin: 0 }}>{step.h3}</h3>
+                <p style={{ fontFamily: SANS, fontSize: BODY_SM, lineHeight: 1.5, color: "#000", margin: 0 }}>{step.p}</p>
               </div>
             ))}
           </motion.div>
@@ -937,49 +1033,12 @@ export default function StartPage() {
           <motion.div
             initial="hidden" whileInView="visible" variants={rv} viewport={vp}
             className="tgrid"
-            style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 28, marginTop: "clamp(40px, 5vw, 72px)" }}
+            style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 34, marginTop: "clamp(40px, 5vw, 72px)" }}
           >
-            {/* JJ Virgin */}
-            <div style={{ borderLeft: `3px solid ${LIME}`, background: "rgba(255,255,255,0.04)", padding: "36px 34px", display: "flex", flexDirection: "column", gap: 26 }}>
-              <p style={{ fontFamily: SANS, fontWeight: 400, fontStyle: "italic", fontSize: BODY_SM, lineHeight: 1.55, color: "#fff", margin: 0, textWrap: "pretty" as React.CSSProperties["textWrap"] }}>
-                &ldquo;I&apos;ve never had a branding company so intimately involved in every step.&rdquo;
-              </p>
-              <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: "auto" }}>
-                <Image src="/images/jj-virgin-2.png" alt="JJ Virgin" width={56} height={56} style={{ borderRadius: 999, objectFit: "cover", flexShrink: 0, width: 56, height: 56 }} />
-                <div>
-                  <div style={{ fontFamily: SANS, fontWeight: 600, fontSize: 14, letterSpacing: "0.12em", textTransform: "uppercase", color: "#fff" }}>JJ Virgin</div>
-                  <div style={{ fontFamily: SANS, fontSize: 14, lineHeight: 1.5, color: "rgba(255,255,255,0.78)", marginTop: 5 }}>4× NYT Bestselling Author &amp; Founder, Mindshare Collaborative</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Laila Ali … lime monogram */}
-            <div style={{ borderLeft: `3px solid ${LIME}`, background: "rgba(255,255,255,0.04)", padding: "36px 34px", display: "flex", flexDirection: "column", gap: 26 }}>
-              <p style={{ fontFamily: SANS, fontWeight: 400, fontStyle: "italic", fontSize: BODY_SM, lineHeight: 1.55, color: "#fff", margin: 0, textWrap: "pretty" as React.CSSProperties["textWrap"] }}>
-                &ldquo;They gave me a roadmap… and we&apos;ve been winning ever since.&rdquo;
-              </p>
-              <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: "auto" }}>
-                <Image src="/images/laila-ali.jpg" alt="Laila Ali" width={56} height={56} style={{ borderRadius: 999, objectFit: "cover", flexShrink: 0, width: 56, height: 56 }} />
-                <div>
-                  <div style={{ fontFamily: SANS, fontWeight: 600, fontSize: 14, letterSpacing: "0.12em", textTransform: "uppercase", color: "#fff" }}>Laila Ali</div>
-                  <div style={{ fontFamily: SANS, fontSize: 14, lineHeight: 1.5, color: "rgba(255,255,255,0.78)", marginTop: 5 }}>World Champion Athlete &amp; Lifestyle Entrepreneur</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Chris & Melissa Smith … lime monogram */}
-            <div style={{ borderLeft: `3px solid ${LIME}`, background: "rgba(255,255,255,0.04)", padding: "36px 34px", display: "flex", flexDirection: "column", gap: 26 }}>
-              <p style={{ fontFamily: SANS, fontWeight: 400, fontStyle: "italic", fontSize: BODY_SM, lineHeight: 1.55, color: "#fff", margin: 0, textWrap: "pretty" as React.CSSProperties["textWrap"] }}>
-                &ldquo;It felt effortless… we walked away with a beautiful brand and solid strategy.&rdquo;
-              </p>
-              <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: "auto" }}>
-                <Image src="/images/chris-melissa.png" alt="Chris &amp; Melissa Smith" width={56} height={56} style={{ borderRadius: 999, objectFit: "cover", objectPosition: "top center", flexShrink: 0, width: 56, height: 56 }} />
-                <div>
-                  <div style={{ fontFamily: SANS, fontWeight: 600, fontSize: 14, letterSpacing: "0.12em", textTransform: "uppercase", color: "#fff" }}>Chris &amp; Melissa Smith</div>
-                  <div style={{ fontFamily: SANS, fontSize: 14, lineHeight: 1.5, color: "rgba(255,255,255,0.78)", marginTop: 5 }}>Founders, Family Brand</div>
-                </div>
-              </div>
-            </div>
+            {[TESTIMONIALS.geeta, TESTIMONIALS.brent, TESTIMONIALS.darlene,
+              TESTIMONIALS.tim, TESTIMONIALS.bonni, TESTIMONIALS.sherri].map((t) => (
+              <VideoTestimonial key={t.vimeoId} t={t} dark />
+            ))}
           </motion.div>
 
           <motion.p
@@ -1204,6 +1263,12 @@ export default function StartPage() {
           .split-grid--img-left > div:first-child {
             order: -1;
           }
+        }
+
+        @media (max-width: 880px) {
+          .steps3 { grid-template-columns: 1fr !important; gap: 36px; }
+          .steps3 > div { padding-right: 0 !important; }
+          .step-line { display: none !important; }
         }
 
         @media (max-width: 880px) {
