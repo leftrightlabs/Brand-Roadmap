@@ -62,7 +62,7 @@ export const AREA_LABELS: Record<AreaKey, string> = {
   visualPositioning: 'Visual positioning',
   onlinePresence: 'Online presence',
   brandAuthority: 'Brand authority',
-  offerEvolution: 'Offer evolution',
+  offerEvolution: 'Offer positioning',
   visionaryGrowth: 'Visionary growth',
 };
 
