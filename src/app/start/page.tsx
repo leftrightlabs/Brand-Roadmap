@@ -699,7 +699,7 @@ export default function StartPage() {
       {/* ════════════════════════════════════════════════════════
           THE STRATEGIC LENS … white, image left / text right
       ════════════════════════════════════════════════════════ */}
-      <section style={{ background: "#fff", paddingBottom: "clamp(80px, 11vw, 168px)" }}>
+      <section style={{ background: "#fff", ...sectionPad }}>
         <motion.div
           style={{ ...container }}
           initial="hidden"
@@ -1045,8 +1045,7 @@ export default function StartPage() {
             initial="hidden" whileInView="visible" variants={rv} viewport={vp}
             style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "rgba(255,255,255,0.78)", maxWidth: 760, margin: "48px 0 0" }}
           >
-            These leaders came to us for private brand engagements. Your Roadmap
-            runs on the same framework theirs did.
+            Your Roadmap runs on the same framework theirs did.
           </motion.p>
         </div>
       </section>
