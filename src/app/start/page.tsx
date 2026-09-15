@@ -434,9 +434,7 @@ export default function StartPage() {
               style={{ fontFamily: SANS, fontSize: 22, lineHeight: 1.35, color: "rgba(255,255,255,0.82)", maxWidth: 660, margin: 0 }}
             >
               The people who&apos;ve worked with you already know. Everyone else is
-              still deciding from your website. Your free Brand Elevation Roadmap
-              finds every place your brand is mismatched, and tells you exactly
-              what to fix first.
+              still deciding from your website.
             </motion.p>
 
             <motion.p
@@ -445,7 +443,9 @@ export default function StartPage() {
               transition={{ duration: 0.8, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
               style={{ fontFamily: SANS, fontSize: 22, lineHeight: 1.35, color: "rgba(255,255,255,0.82)", maxWidth: 660, margin: 0 }}
             >
-              Before you spend another dime guessing what to do next.
+              Your free Brand Elevation Roadmap finds every place your brand is
+              mismatched, and tells you exactly what to fix first… before you spend
+              another dime guessing what to do next.
             </motion.p>
 
             <motion.div
@@ -464,7 +464,7 @@ export default function StartPage() {
               transition={{ duration: 0.6, delay: 0.75 }}
               style={{ display: "flex", flexWrap: "wrap", gap: "12px 28px", marginTop: 4 }}
             >
-              {["Free to start", "About five minutes", "Your first fix included"].map((item) => (
+              {["Full assessment, free", "About five minutes", "Your first fix included"].map((item) => (
                 <span
                   key={item}
                   style={{
@@ -483,27 +483,6 @@ export default function StartPage() {
               ))}
             </motion.div>
 
-            {/* Logo strip … the same asset the credibility band used to carry,
-                moved up here per the v6 copy so proof lands above the fold. */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.7, delay: 0.9 }}
-              style={{ marginTop: "clamp(20px, 3vw, 36px)", maxWidth: 720 }}
-            >
-              <p style={{ fontFamily: SANS, fontWeight: 400, fontSize: 14, letterSpacing: "2px", textTransform: "uppercase", color: "rgba(255,255,255,0.55)", margin: "0 0 18px" }}>
-                The framework behind these brands.
-              </p>
-              <picture>
-                <source srcSet="/images/logos/logo-strip-desktop.png" media="(min-width: 768px)" />
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/images/logos/logo-strip-mobile.png"
-                  alt="Client logos: JJ Virgin, Laila Ali, Mindshare, Family Brand, Katalyst and DesBio"
-                  style={{ maxWidth: "100%", height: "auto", opacity: 0.9, display: "block" }}
-                />
-              </picture>
-            </motion.div>
           </div>
 
           {/* Report mockup … the top of a real Roadmap (header, Legacy Read, the
@@ -532,6 +511,33 @@ export default function StartPage() {
             />
           </motion.div>
         </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════════
+          LOGO BAND … navy, full-bleed proof strip
+      ════════════════════════════════════════════════════════ */}
+      <section style={{ background: NAVY, paddingTop: "clamp(44px, 6vw, 80px)", paddingBottom: "clamp(44px, 6vw, 80px)", borderTop: "1px solid rgba(255,255,255,0.10)" }}>
+        <motion.div
+          initial="hidden" whileInView="visible" variants={rv} viewport={vp}
+          style={{ textAlign: "center" }}
+        >
+          <p style={{ fontFamily: SANS, fontWeight: 400, fontSize: 16, letterSpacing: "2px", textTransform: "uppercase", color: "rgba(255,255,255,0.62)", margin: "0 0 clamp(28px, 4vw, 48px)" }}>
+            The framework behind these brands.
+          </p>
+          {/* Full-bleed: the strip asset is 2048px wide, so it stays crisp
+              edge to edge on anything short of a very large display. */}
+          <div style={{ paddingLeft: "max(16px, 2vw)", paddingRight: "max(16px, 2vw)" }}>
+            <picture>
+              <source srcSet="/images/logos/logo-strip-desktop.png" media="(min-width: 768px)" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/logos/logo-strip-mobile.png"
+                alt="Client logos: JJ Virgin, Laila Ali, Mindshare, Family Brand, Katalyst and DesBio"
+                style={{ width: "100%", maxWidth: 2048, height: "auto", opacity: 0.92, display: "block", margin: "0 auto" }}
+              />
+            </picture>
+          </div>
+        </motion.div>
       </section>
 
       {/* ════════════════════════════════════════════════════════
@@ -807,8 +813,9 @@ export default function StartPage() {
               <em style={{ fontStyle: "italic", fontWeight: 400 }}>Inside Your Roadmap</em>
             </ScotchH2>
             <p style={{ fontFamily: SANS, fontSize: 22, lineHeight: 1.35, color: "rgba(255,255,255,0.82)", maxWidth: 680, margin: 0 }}>
-              Free to start, with one real lever included. The complete plan is
-              $97, with a fourteen-day money-back guarantee.
+              The full assessment is free, all nine levers, with one of them
+              unlocked to act on. The complete plan is $97, with a fourteen-day
+              money-back guarantee.
             </p>
           </motion.div>
 
@@ -819,7 +826,7 @@ export default function StartPage() {
             style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", borderTop: "1px solid rgba(255,255,255,0.14)", marginTop: "clamp(40px, 5vw, 72px)" }}
           >
             {[
-              { num: "01", h3: "Where You're Losing People", p: "A straight read across all nine levers. Which ones are working for you, and which are quietly turning people away." },
+              { num: "01", h3: "Where You're Losing People", p: "A complete read across all nine levers, free. Which ones are working for you, and which are quietly turning people away." },
               { num: "02", h3: "The One to Pull First, Free", p: "We give away the best one on purpose. You'll know exactly which lever moves the most for your brand right now, at no cost, along with three short lessons on the method behind it. One specific action, not another suggestion to clarify your messaging." },
               { num: "03", h3: "Your Full 90-Day Plan", p: "When you're ready, $97 gives you the other eight, sequenced across 30, 60, and 90 days, so you work them in the order that compounds. It comes with example rewrites in your own voice, so you're never starting from a blank page, and a link you can hand to whoever helps you carry it out." },
             ].map((card, i) => (
