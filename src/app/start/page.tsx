@@ -685,13 +685,23 @@ export default function StartPage() {
             initial="hidden" whileInView="visible" variants={rv} viewport={vp}
             style={{ display: "flex", flexDirection: "column", gap: 22, alignItems: "center", textAlign: "center", maxWidth: 820, margin: "0 auto" }}
           >
+            {/* The section above introduces Brand Elevation, so this one has to
+                name the method outright, or the diagram below never gets
+                identified as the method. "Get Clear. Get Noticed. Get Paid."
+                is the method's descriptor, not a section title, so it sits
+                here as a subhead. */}
             <ScotchH2 white center>
-              Get Clear. Get Noticed.{" "}
-              <em style={{ fontStyle: "italic", fontWeight: 400 }}>Get Paid.</em>
+              The Brand Elevation<sup style={{ fontSize: "0.38em", verticalAlign: "super", fontWeight: 400 }}>&trade;</sup>{" "}
+              <em style={{ fontStyle: "italic", fontWeight: 400 }}>Method</em>
             </ScotchH2>
-            <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "rgba(255,255,255,0.82)", maxWidth: 720, margin: 0 }}>
-              Three pillars, nine levers, and an order that doesn&apos;t change.
-            </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10, alignItems: "center" }}>
+              <p style={{ fontFamily: SANS, fontWeight: 600, fontSize: "clamp(18px, 1.9vw, 26px)", letterSpacing: "0.02em", color: LIME, margin: 0 }}>
+                Get Clear. Get Noticed. Get Paid.
+              </p>
+              <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "rgba(255,255,255,0.82)", maxWidth: 720, margin: 0 }}>
+                Nine levers live under those three pillars, and your Roadmap reads every one.
+              </p>
+            </div>
           </motion.div>
 
           {/* Process diagram — the framework at a glance. Its navy background
@@ -716,7 +726,6 @@ export default function StartPage() {
             {[
               {
                 num: "01", tier: "Get Clear",
-                lead: "Align your brand personality, signature framework, and elevated audience to craft a strategic foundation for your next-level identity.",
                 pillars: [
                   ["Brand Personality", "The traits that make your brand unmistakably yours."],
                   ["Signature Framework", "The approach that's yours alone, and can't be borrowed."],
@@ -725,7 +734,6 @@ export default function StartPage() {
               },
               {
                 num: "02", tier: "Get Noticed",
-                lead: "Elevate your magnetic voice, visual positioning, and online presence into something instantly recognizable and deeply resonant.",
                 pillars: [
                   ["Magnetic Voice", "The way your brand talks, so it finally sounds like the person behind it."],
                   ["Visual Positioning", "The identity system that makes you recognizable before anyone reads a word."],
@@ -734,7 +742,6 @@ export default function StartPage() {
               },
               {
                 num: "03", tier: "Get Paid",
-                lead: "Align your brand authority, offer positioning, and visionary growth to scale sustainably and sell with soul.",
                 pillars: [
                   ["Brand Authority", "The credibility that makes you the obvious choice before anyone asks for a proposal."],
                   ["Offer Positioning", "Services and pricing aligned so clients move through your work the way it was meant to flow."],
@@ -752,7 +759,6 @@ export default function StartPage() {
                   </span>
                   <h3 style={{ fontFamily: SERIF, fontWeight: 700, fontSize: "clamp(26px, 2.6vw, 38px)", lineHeight: 1.05, color: "#fff", margin: 0, whiteSpace: "nowrap" }}>{col.tier}</h3>
                 </div>
-                <p style={{ fontFamily: SANS, fontSize: BODY_SM, lineHeight: 1.5, color: "rgba(255,255,255,0.78)", margin: 0 }}>{col.lead}</p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 16, marginTop: 6 }}>
                   {col.pillars.map(([name, desc]) => (
                     <div key={name} style={{ display: "flex", flexDirection: "column", gap: 3 }}>
