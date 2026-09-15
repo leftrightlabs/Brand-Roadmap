@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { LegacyTriad } from "@/components/legacy-triad";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
@@ -701,7 +700,12 @@ export default function StartPage() {
             initial="hidden" whileInView="visible" variants={rv} viewport={vp}
             style={{ display: "flex", justifyContent: "center", marginTop: "clamp(40px, 5vw, 64px)" }}
           >
-            <LegacyTriad label="#fff" maxWidth={620} />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/brand-elevation-method.png"
+              alt="The Brand Elevation framework: three overlapping circles for Get Clear, Get Noticed and Get Paid, meeting at Align, Activate and Ascend, with Legacy at the centre."
+              style={{ width: "100%", maxWidth: 620, height: "auto", display: "block" }}
+            />
           </motion.div>
 
           <motion.div
