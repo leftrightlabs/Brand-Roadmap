@@ -15,8 +15,15 @@ function isBlockedHost(hostname: string): boolean {
   if (h === 'localhost' || h.endsWith('.localhost') || h.endsWith('.local') || h.endsWith('.internal')) {
     return true;
   }
-  // IPv6 loopback / link-local / unique-local
-  if (h === '::1' || h.startsWith('fe80:') || h.startsWith('fc') || h.startsWith('fd')) return true;
+  // IPv6 loopback / link-local / unique-local. These only apply to actual IPv6
+  // literals, which always contain a colon. Matching them as bare prefixes
+  // blocked every ordinary domain starting "fc" or "fd" (fdaatty.com, fdic.gov,
+  // fcc.gov), which failed silently because a blocked host returns ogImage:null.
+  if (h.includes(':')) {
+    const bare = h.replace(/^\[|\]$/g, '');
+    if (bare === '::1' || bare.startsWith('fe80:')) return true;
+    if (/^f[cd][0-9a-f]{0,2}:/.test(bare)) return true;   // fc00::/7
+  }
   // IPv4 literals in private / loopback / link-local ranges (incl. 169.254.169.254 metadata)
   const m = h.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/);
   if (m) {
@@ -58,7 +65,10 @@ async function fromDirectFetch(url: URL): Promise<string | null> {
       },
     });
     clearTimeout(timer);
-    if (!res.ok) return null;
+    if (!res.ok) {
+      console.warn(`[OG-IMAGE] direct fetch ${res.status} for ${url.hostname}`);
+      return null;
+    }
 
     // og tags live in <head>; cap how much we read.
     const html = (await res.text()).slice(0, 300_000);
@@ -99,7 +109,10 @@ async function fromMicrolink(url: URL): Promise<string | null> {
       }
     );
     clearTimeout(timer);
-    if (!res.ok) return null;
+    if (!res.ok) {
+      console.warn(`[OG-IMAGE] microlink ${res.status} for ${url.hostname}`);
+      return null;
+    }
     const json = (await res.json()) as {
       status?: string;
       data?: { image?: { url?: string }; logo?: { url?: string } };
@@ -129,5 +142,6 @@ export async function GET(request: NextRequest) {
   }
 
   const ogImage = (await fromDirectFetch(url)) ?? (await fromMicrolink(url));
+  if (!ogImage) console.warn(`[OG-IMAGE] no image resolved for ${url.hostname}`);
   return NextResponse.json({ ogImage });
 }
