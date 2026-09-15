@@ -498,8 +498,8 @@ export default function StartPage() {
             <Image
               src="/images/report-mockup.png"
               alt="A Brand Elevation Roadmap report, showing the What We See summary and the nine-lever wheel"
-              width={1000}
-              height={673}
+              width={1400}
+              height={1332}
               priority
               style={{
                 width: "100%",
