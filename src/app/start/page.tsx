@@ -435,8 +435,8 @@ export default function StartPage() {
             >
               The people who&apos;ve worked with you already know. Everyone else is
               still deciding from your website. Your free Brand Elevation Roadmap
-              finds every place your brand is keeping you quiet, and hands you the
-              one to fix first.
+              finds every place your brand is mismatched, and tells you exactly
+              what to fix first.
             </motion.p>
 
             <motion.p
