@@ -523,6 +523,7 @@ export default function StartPage() {
       <section style={{ background: NAVY, paddingTop: "clamp(26px, 3vw, 44px)", paddingBottom: "clamp(26px, 3vw, 44px)", borderTop: "1px solid rgba(255,255,255,0.10)" }}>
         <motion.div
           initial="hidden" whileInView="visible" variants={rv} viewport={vp}
+          className="ctr"
           style={{ textAlign: "center" }}
         >
           <p style={{ fontFamily: SANS, fontWeight: 400, fontSize: 16, letterSpacing: "2px", textTransform: "uppercase", color: "rgba(255,255,255,0.62)", margin: "0 0 clamp(18px, 2.4vw, 30px)" }}>
@@ -683,6 +684,7 @@ export default function StartPage() {
         <div style={container}>
           <motion.div
             initial="hidden" whileInView="visible" variants={rv} viewport={vp}
+            className="ctr"
             style={{ display: "flex", flexDirection: "column", gap: 22, alignItems: "center", textAlign: "center", maxWidth: 820, margin: "0 auto" }}
           >
             {/* The section above introduces Brand Elevation, so this one has to
@@ -694,21 +696,17 @@ export default function StartPage() {
               The Brand Elevation<sup style={{ fontSize: "0.38em", verticalAlign: "super", fontWeight: 400 }}>&trade;</sup>{" "}
               <em style={{ fontStyle: "italic", fontWeight: 400 }}>Method</em>
             </ScotchH2>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10, alignItems: "center" }}>
-              <p style={{ fontFamily: SANS, fontWeight: 600, fontSize: "clamp(18px, 1.9vw, 26px)", letterSpacing: "0.02em", color: LIME, margin: 0 }}>
-                Get Clear. Get Noticed. Get Paid.
-              </p>
-              <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "rgba(255,255,255,0.82)", maxWidth: 720, margin: 0 }}>
-                Nine levers live under those three pillars, and your Roadmap reads every one.
-              </p>
-            </div>
+            <p style={{ fontFamily: SANS, fontWeight: 600, fontSize: "clamp(18px, 1.9vw, 26px)", letterSpacing: "0.02em", color: LIME, margin: 0 }}>
+              Get Clear. Get Noticed. Get Paid.
+            </p>
           </motion.div>
 
           {/* Process diagram — the framework at a glance. Its navy background
               matches this band, so it sits flush with no visible edges. */}
           <motion.div
             initial="hidden" whileInView="visible" variants={rv} viewport={vp}
-            style={{ display: "flex", justifyContent: "center", marginTop: "clamp(40px, 5vw, 64px)" }}
+            className="ctr"
+            style={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: "clamp(40px, 5vw, 64px)" }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -716,6 +714,9 @@ export default function StartPage() {
               alt="The Brand Elevation framework: Get Clear, Get Noticed and Get Paid overlapping at Align, Activate and Ascend with Legacy at the centre, ringed by the nine levers."
               style={{ width: "100%", maxWidth: 620, height: "auto", display: "block" }}
             />
+            <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "rgba(255,255,255,0.82)", maxWidth: 620, margin: "clamp(20px, 2.4vw, 30px) 0 0", textAlign: "center" }}>
+              Your Roadmap is a snapshot of your website, lever by lever.
+            </p>
           </motion.div>
 
           <motion.div
@@ -780,6 +781,7 @@ export default function StartPage() {
         <div style={container}>
           <motion.div
             initial="hidden" whileInView="visible" variants={rv} viewport={vp}
+            className="ctr"
             style={{ display: "flex", flexDirection: "column", gap: 22, maxWidth: 800, margin: "0 auto clamp(32px, 4vw, 56px)", alignItems: "center", textAlign: "center" }}
           >
             <ScotchH2 center>
@@ -818,6 +820,7 @@ export default function StartPage() {
         <div style={{ ...container, position: "relative", ...sectionPad }}>
           <motion.div
             initial="hidden" whileInView="visible" variants={rv} viewport={vp}
+            className="ctr"
             style={{ display: "flex", flexDirection: "column", gap: 22, alignItems: "center", textAlign: "center", maxWidth: 800, margin: "0 auto" }}
           >
             <ScotchH2 white center>
@@ -855,6 +858,7 @@ export default function StartPage() {
           {/* Price / value stack + CTA */}
           <motion.div
             initial="hidden" whileInView="visible" variants={rv} viewport={vp}
+            className="ctr"
             style={{ marginTop: "clamp(48px, 6vw, 84px)", textAlign: "center", display: "flex", flexDirection: "column", gap: 22, alignItems: "center" }}
           >
             <div style={{ display: "flex", alignItems: "baseline", gap: 12, justifyContent: "center" }}>
@@ -1011,6 +1015,7 @@ export default function StartPage() {
         />
         <motion.div
           initial="hidden" whileInView="visible" variants={rv} viewport={vp}
+          className="ctr"
           style={{ ...container, textAlign: "center", position: "relative", zIndex: 2 }}
         >
           <ScotchH2 white center>
@@ -1178,6 +1183,12 @@ export default function StartPage() {
            centered lines that were ragging badly. */
         .baa-page p { text-wrap: pretty; }
         .baa-page .bal { text-wrap: balance !important; }
+        /* Centred copy wants balance, not pretty: pretty only guards the last
+           line, which leaves a centred block ragging badly above it. Tagging
+           the container means anything centred inside it balances by default. */
+        .baa-page .ctr :is(p, h1, h2, h3, h4, h5, h6, li, span) {
+          text-wrap: balance;
+        }
 
         .split-grid {
           grid-template-columns: 1.05fr 0.95fr;
