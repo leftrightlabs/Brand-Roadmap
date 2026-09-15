@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useLayoutEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { LegacyTriad } from "@/components/legacy-triad";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -10,6 +10,10 @@ const NAVY = "#112248";
 const LIME = "#a7c140";
 const SANS = "'sweet-sans-pro', Montserrat, Arial, sans-serif";
 const SERIF = "scotch-display, 'Playfair Display', Georgia, serif";
+// Body copy runs 18px on a phone up to 22px on desktop on leftrightlabs.com
+// (--text-m to --text-l). A fixed 22px gave 25-character lines at 375px.
+const BODY = "clamp(17px, 13px + 1.1vw, 22px)";
+const BODY_SM = "clamp(16px, 12.5px + 0.8vw, 19px)";
 
 // ─── Scroll reveal ───────────────────────────────────────────────────────────
 const rv = {
@@ -54,38 +58,23 @@ function Eyebrow({
   );
 }
 
-// ─── Scaley … the LRL scaleY(1.2) typographic signature ─────────────────────
-// Mirrors the exact same component used on /mirror. Uses display:block (not
-// inline-block) so scaleY only compounds once. useLayoutEffect measures the
-// actual rendered overflow and sets paddingTop/paddingBottom on the parent
-// heading so the visual text never bleeds into adjacent elements.
+// ─── Scaley … the Scotch Display signature, per [CANON] Brand ────────────────
+// Canon (2026-09-03): set the face at 1.2x its nominal size and compress it
+// horizontally to 83.33%. Same letterform proportions as the old scaleY(1.2),
+// but the extra height comes from font-size, which participates in layout, so
+// nothing overflows and no padding hack has to guess how many lines wrapped.
 function Scaley({ children, center = false }: { children: React.ReactNode; center?: boolean }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  useLayoutEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const parent = el.parentElement;
-    if (!parent) return;
-    const spanRect = el.getBoundingClientRect();
-    const prev = parent.previousElementSibling as HTMLElement | null;
-    let expectedParentTop = spanRect.top;
-    if (prev) {
-      const prevRect = prev.getBoundingClientRect();
-      const prevMB = parseFloat(getComputedStyle(prev).marginBottom) || 0;
-      expectedParentTop = prevRect.bottom + prevMB;
-    }
-    const upwardOverflow = Math.max(0, Math.ceil(expectedParentTop - spanRect.top));
-    const downwardOverflow = Math.ceil((spanRect.height - upwardOverflow) / 6) + 8;
-    if (upwardOverflow > 0) parent.style.paddingTop = `${upwardOverflow}px`;
-    parent.style.paddingBottom = `${downwardOverflow}px`;
-  }, []);
   return (
     <span
-      ref={ref}
       style={{
         display: "block",
-        transform: "scaleY(1.2)",
-        transformOrigin: center ? "top center" : "top left",
+        width: "fit-content",
+        marginInline: center ? "auto" : 0,
+        fontSize: "1.2em",
+        lineHeight: 0.85,
+        paddingInline: "0.1em",
+        transform: "scaleX(0.8333)",
+        transformOrigin: center ? "center" : "left center",
       }}
     >
       {children}
@@ -139,14 +128,14 @@ function ScotchH2({
       style={{
         fontFamily: SERIF,
         fontWeight: 700,
-        fontSize: "clamp(36px, 5vw, 76px)",
+        fontSize: "clamp(32px, 5vw, 76px)",
         lineHeight: 1,
         letterSpacing: "-0.01em",
         textTransform: "capitalize",
         color: white ? "#fff" : NAVY,
         textWrap: "balance" as React.CSSProperties["textWrap"],
         margin: 0,
-        paddingBottom: "1.5em",
+        paddingBottom: "0.35em",
         ...(center ? { textAlign: "center" } : {}),
         ...extraStyle,
       }}
@@ -212,7 +201,7 @@ function FaqItem({
             fontFamily: SANS,
             fontSize: 28,
             lineHeight: 1,
-            color: LIME,
+            color: NAVY,
             fontWeight: 400,
             flexShrink: 0,
             minWidth: 24,
@@ -246,22 +235,25 @@ function AccentBtn({
   onClick,
   disabled,
   children,
+  className,
 }: {
   onClick: () => void;
   disabled?: boolean;
   children: React.ReactNode;
+  className?: string;
 }) {
   return (
     <button
       onClick={onClick}
       disabled={disabled}
+      className={className}
       style={{
         fontFamily: SANS,
         fontWeight: 700,
-        fontSize: 20,
+        fontSize: "clamp(15px, 12px + 0.55vw, 20px)",
         letterSpacing: "0.5px",
         textTransform: "uppercase",
-        padding: "15px 38px",
+        padding: "clamp(12px, 1vw, 15px) clamp(22px, 2.6vw, 38px)",
         background: LIME,
         color: NAVY,
         border: 0,
@@ -386,7 +378,7 @@ export default function StartPage() {
                 </a>
               );
             })}
-            <AccentBtn onClick={handleCTA} disabled={isLoading}>
+            <AccentBtn onClick={handleCTA} disabled={isLoading} className="hdr-cta">
               {isLoading ? "Loading…" : "Start Here"}
             </AccentBtn>
           </nav>
@@ -445,7 +437,7 @@ export default function StartPage() {
                   textTransform: "capitalize",
                   color: "#fff",
                   margin: 0,
-                  paddingBottom: "1.5em",
+                  paddingBottom: "0.35em",
                   textWrap: "pretty" as React.CSSProperties["textWrap"],
                 }}
               >
@@ -461,7 +453,7 @@ export default function StartPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              style={{ fontFamily: SANS, fontSize: 22, lineHeight: 1.35, color: "rgba(255,255,255,0.82)", maxWidth: 660, margin: 0 }}
+              style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "rgba(255,255,255,0.82)", maxWidth: 660, margin: 0 }}
             >
               The people who&apos;ve worked with you already know. Everyone else is
               still deciding from your website.
@@ -471,7 +463,7 @@ export default function StartPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
-              style={{ fontFamily: SANS, fontSize: 22, lineHeight: 1.35, color: "rgba(255,255,255,0.82)", maxWidth: 660, margin: 0 }}
+              style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "rgba(255,255,255,0.82)", maxWidth: 660, margin: 0 }}
             >
               Your free Brand Elevation Roadmap finds every place your brand is
               mismatched, and tells you exactly what to fix first… before you spend
@@ -571,23 +563,23 @@ export default function StartPage() {
               <em style={{ fontStyle: "italic", fontWeight: 400 }}>Googled You.</em>
             </ScotchH2>
             <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-              <p style={{ fontFamily: SANS, fontSize: 22, lineHeight: 1.35, color: "#000", margin: 0 }}>
+              <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "#000", margin: 0 }}>
                 You were introduced on a podcast. Someone in the audience typed
                 your name into their phone before the episode finished, landed on
                 your site, gave it the eight seconds everyone gives everything, and
                 formed a complete opinion about what you charge.
               </p>
-              <p style={{ fontFamily: SANS, fontSize: 22, lineHeight: 1.35, color: "#000", margin: 0 }}>
+              <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "#000", margin: 0 }}>
                 You weren&apos;t in the room for that conversation.{" "}
                 <strong style={{ color: "#000", fontWeight: 700 }}>
                   Your brand was, and it may have said a few things you&apos;d never
                   say out loud.
                 </strong>{" "}
-                That you&apos;re newer at this than you are. That you&apos;re roughly
-                interchangeable with the other four people they&apos;re considering.
-                That your fee should probably start with a smaller number.
+                That you&apos;re newer at this than you are, that you&apos;re roughly
+                interchangeable with the other four people they&apos;re considering,
+                and that your fee should probably start with a smaller number.
               </p>
-              <p style={{ fontFamily: SANS, fontSize: 22, lineHeight: 1.35, color: "#000", margin: 0 }}>
+              <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "#000", margin: 0 }}>
                 None of that reflects your work. It reflects a brand that stopped
                 keeping up with you somewhere around your last big leap… and is
                 still describing the version of you it met.
@@ -658,7 +650,7 @@ export default function StartPage() {
 
           <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
             <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-              <p style={{ fontFamily: SANS, fontSize: 22, lineHeight: 1.35, color: "#000", margin: 0 }}>
+              <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "#000", margin: 0 }}>
                 Brand Elevation™ is the framework we&apos;ve used with JJ Virgin,
                 Laila Ali, Mindshare, DesBio, and two decades of founders whose work
                 had outpaced the brand carrying it.{" "}
@@ -666,14 +658,14 @@ export default function StartPage() {
                   Your Roadmap runs on the same framework. Free.
                 </strong>
               </p>
-              <p style={{ fontFamily: SANS, fontSize: 22, lineHeight: 1.35, color: "#000", margin: 0 }}>
+              <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "#000", margin: 0 }}>
                 A generic AI prompt returns generic advice. Ours reads your{" "}
                 <em style={{ fontStyle: "italic" }}>actual</em> brand… your site,
                 your language, how you price and position what you sell… and returns
                 findings that would be useless to anyone else. Then it puts them in
                 order. Get Clear. Get Noticed. Get Paid.
               </p>
-              <p style={{ fontFamily: SANS, fontSize: 22, lineHeight: 1.35, color: "#000", margin: 0 }}>
+              <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "#000", margin: 0 }}>
                 The order is doing more work than it appears to. No one gets noticed
                 for a message that hasn&apos;t landed, and no one commands premium
                 fees for work the market hasn&apos;t registered. So we begin at the
@@ -698,7 +690,7 @@ export default function StartPage() {
               Get Clear. Get Noticed.{" "}
               <em style={{ fontStyle: "italic", fontWeight: 400 }}>Get Paid.</em>
             </ScotchH2>
-            <p style={{ fontFamily: SANS, fontSize: 22, lineHeight: 1.35, color: "rgba(255,255,255,0.82)", maxWidth: 720, margin: 0 }}>
+            <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "rgba(255,255,255,0.82)", maxWidth: 720, margin: 0 }}>
               Three pillars, nine levers, and an order that doesn&apos;t change.
             </p>
           </motion.div>
@@ -752,11 +744,11 @@ export default function StartPage() {
                     two lines. */}
                 <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                   <span style={{ fontFamily: SERIF, fontWeight: 700, fontStyle: "italic", fontSize: "clamp(30px, 3.2vw, 42px)", lineHeight: 1, color: LIME }}>
-                    <span style={{ display: "inline-block", transform: "scaleY(1.2)", transformOrigin: "top left" }}>{col.num}</span>
+                    <span style={{ display: "inline-block", fontSize: "1.2em", lineHeight: 0.85, transform: "scaleX(0.8333)", transformOrigin: "left center" }}>{col.num}</span>
                   </span>
                   <h3 style={{ fontFamily: SERIF, fontWeight: 700, fontSize: "clamp(26px, 2.6vw, 38px)", lineHeight: 1.05, color: "#fff", margin: 0, whiteSpace: "nowrap" }}>{col.tier}</h3>
                 </div>
-                <p style={{ fontFamily: SANS, fontSize: 19, lineHeight: 1.45, color: "rgba(255,255,255,0.78)", margin: 0 }}>{col.lead}</p>
+                <p style={{ fontFamily: SANS, fontSize: BODY_SM, lineHeight: 1.5, color: "rgba(255,255,255,0.78)", margin: 0 }}>{col.lead}</p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 16, marginTop: 6 }}>
                   {col.pillars.map(([name, desc]) => (
                     <div key={name} style={{ display: "flex", flexDirection: "column", gap: 3 }}>
@@ -783,7 +775,7 @@ export default function StartPage() {
             <ScotchH2 center>
               Why Clarity <em style={{ fontStyle: "italic", fontWeight: 400 }}>Comes First</em>
             </ScotchH2>
-            <p style={{ fontFamily: SANS, fontSize: 22, lineHeight: 1.35, color: "#000", margin: 0 }}>
+            <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "#000", margin: 0 }}>
               A few minutes on the method behind your Roadmap… why clarity has to
               land before visibility, and what that one free lever tends to set in
               motion.
@@ -822,10 +814,10 @@ export default function StartPage() {
               Everything{" "}
               <em style={{ fontStyle: "italic", fontWeight: 400 }}>Inside Your Roadmap</em>
             </ScotchH2>
-            <p style={{ fontFamily: SANS, fontSize: 22, lineHeight: 1.35, color: "rgba(255,255,255,0.82)", maxWidth: 680, margin: 0 }}>
-              The full assessment is free, all nine levers, with one of them
-              unlocked to act on. The complete plan is $97, with a fourteen-day
-              money-back guarantee.
+            <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "rgba(255,255,255,0.82)", maxWidth: 680, margin: 0 }}>
+              The full assessment across all nine levers is free, with your first
+              lever unlocked so you can act on it today. The complete plan is $97,
+              with a fourteen-day money-back guarantee.
             </p>
           </motion.div>
 
@@ -837,15 +829,15 @@ export default function StartPage() {
           >
             {[
               { num: "01", h3: "Where You're Losing People", p: "A complete read across all nine levers, free. Which ones are working for you, and which are quietly turning people away." },
-              { num: "02", h3: "The One to Pull First, Free", p: "We give away the best one on purpose. You'll know exactly which lever moves the most for your brand right now, at no cost, along with three short lessons on the method behind it. One specific action, not another suggestion to clarify your messaging." },
+              { num: "02", h3: "The One to Pull First, Free", p: "We give away the best one on purpose. You'll know exactly which lever moves the most for your brand right now, at no cost, along with three short lessons on the method behind it. You'll leave with one specific action instead of another vague note to clarify your messaging." },
               { num: "03", h3: "Your Full 90-Day Plan", p: "When you're ready, $97 gives you the other eight, sequenced across 30, 60, and 90 days, so you work them in the order that compounds. It comes with example rewrites in your own voice, so you're never starting from a blank page, and a link you can hand to whoever helps you carry it out." },
             ].map((card, i) => (
               <div key={i} style={{ padding: "44px 40px 48px", display: "flex", flexDirection: "column", gap: 18, borderLeft: i === 0 ? "none" : "1px solid rgba(255,255,255,0.14)" }}>
                 <p style={{ fontFamily: SERIF, fontWeight: 700, fontStyle: "italic", fontSize: "clamp(48px, 6vw, 80px)", lineHeight: 1, color: LIME, margin: "0 0 8px" }}>
-                  <span style={{ display: "block", transform: "scaleY(1.2)", transformOrigin: "top left" }}>{card.num}</span>
+                  <span style={{ display: "block", width: "fit-content", fontSize: "1.2em", lineHeight: 0.85, transform: "scaleX(0.8333)", transformOrigin: "left center" }}>{card.num}</span>
                 </p>
                 <h3 style={{ fontFamily: SERIF, fontWeight: 700, fontSize: "clamp(24px, 2.4vw, 32px)", lineHeight: 1.1, textTransform: "capitalize", color: "#fff", margin: 0 }}>{card.h3}</h3>
-                <p style={{ fontFamily: SANS, fontSize: 19, lineHeight: 1.45, color: "rgba(255,255,255,0.78)", margin: 0 }}>{card.p}</p>
+                <p style={{ fontFamily: SANS, fontSize: BODY_SM, lineHeight: 1.5, color: "rgba(255,255,255,0.78)", margin: 0 }}>{card.p}</p>
               </div>
             ))}
           </motion.div>
@@ -857,19 +849,19 @@ export default function StartPage() {
           >
             <div style={{ display: "flex", alignItems: "baseline", gap: 12, justifyContent: "center" }}>
               <span style={{ fontFamily: SERIF, fontWeight: 700, fontSize: "clamp(56px, 8vw, 96px)", lineHeight: 1, color: LIME }}>
-                <span style={{ display: "inline-block", transform: "scaleY(1.2)", transformOrigin: "center" }}>$97</span>
+                <span style={{ display: "inline-block", fontSize: "1.2em", lineHeight: 0.85, transform: "scaleX(0.8333)", transformOrigin: "center" }}>$97</span>
               </span>
               <span style={{ fontFamily: SANS, fontSize: 18, color: "rgba(255,255,255,0.7)" }}>for the complete plan</span>
             </div>
-            <p className="bal" style={{ fontFamily: SANS, fontSize: 20, lineHeight: 1.45, color: "rgba(255,255,255,0.82)", maxWidth: 640, margin: 0 }}>
+            <p className="bal" style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "rgba(255,255,255,0.82)", maxWidth: 640, margin: 0 }}>
               All eight remaining levers, example rewrites in your voice, ninety
               days of sequencing, and a link your team can work from. Ninety days of
               direction for less than the cost of a single hour with most
               strategists.
             </p>
             <p className="bal" style={{ fontFamily: SANS, fontSize: 17, lineHeight: 1.5, color: "rgba(255,255,255,0.66)", maxWidth: 560, margin: 0 }}>
-              Fourteen-day money-back guarantee. When it doesn&apos;t earn its
-              place, you have your $97 back.
+              Fourteen days to decide it earned its place, or your $97 comes
+              right back.
             </p>
             <AccentBtn onClick={handleCTA} disabled={isLoading}>
               {isLoading ? "Loading…" : <>Get My Free Brand Elevation Roadmap&nbsp;→</>}
@@ -903,11 +895,11 @@ export default function StartPage() {
               { num: "03", h3: "See Your Roadmap", p: "On screen about two minutes later, with a link in your inbox to keep. It never expires." },
             ].map((card, i) => (
               <div key={i} style={{ padding: "44px 40px 48px", display: "flex", flexDirection: "column", gap: 18, borderLeft: i === 0 ? "none" : "1px solid rgba(17,34,72,0.12)" }}>
-                <p style={{ fontFamily: SERIF, fontWeight: 700, fontStyle: "italic", fontSize: "clamp(48px, 6vw, 80px)", lineHeight: 1, color: LIME, margin: "0 0 8px" }}>
-                  <span style={{ display: "block", transform: "scaleY(1.2)", transformOrigin: "top left" }}>{card.num}</span>
+                <p style={{ fontFamily: SERIF, fontWeight: 700, fontStyle: "italic", fontSize: "clamp(48px, 6vw, 80px)", lineHeight: 1, color: NAVY, margin: "0 0 8px" }}>
+                  <span style={{ display: "block", width: "fit-content", fontSize: "1.2em", lineHeight: 0.85, transform: "scaleX(0.8333)", transformOrigin: "left center" }}>{card.num}</span>
                 </p>
                 <h3 style={{ fontFamily: SERIF, fontWeight: 700, fontSize: "clamp(24px, 2.4vw, 32px)", lineHeight: 1.1, textTransform: "capitalize", color: NAVY, margin: 0 }}>{card.h3}</h3>
-                <p style={{ fontFamily: SANS, fontSize: 19, lineHeight: 1.45, color: "#000", margin: 0 }}>{card.p}</p>
+                <p style={{ fontFamily: SANS, fontSize: BODY_SM, lineHeight: 1.5, color: "#000", margin: 0 }}>{card.p}</p>
               </div>
             ))}
           </motion.div>
@@ -935,7 +927,7 @@ export default function StartPage() {
           >
             {/* JJ Virgin */}
             <div style={{ borderLeft: `3px solid ${LIME}`, background: "rgba(255,255,255,0.04)", padding: "36px 34px", display: "flex", flexDirection: "column", gap: 26 }}>
-              <p style={{ fontFamily: SANS, fontWeight: 400, fontStyle: "italic", fontSize: 20, lineHeight: 1.5, color: "#fff", margin: 0, textWrap: "pretty" as React.CSSProperties["textWrap"] }}>
+              <p style={{ fontFamily: SANS, fontWeight: 400, fontStyle: "italic", fontSize: BODY_SM, lineHeight: 1.55, color: "#fff", margin: 0, textWrap: "pretty" as React.CSSProperties["textWrap"] }}>
                 &ldquo;I&apos;ve never had a branding company so intimately involved in every step.&rdquo;
               </p>
               <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: "auto" }}>
@@ -949,7 +941,7 @@ export default function StartPage() {
 
             {/* Laila Ali … lime monogram */}
             <div style={{ borderLeft: `3px solid ${LIME}`, background: "rgba(255,255,255,0.04)", padding: "36px 34px", display: "flex", flexDirection: "column", gap: 26 }}>
-              <p style={{ fontFamily: SANS, fontWeight: 400, fontStyle: "italic", fontSize: 20, lineHeight: 1.5, color: "#fff", margin: 0, textWrap: "pretty" as React.CSSProperties["textWrap"] }}>
+              <p style={{ fontFamily: SANS, fontWeight: 400, fontStyle: "italic", fontSize: BODY_SM, lineHeight: 1.55, color: "#fff", margin: 0, textWrap: "pretty" as React.CSSProperties["textWrap"] }}>
                 &ldquo;They gave me a roadmap… and we&apos;ve been winning ever since.&rdquo;
               </p>
               <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: "auto" }}>
@@ -963,7 +955,7 @@ export default function StartPage() {
 
             {/* Chris & Melissa Smith … lime monogram */}
             <div style={{ borderLeft: `3px solid ${LIME}`, background: "rgba(255,255,255,0.04)", padding: "36px 34px", display: "flex", flexDirection: "column", gap: 26 }}>
-              <p style={{ fontFamily: SANS, fontWeight: 400, fontStyle: "italic", fontSize: 20, lineHeight: 1.5, color: "#fff", margin: 0, textWrap: "pretty" as React.CSSProperties["textWrap"] }}>
+              <p style={{ fontFamily: SANS, fontWeight: 400, fontStyle: "italic", fontSize: BODY_SM, lineHeight: 1.55, color: "#fff", margin: 0, textWrap: "pretty" as React.CSSProperties["textWrap"] }}>
                 &ldquo;It felt effortless… we walked away with a beautiful brand and solid strategy.&rdquo;
               </p>
               <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: "auto" }}>
@@ -978,7 +970,7 @@ export default function StartPage() {
 
           <motion.p
             initial="hidden" whileInView="visible" variants={rv} viewport={vp}
-            style={{ fontFamily: SANS, fontSize: 22, lineHeight: 1.35, color: "rgba(255,255,255,0.78)", maxWidth: 760, margin: "48px 0 0" }}
+            style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "rgba(255,255,255,0.78)", maxWidth: 760, margin: "48px 0 0" }}
           >
             These leaders came to us for private brand engagements. Your Roadmap
             runs on the same framework theirs did.
@@ -1012,10 +1004,10 @@ export default function StartPage() {
           style={{ ...container, textAlign: "center", position: "relative", zIndex: 2 }}
         >
           <ScotchH2 white center>
-            Award-Winning Branding for Leaders{" "}
-            <em style={{ fontStyle: "italic", fontWeight: 400 }}>Who Know Who They Are</em>
+            Award-Winning Branding for Leaders Who Know Who They Are{" "}
+            <em style={{ fontStyle: "italic", fontWeight: 400, textTransform: "none" }}>(and aren&apos;t afraid to show it)</em>
           </ScotchH2>
-          <p className="bal" style={{ fontFamily: SANS, fontSize: 22, lineHeight: 1.35, color: "rgba(255,255,255,0.82)", maxWidth: 800, margin: "26px auto 0", textAlign: "center" }}>
+          <p className="bal" style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "rgba(255,255,255,0.82)", maxWidth: 800, margin: "26px auto 0", textAlign: "center" }}>
             Nearly two decades of telling founders the thing nobody else in the
             room would say. Some of our clients arrived with a name you&apos;d recognize
             and a brand that no longer matched it. Some arrived years before anyone
@@ -1043,14 +1035,14 @@ export default function StartPage() {
             initial="hidden" whileInView="visible" variants={rv} viewport={vp}
             style={{ marginTop: "clamp(40px, 5vw, 64px)", borderTop: "1px solid rgba(17,34,72,0.12)", maxWidth: 900 }}
           >
-            <FaqItem q="Is This Actually" qEm="Free?" a="It is, and there's no catch to go looking for. No credit card, and nothing that starts charging you quietly in thirty days. You get the full read across all nine levers, three short lessons, and the one lever to pull first, at no cost. The other eight and your 90-day plan are $97, whenever you decide you want them." defaultOpen />
-            <FaqItem q="What If The $97 Upgrade" qEm="Isn't Useful?" a="Then you have your $97 back. Fourteen days, no questions. We'd rather refund the occasional plan than have anyone feel they paid for something that will sit unread. Your Roadmap lives online, never expires, and there's no PDF to lose." />
-            <FaqItem q="Will I Be Pitched At" qEm="The End?" a="You'll see the $97 option inside your free Roadmap, and we'll follow up by email, because we're a business and you're an adult who can decide. What you won't get is a surprise sales call, a countdown timer, or a message in your DMs. Read the free version, pull the one lever, and decide from there." />
-            <FaqItem q="How Is This Different From A Generic" qEm="Online Quiz?" a="A quiz asks you a dozen multiple-choice questions and sorts you into a category. Your Roadmap doesn't ask what your brand is like. It looks. It reads your actual website and public presence, runs what it finds through the Brand Elevation™ framework, and returns findings specific enough to be useless to anyone else. No two Roadmaps are the same." />
-            <FaqItem q="Why Do You Fix Things In A Specific" qEm="Order?" a="Because the order is where most brand work quietly fails. Founders invest in visibility before the message is clear, or in a new site before they know exactly who it's for, and then wonder why the beautiful new thing didn't move anything. Clarity comes first because everything else is built on it. Presence without clarity is noise with a nice font, and premium pricing without either is a hope. So we sequence it: Get Clear, Get Noticed, Get Paid." />
-            <FaqItem q="I've Already Invested In Branding. Why Would I" qEm="Need This?" a="Then you'll recognize a real read when you see one. Brands don't stay aligned on their own. You've grown since that last investment, your offers have changed, your audience has moved upmarket, and the brand you paid for is still describing the version of you it met. The Roadmap is a check-in, not a do-over: which parts of that investment are still earning their place, and which have quietly drifted." />
-            <FaqItem q="How Much Time Does This" qEm="Actually Take?" a="About five minutes on your end. Your website, a few details, and five questions about your goals and who you're trying to reach. Then our side takes about two minutes to read everything and build your Roadmap. It arrives on screen and in your inbox, and it never expires." />
-            <FaqItem q="How Does AI Fit" qEm="Into This?" a="AI does the reading. It moves through your entire public brand presence in the time it would take a strategist to open the first tab, and it holds every finding against the Brand Elevation™ framework we built over nearly two decades of client work. The framework is ours. The judgment about what matters, and in what order, is ours. AI makes it possible to give you that read in two minutes instead of two weeks." />
+            <FaqItem q="Is this actually" qEm="free?" a="It is. You get the full read across all nine levers, three short lessons on the method, and the one lever to pull first, and none of it asks for a credit card. We built the free version to be useful on its own, because a Roadmap that only works after you pay isn't much of a roadmap. When you want the other eight levers and your 90-day plan, that part is $97, and it'll be waiting whenever you decide." defaultOpen />
+            <FaqItem q="What happens when the $97 plan" qEm="isn't for me?" a="Then it comes back to you. You have fourteen days to decide whether the plan earned its place, and when it hasn't, we refund it without a form to fill out or a reason to give. We'd much rather return the occasional $97 than have anyone carrying around a plan they never wanted to open. Your Roadmap stays online either way, and it never expires." />
+            <FaqItem q="Will I be pitched at" qEm="the end?" a="You'll see the $97 option inside your free Roadmap, and we'll send a few emails over the following days, because we'd love for you to keep going and we're not shy about saying so. What you won't get is a sales call you didn't ask for, a countdown clock, or a stranger sliding into your DMs. Read the free version, pull your first lever, and take your time with the rest." />
+            <FaqItem q="How is this different from an" qEm="online quiz?" a="A quiz asks you to describe your brand and then sorts you into a category. Your Roadmap skips the asking and goes to look. It reads your actual website and your public presence, runs everything it finds through the Brand Elevation framework, and hands back findings that only make sense for you, because they came from your words, your offers, and your prices. No two Roadmaps have ever matched, and we've checked." />
+            <FaqItem q="Why do you fix things in a specific" qEm="order?" a="Because the order is where most brand work quietly falls apart. Founders invest in visibility before the message has landed, or in a gorgeous new site before they know exactly who it's for, and then wonder why the beautiful new thing didn't move anything. Clarity goes first because everything else stands on it, so your Roadmap starts there too: Get Clear, then Get Noticed, then Get Paid. It's the same order every time, and that's on purpose." />
+            <FaqItem q="I've already invested in branding. Why would I" qEm="need this?" a="Then you already know how much the right read is worth, and this one is free. Brands don't hold still. You've grown since that last investment, your offers have shifted, your audience has moved up, and the brand you paid for is still describing the version of you it met back then. Think of your Roadmap as a check-in on that work: it shows you which parts are still earning their keep and which have drifted while you were busy being good at your job." />
+            <FaqItem q="How much time does this" qEm="actually take?" a="About five minutes on your side. You'll give us your website, a few details, and answers to five questions about where you're headed and who you want to reach. Then we take about two minutes to read everything and build your Roadmap. It shows up on your screen and in your inbox, it lives online, and it never expires, so there's no PDF to lose in a downloads folder." />
+            <FaqItem q="How does AI fit" qEm="into this?" a="AI does the reading, and it's very good at reading. It moves through your entire public presence in the time it would take one of us to open the first tab, and it holds everything it finds against the Brand Elevation framework we built over nearly two decades with real clients. The framework, and the judgment about what matters and in what order, came from us. AI is what lets you have that read in two minutes instead of two weeks." />
           </motion.div>
         </div>
       </section>
@@ -1072,9 +1064,9 @@ export default function StartPage() {
               <em style={{ fontStyle: "italic", fontWeight: 400 }}>From Now</em>
             </ScotchH2>
 
-            <p style={{ fontFamily: SANS, fontSize: 22, lineHeight: 1.35, color: "rgba(255,255,255,0.82)", maxWidth: 600, margin: 0 }}>
+            <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "rgba(255,255,255,0.82)", maxWidth: 600, margin: 0 }}>
               You could be looking at the specific reasons your brand isn&apos;t
-              landing the way you do in person, and the one lever to pull about it.
+              landing the way you do in person, and the one lever to pull first.
             </p>
 
             <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 22, lineHeight: 1.6, color: LIME, maxWidth: 600, margin: 0 }}>
@@ -1141,9 +1133,9 @@ export default function StartPage() {
 
       {/* ─── Global heading override + responsive ─── */}
       <style>{`
-        /* globals.css applies scaleY(1.2) to ALL h1/h2 site-wide.
-           Scaley handles the transform per-element here … cancel the
-           global rule so it doesn't double-scale and add extra line height. */
+        /* globals.css still applies the retired vertical stretch to h1/h2
+           site-wide. Scaley applies the canon squeeze per element here, so
+           cancel the global rule or the two would stack. */
         .baa-page h1, .baa-page h2, .baa-page h3, .baa-page h4,
         .baa-page h5, .baa-page h6, .baa-page .font-heading {
           transform: none !important;
@@ -1200,6 +1192,16 @@ export default function StartPage() {
           .cards3 > div {
             border-left: none !important;
             border-top: 1px solid rgba(17,34,72,0.12) !important;
+            /* The 40px column gutters made sense between three columns; stacked
+               on a 375px screen they left 255px for the text. */
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            padding-top: 32px !important;
+            padding-bottom: 36px !important;
+          }
+          .hdr-cta {
+            font-size: 14px !important;
+            padding: 12px 18px !important;
           }
           .cards3 > div:first-child {
             border-top: 0 !important;
