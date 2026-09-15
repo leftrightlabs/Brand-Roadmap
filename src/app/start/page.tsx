@@ -702,8 +702,8 @@ export default function StartPage() {
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/images/brand-elevation-method.png"
-              alt="The Brand Elevation framework: three overlapping circles for Get Clear, Get Noticed and Get Paid, meeting at Align, Activate and Ascend, with Legacy at the centre."
+              src="/images/brand-elevation-framework-wheel.png"
+              alt="The Brand Elevation framework: Get Clear, Get Noticed and Get Paid overlapping at Align, Activate and Ascend with Legacy at the centre, ringed by the nine levers."
               style={{ width: "100%", maxWidth: 620, height: "auto", display: "block" }}
             />
           </motion.div>
