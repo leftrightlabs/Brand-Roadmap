@@ -165,9 +165,15 @@ async function syncContact(
   lastName: string,
   fieldValues: { field: string; value: string }[]
 ): Promise<string | null> {
-  const res = await ac<{ contact?: { id: string } }>('/contact/sync', 'POST', {
-    contact: { email, firstName, lastName, fieldValues },
-  });
+  // Only send a name field when we actually have one. AC's /contact/sync
+  // overwrites every key it receives, so an empty string blanks a name that is
+  // already on the contact. markRoadmapPaid hits this path with no name at all,
+  // since the Stripe webhook only knows the buyer's email.
+  const contact: Record<string, unknown> = { email, fieldValues };
+  if (firstName) contact.firstName = firstName;
+  if (lastName) contact.lastName = lastName;
+
+  const res = await ac<{ contact?: { id: string } }>('/contact/sync', 'POST', { contact });
   const id = res?.contact?.id ?? null;
   if (id && LIST_ID) {
     // Ensure they're on the configured list (status 1 = subscribed).
