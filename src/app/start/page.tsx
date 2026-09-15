@@ -445,8 +445,7 @@ export default function StartPage() {
               transition={{ duration: 0.8, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
               style={{ fontFamily: SANS, fontSize: 22, lineHeight: 1.35, color: "rgba(255,255,255,0.82)", maxWidth: 660, margin: 0 }}
             >
-              About five minutes, and free, before you spend another dime guessing
-              what to do next.
+              Before you spend another dime guessing what to do next.
             </motion.p>
 
             <motion.div
@@ -682,7 +681,7 @@ export default function StartPage() {
               <em style={{ fontStyle: "italic", fontWeight: 400 }}>Get Paid.</em>
             </ScotchH2>
             <p style={{ fontFamily: SANS, fontSize: 22, lineHeight: 1.35, color: "rgba(255,255,255,0.82)", maxWidth: 720, margin: 0 }}>
-              Three pillars. Nine levers. One order that never changes.
+              Three pillars, nine levers, and an order that doesn&apos;t change.
             </p>
           </motion.div>
 
@@ -708,7 +707,7 @@ export default function StartPage() {
             {[
               {
                 num: "01", tier: "Get Clear",
-                lead: "Clarity first. On your business, your model, and exactly who you're for. Everything else is built on this, which is why nothing else comes before it.",
+                lead: "Align your brand personality, signature framework, and elevated audience to craft a strategic foundation for your next-level identity.",
                 pillars: [
                   ["Brand Personality", "The traits that make your brand unmistakably yours."],
                   ["Signature Framework", "The approach that's yours alone, and can't be borrowed."],
@@ -717,7 +716,7 @@ export default function StartPage() {
               },
               {
                 num: "02", tier: "Get Noticed",
-                lead: "Then presence. How your brand looks, sounds, and shows up, so you're the one they remember.",
+                lead: "Elevate your magnetic voice, visual positioning, and online presence into something instantly recognizable and deeply resonant.",
                 pillars: [
                   ["Magnetic Voice", "The way your brand talks, so it finally sounds like the person behind it."],
                   ["Visual Positioning", "The identity system that makes you recognizable before anyone reads a word."],
@@ -726,7 +725,7 @@ export default function StartPage() {
               },
               {
                 num: "03", tier: "Get Paid",
-                lead: "Then the money. The authority and the offers to command what your reputation has already earned.",
+                lead: "Align your brand authority, offer positioning, and visionary growth to scale sustainably and sell with soul.",
                 pillars: [
                   ["Brand Authority", "The credibility that makes you the obvious choice before anyone asks for a proposal."],
                   ["Offer Positioning", "Services and pricing aligned so clients move through your work the way it was meant to flow."],
@@ -1000,8 +999,8 @@ export default function StartPage() {
             <em style={{ fontStyle: "italic", fontWeight: 400 }}>Who Know Who They Are</em>
           </ScotchH2>
           <p className="bal" style={{ fontFamily: SANS, fontSize: 22, lineHeight: 1.35, color: "rgba(255,255,255,0.82)", maxWidth: 800, margin: "26px auto 0", textAlign: "center" }}>
-            Nearly two decades of bringing clarity, message, and presence into
-            alignment. Some of our clients arrived with a name you&apos;d recognize
+            Nearly two decades of telling founders the thing nobody else in the
+            room would say. Some of our clients arrived with a name you&apos;d recognize
             and a brand that no longer matched it. Some arrived years before anyone
             knew them. Where you are in your growth doesn&apos;t change the
             framework. Whether your brand has kept pace with you does.
