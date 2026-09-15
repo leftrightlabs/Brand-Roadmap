@@ -130,14 +130,18 @@ export function BrandVenn({ statuses, onSegmentClick, className }: BrandVennProp
 
           {/* pillar circles + legacy + names fade in after the segments */}
           <motion.g variants={coreVariants} initial="hidden" animate="show">
-            <g fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.5)" strokeWidth="1.6">
+            {/* Matches Brand Elevation Method Diagram.png: each circle is a soft
+                white layer (~0.30) over navy; two-way overlaps compound to a
+                lighter petal, which is exactly where Ascend/Align/Activate sit
+                in the source artwork. */}
+            <g fill="rgba(255,255,255,0.30)" stroke="rgba(255,255,255,0.22)" strokeWidth="1">
               <circle cx="340" cy="240" r="150" />
               <circle cx="262" cy="378" r="150" />
               <circle cx="418" cy="378" r="150" />
             </g>
 
             <ellipse cx="340" cy="320" rx="44" ry="52" fill="#A7C140" />
-            <text x="340" y="327" textAnchor="middle" fontFamily="'scotch-display', serif" fontStyle="italic" fontSize="22" fill="#112248">Legacy</text>
+            <text x="340" y="327" textAnchor="middle" fontFamily="'scotch-display', serif" fontStyle="italic" fontSize="22" fill="#ffffff">Legacy</text>
 
             <text x="340" y="172" textAnchor="middle" fill="#fff" fontFamily="'sweet-sans-pro', Arial, sans-serif" fontSize="14">Get</text>
             <text x="340" y="201" textAnchor="middle" fill="#fff" fontFamily="'scotch-display', serif" fontStyle="italic" fontSize="27">Clear™</text>
@@ -145,6 +149,13 @@ export function BrandVenn({ statuses, onSegmentClick, className }: BrandVennProp
             <text x="206" y="423" textAnchor="middle" fill="#fff" fontFamily="'scotch-display', serif" fontStyle="italic" fontSize="27">Paid</text>
             <text x="474" y="394" textAnchor="middle" fill="#fff" fontFamily="'sweet-sans-pro', Arial, sans-serif" fontSize="14">Get</text>
             <text x="474" y="423" textAnchor="middle" fill="#fff" fontFamily="'scotch-display', serif" fontStyle="italic" fontSize="27">Noticed</text>
+
+            {/* The cycle, per [CANON] Brand: Ascend = Paid+Clear, Align =
+                Clear+Noticed, Activate = Noticed+Paid. Navy on the lighter
+                two-circle overlap, same pairing as the source artwork. */}
+            <text x="263" y="300" textAnchor="middle" fill="#112248" fontFamily="'sweet-sans-pro', Arial, sans-serif" fontWeight="700" fontSize="12" letterSpacing="0.8">ASCEND</text>
+            <text x="417" y="300" textAnchor="middle" fill="#112248" fontFamily="'sweet-sans-pro', Arial, sans-serif" fontWeight="700" fontSize="12" letterSpacing="0.8">ALIGN</text>
+            <text x="340" y="410" textAnchor="middle" fill="#112248" fontFamily="'sweet-sans-pro', Arial, sans-serif" fontWeight="700" fontSize="12" letterSpacing="0.8">ACTIVATE</text>
           </motion.g>
         </svg>
 
