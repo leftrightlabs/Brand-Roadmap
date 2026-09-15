@@ -1179,7 +1179,7 @@ export default function StartPage() {
         }}
       >
         <div style={container}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 48, flexWrap: "wrap" }}>
+          <div className="foot-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 48, flexWrap: "wrap" }}>
             <Image
               src="/images/logos/LRL_Logo_2025_White.svg"
               alt="Left Right Labs"
@@ -1194,6 +1194,7 @@ export default function StartPage() {
             </p>
           </div>
           <div
+            className="foot-row"
             style={{
               marginTop: 56,
               paddingTop: 26,
@@ -1276,6 +1277,17 @@ export default function StartPage() {
         }
 
         @media (max-width: 880px) {
+          /* Footer rows are space-between flex rows. On a phone they wrap into
+             one item per line, and space-between with a single item hugs the
+             left edge, so stack them as centred columns instead. */
+          .foot-row {
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+            gap: 22px !important;
+          }
+          .foot-row > * { text-align: center !important; }
           .steps3 { grid-template-columns: 1fr !important; gap: 36px; }
           .steps3 > div { padding-right: 0 !important; }
           .step-line { display: none !important; }
