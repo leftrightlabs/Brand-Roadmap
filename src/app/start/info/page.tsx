@@ -43,7 +43,7 @@ const QUESTIONS: Question[] = [
     options: [
       "Get clear on my message & positioning",
       "Get noticed & build authority",
-      "Get paid — convert & scale revenue",
+      "Get paid: convert & scale revenue",
       "Build a lasting, legacy-level brand",
     ],
   },
@@ -52,21 +52,21 @@ const QUESTIONS: Question[] = [
     type: "text",
     title: "Who are you most trying to attract?",
     help: "One sentence is perfect.",
-    placeholder: "e.g. Female founders scaling past $1M who feel invisible online",
+    placeholder: "e.g. Established business owners who are ready to invest in expert help",
   },
   {
     key: "primaryOffer",
     type: "text",
-    title: "What's your primary offer — and roughly what does it cost?",
+    title: "What's your primary offer, and roughly what does it cost?",
     help: "Even a ballpark helps us read your positioning.",
-    placeholder: "e.g. 6-month brand intensive, around $25k",
+    placeholder: "e.g. A 3-month coaching program, around $5k",
   },
   {
     key: "biggestGap",
     type: "text",
     title: "What feels most ‘off’ about your brand right now?",
-    help: "Be honest — this is what we'll speak to first.",
-    placeholder: "e.g. It looks polished, but it doesn't sound like the leader I've become",
+    help: "Be honest… this is what we'll speak to first.",
+    placeholder: "e.g. It looks fine, but it doesn't reflect how far the business has come",
   },
 ];
 
