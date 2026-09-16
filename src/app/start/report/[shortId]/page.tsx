@@ -19,6 +19,15 @@ import {
   type RoadmapResults,
 } from "@/lib/roadmap-types";
 
+// Dollar value reported to analytics for the full unlock. Kept in step with
+// FULL_ROADMAP_PRICE_CENTS in lib/stripe.ts by hand; that module pulls in the
+// server-only Stripe SDK, so a client component cannot import from it.
+const FULL_ROADMAP_PRICE_USD = 97;
+
+// How long the purchase event waits for the analytics tag to finish loading.
+const GA_SEND_RETRY_MS = 250;
+const GA_SEND_MAX_TRIES = 40; // 10 seconds
+
 interface AssessmentResults extends Partial<RoadmapResults> {
   shortId: string;
   websiteUrl: string;
@@ -204,17 +213,32 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
     const key = `ga_purchase_${shortId}`;
     try {
       if (sessionStorage.getItem(key)) return;
-      sessionStorage.setItem(key, "1");
     } catch { /* private mode: fall through, GA dedupes on transaction_id */ }
-    if (typeof window !== "undefined") {
-      if (window.gtag) window.gtag("event", "purchase", {
+
+    // The analytics tag can still be downloading when the paid flag lands, so
+    // retry briefly instead of firing once into a missing window.gtag. The
+    // session key is written only after a real send: marking it up front burned
+    // the only attempt and lost the sale on the first live purchase.
+    let cancelled = false;
+    let tries = 0;
+    const send = () => {
+      if (cancelled || typeof window === "undefined") return;
+      if (!window.gtag) {
+        tries += 1;
+        if (tries <= GA_SEND_MAX_TRIES) setTimeout(send, GA_SEND_RETRY_MS);
+        return;
+      }
+      window.gtag("event", "purchase", {
         transaction_id: shortId,
         currency: "USD",
-        value: 97,
-        items: [{ item_id: "roadmap_full_plan", item_name: "Brand Elevation Roadmap full plan", price: 97, quantity: 1 }],
+        value: FULL_ROADMAP_PRICE_USD,
+        items: [{ item_id: "roadmap_full_plan", item_name: "Brand Elevation Roadmap full plan", price: FULL_ROADMAP_PRICE_USD, quantity: 1 }],
       });
       if (window.clarity) window.clarity("set", "conversion", "purchase");
-    }
+      try { sessionStorage.setItem(key, "1"); } catch { /* private mode */ }
+    };
+    send();
+    return () => { cancelled = true; };
   }, [checkoutReturn, shortId, results?.paid]);
 
   const loadResults = async () => {
@@ -380,7 +404,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
       const data = await res.json();
       if (res.ok && data.clientSecret && data.publishableKey) {
         if (typeof window !== "undefined") {
-          if (window.gtag) window.gtag("event", "begin_checkout", { currency: "USD", value: 97, items: [{ item_id: "roadmap_full_plan", item_name: "Brand Elevation Roadmap full plan", price: 97, quantity: 1 }] });
+          if (window.gtag) window.gtag("event", "begin_checkout", { currency: "USD", value: FULL_ROADMAP_PRICE_USD, items: [{ item_id: "roadmap_full_plan", item_name: "Brand Elevation Roadmap full plan", price: FULL_ROADMAP_PRICE_USD, quantity: 1 }] });
           if (window.clarity) window.clarity("set", "conversion", "begin_checkout");
         }
         setCheckoutData({ clientSecret: data.clientSecret, publishableKey: data.publishableKey });
