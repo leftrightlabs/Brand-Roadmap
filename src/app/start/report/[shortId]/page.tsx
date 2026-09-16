@@ -195,6 +195,28 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checkoutReturn, shortId, results?.paid]);
 
+  // Report the sale once the webhook has confirmed it, not when Stripe
+  // redirects: ?checkout=success only means the customer came back, and the
+  // webhook is the real gate. transaction_id lets GA4 dedupe, and the session
+  // guard stops a refresh re-firing it.
+  useEffect(() => {
+    if (!checkoutReturn || !shortId || !results?.paid) return;
+    const key = `ga_purchase_${shortId}`;
+    try {
+      if (sessionStorage.getItem(key)) return;
+      sessionStorage.setItem(key, "1");
+    } catch { /* private mode: fall through, GA dedupes on transaction_id */ }
+    if (typeof window !== "undefined") {
+      if (window.gtag) window.gtag("event", "purchase", {
+        transaction_id: shortId,
+        currency: "USD",
+        value: 97,
+        items: [{ item_id: "roadmap_full_plan", item_name: "Brand Elevation Roadmap full plan", price: 97, quantity: 1 }],
+      });
+      if (window.clarity) window.clarity("set", "conversion", "purchase");
+    }
+  }, [checkoutReturn, shortId, results?.paid]);
+
   const loadResults = async () => {
     setIsLoading(true);
     try {
@@ -357,6 +379,10 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
       });
       const data = await res.json();
       if (res.ok && data.clientSecret && data.publishableKey) {
+        if (typeof window !== "undefined") {
+          if (window.gtag) window.gtag("event", "begin_checkout", { currency: "USD", value: 97, items: [{ item_id: "roadmap_full_plan", item_name: "Brand Elevation Roadmap full plan", price: 97, quantity: 1 }] });
+          if (window.clarity) window.clarity("set", "conversion", "begin_checkout");
+        }
         setCheckoutData({ clientSecret: data.clientSecret, publishableKey: data.publishableKey });
         setIsUnlocking(false);
         return;
