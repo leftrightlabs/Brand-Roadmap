@@ -18,6 +18,7 @@ import {
   type AreaEval,
   type RoadmapResults,
 } from "@/lib/roadmap-types";
+import { moveTeaser, pickFreeSampleArea } from "@/lib/report-gate";
 
 // Dollar value reported to analytics for the full unlock. Kept in step with
 // FULL_ROADMAP_PRICE_CENTS in lib/stripe.ts by hand; that module pulls in the
@@ -92,15 +93,6 @@ const STATUS_UI: Record<AreaStatus, { text: string; border: string; bg: string }
   Refine: { text: "#9a7710", border: "#EAB43C", bg: "rgba(234,180,60,0.22)" },
   Prioritize: { text: "#b53e1c", border: "#E0552E", bg: "rgba(224,85,46,0.15)" },
 };
-
-// Curiosity-gap teaser: the opening of the (paid) next move, cut off mid-thought
-// at a word boundary. Enough to make the reader want it, not enough to execute.
-function moveTeaser(text: string, max = 68): string {
-  const firstSentence = (text || "").trim().split(/(?<=[.!?])\s/)[0] || "";
-  if (firstSentence.length <= max) return firstSentence;
-  const cut = firstSentence.slice(0, max);
-  return cut.slice(0, cut.lastIndexOf(" ")).trim();
-}
 
 function StrengthBar({ status }: { status: AreaStatus }) {
   const { segments, color } = STATUS_STYLE[status];
@@ -378,16 +370,9 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
   // and the free "sample" move always comes from Get Clear.
   const getClearPillar = PILLARS.find((p) => p.key === "getClear") ?? PILLARS[0];
   const priorityPillar = getClearPillar;
-  const gcArea = (status: AreaStatus) =>
-    getClearPillar.areas.find((a) => results.pillars?.getClear?.areas?.[a]?.status === status);
-  // Prefer a Get Clear start-here area, then the weakest Get Clear area, then
-  // simply the first Get Clear area — so we always unlock a Get Clear move free.
-  const freeSampleAreaKey: AreaKey | null =
-    getClearPillar.areas.find((a) => startHereKeys.includes(a) && a in (results.pillars?.getClear?.areas ?? {})) ??
-    gcArea("Prioritize") ??
-    gcArea("Refine") ??
-    getClearPillar.areas[0] ??
-    null;
+  // Same selection the server redacts with, imported rather than reimplemented:
+  // if the two disagreed, a truncated teaser would render as the unlocked move.
+  const freeSampleAreaKey: AreaKey | null = pickFreeSampleArea(results.pillars);
 
   // Free = the roadmap's route + first move (diagnosis). Paid/preview unlocks every move.
   const unlocked = results.paid === true && !forceFree;

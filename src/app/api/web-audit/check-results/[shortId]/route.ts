@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sql } from '@/lib/db';
+import { redactForFree } from '@/lib/report-gate';
 
 interface ReportRow {
   website_url: string;
@@ -12,8 +13,6 @@ interface ReportRow {
   };
   expires_at: string;
   paid: boolean;
-  lead_name: string | null;
-  lead_email: string | null;
 }
 
 export async function GET(
@@ -31,18 +30,16 @@ export async function GET(
       );
     }
 
-    // LEFT JOIN to surface lead name/email on the same row — mirrors the
-    // previous Supabase nested-select behavior.
+    // The lead join is gone on purpose. This row is the source of a public,
+    // shareable JSON response, so it should not carry the founder's name or
+    // email in the first place.
     const rows = await sql<ReportRow[]>`
       SELECT
         sr.website_url,
         sr.analysis_results,
         sr.expires_at,
-        sr.paid,
-        l.name  AS lead_name,
-        l.email AS lead_email
+        sr.paid
       FROM shared_reports sr
-      LEFT JOIN website_audit_leads l ON l.id = sr.lead_id
       WHERE sr.short_id = ${shortId}
       LIMIT 1
     `;
@@ -70,15 +67,23 @@ export async function GET(
     const analysisResults = report.analysis_results;
 
     if (analysisResults.status === 'completed') {
+      // The paywall is enforced here, not in the browser. An unpaid report
+      // never receives the locked copy, so opening devtools or curling this
+      // endpoint with a guessed six-character short ID yields only the free
+      // view. See lib/report-gate.ts for exactly what survives redaction.
+      const isPaid = report.paid === true;
+      const visible = isPaid ? analysisResults : redactForFree(analysisResults);
+
+      // The lead's name and email are deliberately NOT returned. Nothing in the
+      // report UI reads them, and a report link is shareable, so sending them
+      // handed a stranger the founder's contact details along with the report.
       return NextResponse.json({
         status: 'completed',
         results: {
-          ...analysisResults,
+          ...visible,
           shortId,
           websiteUrl: report.website_url,
-          paid: report.paid === true,
-          leadName: report.lead_name ?? undefined,
-          leadEmail: report.lead_email ?? undefined,
+          paid: isPaid,
         },
       });
     }
