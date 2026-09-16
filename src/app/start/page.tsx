@@ -1259,6 +1259,9 @@ export default function StartPage() {
         .baa-page .ctr :is(p, h1, h2, h3, h4, h5, h6, li, span) {
           text-wrap: balance;
         }
+        /* Footer lines wrap on phones ("...Ourselves? Not so / much."), and
+           pretty only guards the last line. */
+        .baa-page .foot-row > * { text-wrap: balance; }
 
         .split-grid {
           grid-template-columns: 1.05fr 0.95fr;
