@@ -10,7 +10,7 @@ interface GoogleAnalyticsProps {
   measurementId?: string;
 }
 
-export default function GoogleAnalytics({ measurementId = 'G-2XFHTEQ3ZV' }: GoogleAnalyticsProps) {
+export default function GoogleAnalytics({ measurementId = 'G-PTZV3V8NF8' }: GoogleAnalyticsProps) {
   const { isLoading, requiresConsent, hasConsent } = useGeolocationConsent();
 
   // Block in UK/EU until consent is given
