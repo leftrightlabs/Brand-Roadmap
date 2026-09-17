@@ -19,15 +19,21 @@ import {
   type RoadmapResults,
 } from "@/lib/roadmap-types";
 import { moveTeaser, pickFreeSampleArea } from "@/lib/report-gate";
+import { track, trackConversion } from "@/lib/analytics";
 
 // Dollar value reported to analytics for the full unlock. Kept in step with
 // FULL_ROADMAP_PRICE_CENTS in lib/stripe.ts by hand; that module pulls in the
 // server-only Stripe SDK, so a client component cannot import from it.
 const FULL_ROADMAP_PRICE_USD = 97;
 
-// How long the purchase event waits for the analytics tag to finish loading.
-const GA_SEND_RETRY_MS = 250;
-const GA_SEND_MAX_TRIES = 40; // 10 seconds
+// The single product, shared by view_item, begin_checkout and purchase so the
+// three steps line up in Google Analytics' ecommerce funnel.
+const ROADMAP_ITEM = {
+  item_id: "roadmap_full_plan",
+  item_name: "Brand Elevation Roadmap full plan",
+  price: FULL_ROADMAP_PRICE_USD,
+  quantity: 1,
+};
 
 interface AssessmentResults extends Partial<RoadmapResults> {
   shortId: string;
@@ -207,31 +213,41 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
       if (sessionStorage.getItem(key)) return;
     } catch { /* private mode: fall through, GA dedupes on transaction_id */ }
 
-    // The analytics tag can still be downloading when the paid flag lands, so
-    // retry briefly instead of firing once into a missing window.gtag. The
-    // session key is written only after a real send: marking it up front burned
-    // the only attempt and lost the sale on the first live purchase.
-    let cancelled = false;
-    let tries = 0;
-    const send = () => {
-      if (cancelled || typeof window === "undefined") return;
-      if (!window.gtag) {
-        tries += 1;
-        if (tries <= GA_SEND_MAX_TRIES) setTimeout(send, GA_SEND_RETRY_MS);
-        return;
-      }
-      window.gtag("event", "purchase", {
-        transaction_id: shortId,
-        currency: "USD",
-        value: FULL_ROADMAP_PRICE_USD,
-        items: [{ item_id: "roadmap_full_plan", item_name: "Brand Elevation Roadmap full plan", price: FULL_ROADMAP_PRICE_USD, quantity: 1 }],
-      });
-      if (window.clarity) window.clarity("set", "conversion", "purchase");
-      try { sessionStorage.setItem(key, "1"); } catch { /* private mode */ }
-    };
-    send();
-    return () => { cancelled = true; };
+    // trackConversion buffers until the tag is configured, so this cannot be
+    // lost to a slow tag the way the first live sale was. The session key is a
+    // refresh guard only; GA4 also dedupes on transaction_id, and a spent id
+    // cannot be resent, so never replay one.
+    trackConversion("purchase", {
+      transaction_id: shortId,
+      currency: "USD",
+      value: FULL_ROADMAP_PRICE_USD,
+      items: [ROADMAP_ITEM],
+    });
+    try { sessionStorage.setItem(key, "1"); } catch { /* private mode */ }
   }, [checkoutReturn, shortId, results?.paid]);
+
+  // The step the funnel was missing. Without it there is no way to tell a report
+  // that was generated but never opened from one that was opened and not bought,
+  // which is the single most useful thing to know about this product.
+  //
+  // An unpaid view also reports view_item, so Google Analytics' ecommerce funnel
+  // reads view_item to begin_checkout to purchase. begin_checkout with nothing
+  // before it leaves those reports empty.
+  const reportLoaded = Boolean(results?.pillars);
+  useEffect(() => {
+    if (!reportLoaded || !shortId) return;
+    const key = `ga_report_viewed_${shortId}`;
+    try {
+      if (sessionStorage.getItem(key)) return;
+      sessionStorage.setItem(key, "1");
+    } catch { /* private mode: a duplicate view is harmless */ }
+
+    const isPaid = results?.paid === true;
+    track("report_viewed", { short_id: shortId, report_state: isPaid ? "paid" : "free" });
+    if (!isPaid) {
+      track("view_item", { currency: "USD", value: FULL_ROADMAP_PRICE_USD, items: [ROADMAP_ITEM] });
+    }
+  }, [reportLoaded, shortId, results?.paid]);
 
   const loadResults = async () => {
     setIsLoading(true);
@@ -388,10 +404,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
       });
       const data = await res.json();
       if (res.ok && data.clientSecret && data.publishableKey) {
-        if (typeof window !== "undefined") {
-          if (window.gtag) window.gtag("event", "begin_checkout", { currency: "USD", value: FULL_ROADMAP_PRICE_USD, items: [{ item_id: "roadmap_full_plan", item_name: "Brand Elevation Roadmap full plan", price: FULL_ROADMAP_PRICE_USD, quantity: 1 }] });
-          if (window.clarity) window.clarity("set", "conversion", "begin_checkout");
-        }
+        trackConversion("begin_checkout", { currency: "USD", value: FULL_ROADMAP_PRICE_USD, items: [ROADMAP_ITEM] });
         setCheckoutData({ clientSecret: data.clientSecret, publishableKey: data.publishableKey });
         setIsUnlocking(false);
         return;

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { trackConversion } from "@/lib/analytics";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { VideoTestimonial, type Testimonial } from "@/components/video-testimonial";
@@ -342,12 +343,13 @@ export default function StartPage() {
 
   const handleCTA = () => {
     setIsLoading(true);
-    if (typeof window !== "undefined" && typeof (window as Window & { gtag?: Function }).gtag === "function") {
-      (window as Window & { gtag: Function }).gtag("event", "cta_start_assessment_clicked", {
-        event_category: "engagement",
-        event_label: "start_page",
-      });
-    }
+    // Sent, not buffered: this is a full page navigation, so anything still in
+    // the buffer dies with the document. The tag configures within a few hundred
+    // milliseconds of load and this fires on a click, so it is always ready.
+    trackConversion("cta_start_assessment_clicked", {
+      event_category: "engagement",
+      event_label: "start_page",
+    });
     window.location.href = "/start/info";
   };
 

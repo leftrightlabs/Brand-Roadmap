@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { trackConversion } from "@/lib/analytics";
 import { motion, AnimatePresence } from "framer-motion";
 import { Globe, ArrowLeft } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
@@ -114,10 +115,7 @@ export default function IntakeWizard() {
     const payload = { name: contact.name.trim(), email: contact.email.trim(), websiteUrl: url, ...answers };
     sessionStorage.setItem("webAuditFormData", JSON.stringify(payload));
 
-    if (typeof window !== "undefined") {
-      if (window.gtag) window.gtag("event", "lead_captured", { event_category: "engagement", event_label: "Intake Completed", value: 1 });
-      if (window.clarity) window.clarity("set", "conversion", "lead_captured");
-    }
+    trackConversion("lead_captured", { event_category: "engagement", event_label: "Intake Completed", value: 1 });
     fetch("/api/web-audit/submit-lead", {
       method: "POST",
       headers: { "Content-Type": "application/json" },

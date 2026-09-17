@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { trackConversion } from "@/lib/analytics";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
@@ -307,24 +308,15 @@ export default function AnalyzingPage() {
             // Store results for the report page
             sessionStorage.setItem("webAuditResults", JSON.stringify(data.results));
             
-            // Fire GA4 conversion event
-            if (typeof window !== 'undefined' && window.gtag) {
-              window.gtag('event', 'assessment_complete', {
-                event_category: 'conversion',
-                event_label: 'Brand Assessment Completed',
-                value: 1,
-                // Optional: include additional data
-                brand_name: data.results?.brandName || 'Unknown',
-                short_id: shortId
-              });
-              console.log("[ANALYZING] GA4 conversion event fired: assessment_complete");
-            }
-            
-            // Fire Clarity conversion event for assessment completion
-            if (typeof window !== 'undefined' && window.clarity) {
-              window.clarity("set", "conversion", "assessment_complete");
-              console.log("[ANALYZING] Clarity conversion event fired: assessment_complete");
-            }
+            // Buffered if the tag is not configured yet. The router.push below
+            // is a client-side navigation, so the buffer survives it.
+            trackConversion('assessment_complete', {
+              event_category: 'conversion',
+              event_label: 'Brand Assessment Completed',
+              value: 1,
+              brand_name: data.results?.brandName || 'Unknown',
+              short_id: shortId,
+            });
             
             // Redirect to results page
             router.push(getReportUrl(shortId));

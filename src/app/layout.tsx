@@ -31,6 +31,15 @@ export default function RootLayout({
       <head>
         {/* Adobe Fonts (Typekit): Scotch Display + Sweet Sans Pro. Allowlist new
             domain at fonts.adobe.com if fonts fail to load on the live site. */}
+        {/* Define dataLayer + gtag synchronously, before anything renders, so no
+            event can be fired into a missing window.gtag. This only sets up the
+            queue: the tag itself is loaded and configured by <GoogleAnalytics>,
+            and only after consent. See lib/analytics.ts. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: "window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}",
+          }}
+        />
         <link rel="preconnect" href="https://use.typekit.net" />
         <link rel="preconnect" href="https://use.typekit.net" crossOrigin="anonymous" />
         <script src="https://use.typekit.net/uwk2elu.js" />
