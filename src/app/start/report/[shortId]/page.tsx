@@ -28,6 +28,17 @@ const FULL_ROADMAP_PRICE_USD = 97;
 
 // The single product, shared by view_item, begin_checkout and purchase so the
 // three steps line up in Google Analytics' ecommerce funnel.
+// Reports generated before 2026-09-21 carry "First 30 days" style phase
+// labels in the database. Day counts were retired with the rename (the
+// sequence is justified by dependency, not calendar), so anything that still
+// looks like a timeframe renders as the pillar it corresponds to instead.
+const PHASE_LABELS = ["Get Clear", "Get Noticed", "Get Paid"];
+function phaseLabel(stored: string | undefined, index: number): string {
+  const s = (stored || "").trim();
+  if (!s || /\b\d+\b|day|week|month/i.test(s)) return PHASE_LABELS[index] ?? s;
+  return s;
+}
+
 const ROADMAP_ITEM = {
   item_id: "roadmap_full_plan",
   item_name: "Brand Elevation Profile: Full Unlock",
@@ -659,7 +670,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
                     <motion.div key={i} variants={fadeUp} whileHover={{ y: -6 }} className="flex flex-col h-full bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
                       <div className="flex items-center gap-3 mb-4">
                         <span className="flex-shrink-0 w-9 h-9 rounded-full bg-[#a7c140] text-[#112248] font-heading font-bold flex items-center justify-center">{i + 1}</span>
-                        <span className="text-lg md:text-xl font-bold uppercase tracking-wider text-[#112248]">{phase.label}</span>
+                        <span className="text-lg md:text-xl font-bold uppercase tracking-wider text-[#112248]">{phaseLabel(phase.label, i)}</span>
                       </div>
                       <ul className="space-y-3">
                         {phase.moves.map((m, j) => (
@@ -692,7 +703,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
                     <motion.div key={i} variants={fadeUp} className="relative flex flex-col h-full rounded-2xl border border-white/15 bg-white/[0.04] p-6 overflow-hidden">
                       <div className="flex items-center gap-3 mb-5">
                         <span className="flex-shrink-0 w-9 h-9 rounded-full bg-[#a7c140] text-[#112248] font-heading font-bold flex items-center justify-center">{i + 1}</span>
-                        <span className="text-lg font-bold uppercase tracking-wider text-white">{phase.label}</span>
+                        <span className="text-lg font-bold uppercase tracking-wider text-white">{phaseLabel(phase.label, i)}</span>
                       </div>
                       {/* Blurred placeholder bars stand in for the real steps. */}
                       <div className="space-y-3" aria-hidden>
