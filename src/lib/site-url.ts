@@ -12,7 +12,7 @@
  * Set NEXT_PUBLIC_SITE_URL explicitly and the guesswork goes away.
  */
 
-const DEFAULT_ORIGIN = 'https://roadmap.brandelevation.ai';
+const DEFAULT_ORIGIN = 'https://profile.brandelevation.ai';
 
 export function canonicalOrigin(): string {
   const explicit = process.env.NEXT_PUBLIC_SITE_URL?.trim();
