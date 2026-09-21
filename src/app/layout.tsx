@@ -10,8 +10,8 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://roadmap.brandeleva
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Brand Elevation Roadmap™ | Left Right Labs",
-  description: "Your expertise has outpaced your brand. Get a free, personalized Brand Elevation Roadmap™ — the specific moves to re-align your brand and reconnect with the clients you want next.",
+  title: "Brand Elevation Profile | Left Right Labs",
+  description: "Your expertise has outpaced your brand. Get a free, personalized Brand Elevation Profile… the specific moves to re-align your brand and reconnect with the clients you want next.",
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: '32x32', type: 'image/x-icon' },

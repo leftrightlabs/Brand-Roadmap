@@ -34,7 +34,7 @@ const QUESTIONS: Question[] = [
     key: "brandStage",
     type: "select",
     title: "Where is your brand right now?",
-    help: "So we frame your roadmap to where you actually are.",
+    help: "So we frame your Profile to where you actually are.",
     options: ["Establishing it", "Repositioning it", "Scaling it", "Launching something new"],
   },
   {
@@ -145,7 +145,7 @@ export default function IntakeWizard() {
         {/* Eyebrow + progress */}
         <div className="text-center mb-6">
           <p style={{ fontSize: 12, fontWeight: 600, letterSpacing: "0.28em", textTransform: "uppercase", color: LIME, marginBottom: 16 }}>
-            Your Brand Elevation Roadmap™
+            Your Brand Elevation Profile
           </p>
           <div style={{ width: "100%", height: 4, background: "rgba(255,255,255,0.12)", borderRadius: 999, overflow: "hidden" }}>
             <motion.div animate={{ width: `${progress}%` }} transition={{ duration: 0.4, ease: "easeOut" }} style={{ height: "100%", background: LIME }} />
@@ -217,7 +217,7 @@ export default function IntakeWizard() {
                   <h2 style={{ fontFamily: "scotch-display, 'Playfair Display', Georgia, serif", fontWeight: 700, fontSize: "clamp(24px, 4vw, 34px)", lineHeight: 1.15, color: NAVY, marginBottom: 8 }}>
                     Where should we send it?
                   </h2>
-                  <p style={{ fontSize: 14, color: "#64748b", marginBottom: 22 }}>Your personalized roadmap lands here in minutes.</p>
+                  <p style={{ fontSize: 14, color: "#64748b", marginBottom: 22 }}>Your personalized Profile lands here in minutes.</p>
                   <form onSubmit={(e) => { e.preventDefault(); submit(); }} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                     <input autoFocus type="text" value={contact.name} onChange={(e) => setContact((p) => ({ ...p, name: e.target.value }))} placeholder="Full name" required style={inputStyle} onFocus={(e) => { e.currentTarget.style.borderColor = LIME; }} onBlur={(e) => { e.currentTarget.style.borderColor = "#e2e8f0"; }} />
                     <input type="email" value={contact.email} onChange={(e) => setContact((p) => ({ ...p, email: e.target.value }))} placeholder="Email address" required style={inputStyle} onFocus={(e) => { e.currentTarget.style.borderColor = LIME; }} onBlur={(e) => { e.currentTarget.style.borderColor = "#e2e8f0"; }} />
@@ -226,10 +226,10 @@ export default function IntakeWizard() {
                       <input type="text" inputMode="url" value={contact.websiteUrl} onChange={(e) => setContact((p) => ({ ...p, websiteUrl: e.target.value }))} placeholder="yourwebsite.com" required style={{ ...inputStyle, paddingLeft: 38 }} onFocus={(e) => { e.currentTarget.style.borderColor = LIME; }} onBlur={(e) => { e.currentTarget.style.borderColor = "#e2e8f0"; }} />
                     </div>
                     <button type="submit" disabled={isLoading} style={{ ...limeBtn, height: 54, marginTop: 4, background: isLoading ? "#c5d98a" : LIME, cursor: isLoading ? "not-allowed" : "pointer" }}>
-                      {isLoading ? "Building Your Roadmap…" : "Build My Roadmap →"}
+                      {isLoading ? "Building Your Profile…" : "Build My Profile →"}
                     </button>
                     <p style={{ textAlign: "center", fontSize: 12, color: "#94a3b8", letterSpacing: "0.04em", margin: 0 }}>
-                      No credit card&nbsp;&nbsp;|&nbsp;&nbsp;Roadmap in your inbox in minutes
+                      No credit card&nbsp;&nbsp;|&nbsp;&nbsp;Profile in your inbox in minutes
                     </p>
                   </form>
                 </>

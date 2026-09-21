@@ -64,10 +64,10 @@ export function CheckoutModal({
             </button>
           </div>
           <p className="text-[13px] font-bold uppercase tracking-[0.12em] text-[#a7c140]">
-            Unlock your full roadmap
+            Unlock your full Profile
           </p>
           <p className="text-white/60 text-sm mt-1.5 leading-relaxed">
-            Every move for all nine areas, example rewrites in your brand voice, and your full 30 / 60 / 90-day plan.
+            Every move for all nine steps, example rewrites in your brand voice, and your full plan in the order it has to happen.
           </p>
         </div>
 

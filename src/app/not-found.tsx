@@ -28,7 +28,7 @@ export default function NotFound() {
                 Page Not Found
               </h2>
               <p className="text-lg text-gray-600 leading-relaxed max-w-md mx-auto mb-8">
-                The page you&apos;re looking for has wandered off. Let&apos;s get you back to your Brand Elevation Roadmap.
+                The page you&apos;re looking for has wandered off. Let&apos;s get you back to your Brand Elevation Profile.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <Button

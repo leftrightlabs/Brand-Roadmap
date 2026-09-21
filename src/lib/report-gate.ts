@@ -73,7 +73,7 @@ export function moveTeaser(text: unknown, max = 68): string {
 /**
  * The one area whose move is unlocked free, the "sample lesson".
  *
- * Always drawn from Get Clear, because that is where the roadmap starts:
+ * Always drawn from Get Clear, because that is where the Profile starts:
  * a flagged start-here area first, else the weakest one, else the first.
  */
 export function pickFreeSampleArea(pillars?: PillarsProbe): AreaKey | null {

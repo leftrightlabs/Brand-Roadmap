@@ -5,7 +5,7 @@ import { canonicalOrigin } from '@/lib/site-url';
 
 export const runtime = 'nodejs';
 
-// Creates a Stripe Checkout session for the $97 full-roadmap unlock, tied to a
+// Creates a Stripe Checkout session for the $97 full-Profile unlock, tied to a
 // specific report via metadata.shortId. The webhook (stripe-webhook) flips the
 // `paid` flag when the payment completes — never trust the client for that.
 export async function POST(request: NextRequest) {
@@ -61,9 +61,9 @@ export async function POST(request: NextRequest) {
             currency: 'usd',
             unit_amount: FULL_ROADMAP_PRICE_CENTS,
             product_data: {
-              name: 'Brand Elevation Roadmap: Full Unlock',
+              name: 'Brand Elevation Profile: Full Unlock',
               description:
-                'Every move for all nine areas, example rewrites in your brand voice, and your full 30/60/90-day plan.',
+                'Every move for all nine steps, example rewrites in your brand voice, and your full plan in the order it has to happen.',
             },
           },
         },

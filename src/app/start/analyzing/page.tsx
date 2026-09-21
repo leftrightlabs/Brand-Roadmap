@@ -11,7 +11,7 @@ import { Loader2, Globe, Brain, MessageSquare, CheckCircle2 } from "lucide-react
 const ANALYSIS_STEPS = [
   { icon: Globe, label: "Gathering and reviewing your website's content and structure" },
   { icon: Brain, label: "Evaluating visual identity, tone, and overall brand consistency" },
-  { icon: MessageSquare, label: "Building your personalized Brand Elevation Roadmap with sequenced next moves" },
+  { icon: MessageSquare, label: "Building your personalized Brand Elevation Profile with sequenced next moves" },
 ];
 
 export default function AnalyzingPage() {
@@ -148,7 +148,7 @@ export default function AnalyzingPage() {
           console.error("[ANALYZING] Error parsing response:", parseError);
           setIsAnalyzing(false);
           toast({
-            title: "Couldn't Start Building Your Roadmap",
+            title: "Couldn't Start Building Your Profile",
             description: "The server returned an invalid response. Please try again.",
             variant: "destructive",
           });
@@ -160,8 +160,8 @@ export default function AnalyzingPage() {
           console.error("[ANALYZING] No shortId in response:", data);
           setIsAnalyzing(false);
           toast({
-            title: "Couldn't Start Building Your Roadmap",
-            description: "We couldn't start building your roadmap. Please try again.",
+            title: "Couldn't Start Building Your Profile",
+            description: "We couldn't start building your Profile. Please try again.",
             variant: "destructive",
           });
           return;
@@ -226,8 +226,8 @@ export default function AnalyzingPage() {
         // Handle case where user already has a report
         if (response.status === 409 && errorData.existingShortId) {
           toast({
-            title: "Roadmap Already Exists",
-            description: "You've already received your Brand Elevation Roadmap. Redirecting you to it now...",
+            title: "Profile Already Exists",
+            description: "You've already received your Brand Elevation Profile. Redirecting you to it now...",
             variant: "destructive",
           });
           
@@ -241,8 +241,8 @@ export default function AnalyzingPage() {
         // Don't redirect on error - show error message instead
         setIsAnalyzing(false);
         toast({
-          title: "Couldn't Start Building Your Roadmap",
-          description: errorData.error || "Failed to start building your roadmap. Please check your information and try again.",
+          title: "Couldn't Start Building Your Profile",
+          description: errorData.error || "Failed to start building your Profile. Please check your information and try again.",
           variant: "destructive",
         });
         return;
@@ -325,8 +325,8 @@ export default function AnalyzingPage() {
             setIsAnalyzing(false);
             console.error("[ANALYZING] Analysis failed:", data.error);
             toast({
-              title: "Roadmap Build Failed",
-              description: data.error || "We couldn't finish building your roadmap. Please try again.",
+              title: "Profile Build Failed",
+              description: data.error || "We couldn't finish building your Profile. Please try again.",
               variant: "destructive",
             });
             router.push(getWebsiteInputUrl());
@@ -342,8 +342,8 @@ export default function AnalyzingPage() {
           const errorData = await response.json();
           console.log("[ANALYZING] Report already exists:", errorData);
           toast({
-            title: "Roadmap Already Exists",
-            description: errorData.message || "You already have a Brand Elevation Roadmap for this email address.",
+            title: "Profile Already Exists",
+            description: errorData.message || "You already have a Brand Elevation Profile for this email address.",
             variant: "destructive",
           });
           router.push("/start/info");
@@ -356,8 +356,8 @@ export default function AnalyzingPage() {
             clearInterval(pollInterval);
             setIsAnalyzing(false);
             toast({
-              title: "Roadmap Not Found",
-              description: "Your Brand Elevation Roadmap could not be found. Please start a new one.",
+              title: "Profile Not Found",
+              description: "Your Brand Elevation Profile could not be found. Please start a new one.",
               variant: "destructive",
             });
             router.push(getWebsiteInputUrl());
@@ -401,8 +401,8 @@ export default function AnalyzingPage() {
           setIsAnalyzing(false);
           
           toast({
-            title: "Roadmap Build Stalled",
-            description: "Building your roadmap appears to have stalled. This might be due to server load. Please try again in a few minutes.",
+            title: "Profile Build Stalled",
+            description: "Building your Profile appears to have stalled. This might be due to server load. Please try again in a few minutes.",
             variant: "destructive",
           });
           router.push("/start/info");
@@ -414,8 +414,8 @@ export default function AnalyzingPage() {
           clearInterval(pollInterval);
           setIsAnalyzing(false);
           toast({
-            title: "Roadmap Build Timeout",
-            description: "Building your roadmap is taking longer than expected. This might be due to server load. Please try again in a few minutes.",
+            title: "Profile Build Timeout",
+            description: "Building your Profile is taking longer than expected. This might be due to server load. Please try again in a few minutes.",
             variant: "destructive",
           });
           router.push("/start/info");
@@ -435,7 +435,7 @@ export default function AnalyzingPage() {
             setIsAnalyzing(false);
             toast({
               title: "Request Timeout",
-              description: "Building your roadmap is taking longer than expected. Please try again in a moment.",
+              description: "Building your Profile is taking longer than expected. Please try again in a moment.",
               variant: "destructive",
             });
             router.push(getWebsiteInputUrl());
@@ -453,7 +453,7 @@ export default function AnalyzingPage() {
             setIsAnalyzing(false);
             toast({
               title: "Connection Issues",
-              description: "Unable to connect to our roadmap-building service. Please check your internet connection and try again.",
+              description: "Unable to connect to our Profile-building service. Please check your internet connection and try again.",
               variant: "destructive",
             });
             router.push(getWebsiteInputUrl());
@@ -468,7 +468,7 @@ export default function AnalyzingPage() {
           setIsAnalyzing(false);
           toast({
             title: "Connection Issues",
-            description: "Unable to connect to our roadmap-building service. Please check your internet connection and try again.",
+            description: "Unable to connect to our Profile-building service. Please check your internet connection and try again.",
             variant: "destructive",
           });
           router.push("/start/info");
@@ -495,7 +495,7 @@ export default function AnalyzingPage() {
           transition={{ duration: 0.7, ease: "easeOut" }}
         >
           <h1 className="h1-form-title font-heading text-white mb-4 leading-tight">
-            Building Your Brand Elevation Roadmap
+            Building Your Brand Elevation Profile
           </h1>
           <div className="w-16 h-0.5 bg-[#a7c140] mx-auto mb-4" />
           <p className="text-base md:text-lg text-white/60 max-w-md mx-auto">
@@ -518,7 +518,7 @@ export default function AnalyzingPage() {
                 </div>
                 <div className="max-w-md mx-auto">
                   <div className="flex justify-between items-baseline mb-2">
-                    <span className="text-sm font-medium text-[#112248]">Building your roadmap…</span>
+                    <span className="text-sm font-medium text-[#112248]">Building your Profile…</span>
                     <span className="text-sm font-semibold text-[#112248] tabular-nums">{progress}%</span>
                   </div>
                   <div className="w-full h-2.5 bg-[#112248]/10 rounded-full overflow-hidden">

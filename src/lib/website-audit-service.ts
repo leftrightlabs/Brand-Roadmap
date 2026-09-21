@@ -33,11 +33,11 @@ export function generateAnalysisPrompt(websiteUrl: string, intake: FounderIntake
 
 ---
 
-WHAT THE FOUNDER TOLD US — use this to TAILOR the roadmap, not just the website. Weight emphasis toward their stated goal (if it maps to a pillar, make that pillar's evaluations and sequenced move especially sharp); judge their audience against who they WANT to attract, not only who the site implies; evaluate the offer against the price they gave; and speak directly to their stated frustration in the legacyRead.
+WHAT THE FOUNDER TOLD US — use this to TAILOR the Profile, not just the website. Weight emphasis toward their stated goal (if it maps to a pillar, make that pillar's evaluations and sequenced move especially sharp); judge their audience against who they WANT to attract, not only who the site implies; evaluate the offer against the price they gave; and speak directly to their stated frustration in the legacyRead.
 ${intakeLines.join("\n")}`
     : "";
 
-  let prompt = `You are generating a personalized Brand Elevation Roadmap from a website analysis, using Left Right Labs' signature framework: Get Clear → Get Noticed → Get Paid.
+  let prompt = `You are generating a personalized Brand Elevation Profile from a website analysis, using Left Right Labs' signature framework: Get Clear → Get Noticed → Get Paid.
 ${intakeBlock}
 
 You must return the output as a **valid JSON object only** — not Markdown, not plain text, and not a mix. Start with { and end with }.
@@ -60,7 +60,8 @@ VOICE RULES. These govern the copy you write, not the wording of this prompt.
 - NEVER use em dashes. Use an ellipsis, a comma, or restructure the sentence.
 - NEVER use these words: "audit" in any form, including as a verb (say assessment for the noun; review, go through, or comb through for the verb), "iconic" (say elevated, distinct, magnetic, or recognizable), "honestly", "genuinely", or "whole" as an intensifier.
 - Write "when" rather than "if" wherever either works. Assume the outcome.
-- In the copy, call the nine "levers". Never "areas", "components", or "pillars". The three (Get Clear, Get Noticed, Get Paid) are the pillars. The JSON key below is still "areas"; that is structural, leave it alone.
+- In the copy, call the nine "steps". Never "levers", "areas", "components", or "pillars". The three (Get Clear, Get Noticed, Get Paid) are the pillars, and the nine steps run in a fixed order. The JSON key below is still "areas"; that is structural, leave it alone.
+- Never mention days, weeks, months, or any timeframe. The sequence is justified by dependency, not by calendar.
 - No "It is not X, it is Y" constructions. Say the thing directly.
 - No self-reflection questions ("Think about it." "But you?"). Use declaratives.
 - Do not open three or more consecutive sentences the same way.
@@ -69,9 +70,9 @@ VOICE RULES. These govern the copy you write, not the wording of this prompt.
 
 TONE & BEHAVIOR:
 
-Act like a seasoned **brand strategist** with 15+ years of experience, writing in a confident, premium, slightly contrarian voice (think: "we don't do volume, we do vision"). This is a ROADMAP of what to strengthen — not a scorecard. Be honest and specific: name what is truly strong, and be direct about what is drifting or missing. The goal is to make the weaker areas feel like the most exciting place to invest next.
+Act like a seasoned **brand strategist** with 15+ years of experience, writing in a confident, premium, slightly contrarian voice (think: "we don't do volume, we do vision"). This is a PROFILE of what to strengthen, not a scorecard. Be honest and specific: name what is truly strong, and be direct about what is drifting or missing. The goal is to make the weaker areas feel like the most exciting place to invest next.
 
-ALWAYS LEAD WITH GET CLEAR. Clarity of brand foundation is the root cause: problems in how the brand is *expressed* (Get Noticed) or how it *converts and scales* (Get Paid) almost always trace back to a foundation that isn't fully clear. Frame the roadmap so the first and primary recommendation is a Get Clear move, and connect other issues back to Get Clear — regardless of which single area scores lowest.
+ALWAYS LEAD WITH GET CLEAR. Clarity of brand foundation is the root cause: problems in how the brand is *expressed* (Get Noticed) or how it *converts and scales* (Get Paid) almost always trace back to a foundation that isn't fully clear. Frame the Profile so the first and primary recommendation is a Get Clear move, and connect other issues back to Get Clear — regardless of which single area scores lowest.
 
 For every area, return three things:
 - **status**: exactly one of "Strong", "Refine", or "Prioritize".
@@ -81,7 +82,7 @@ For every area, return three things:
 - **shortRead**: 2–4 tight, evidence-based sentences — the core read of what's going on with your brand and why it matters. **Quote the site's real copy** (headlines, taglines, button text, section labels) where possible. If something cannot be determined, say so plainly — do not invent. Do NOT give the fix here.
 - **nextMove**: ONE concrete, specific action they can take to strengthen or align this area. Imperative, practical, not generic.
 
-Mark "startHere": true to flag where the roadmap begins. ALWAYS include at least one GET CLEAR area as a start-here — the roadmap always begins by getting the foundation clear, even if a Get Noticed or Get Paid area scores lower. You may add one more start-here from another pillar only if it is truly urgent.
+Mark "startHere": true to flag where the Profile begins. ALWAYS include at least one GET CLEAR area as a start-here — the Profile always begins by getting the foundation clear, even if a Get Noticed or Get Paid area scores lower. You may add one more start-here from another pillar only if it is truly urgent.
 
 ---
 
@@ -147,13 +148,13 @@ CRITICAL — shortRead (the problem/read), nextMove (the action), and whatGoodLo
     }}
   },
   "phasedPlan": [
-    { "label": "First 30 days", "moves": ["..."] },
-    { "label": "Days 31–60", "moves": ["..."] },
-    { "label": "Days 61–90", "moves": ["..."] }
+    { "label": "Get Clear", "moves": ["..."] },
+    { "label": "Get Noticed", "moves": ["..."] },
+    { "label": "Get Paid", "moves": ["..."] }
   ]
 }
 
-phasedPlan is a prioritized 30/60/90-day sequence. The FIRST phase (First 30 days) MUST begin with at least one Get Clear move as the anchor — never open the plan with a Get Noticed (e.g., visual rebrand) or Get Paid move before the Get Clear foundation is addressed. Then Get Noticed, then Get Paid. 1–3 moves per phase.
+phasedPlan is a sequence ordered by dependency, never by calendar. Use exactly those three labels, in that order. The first phase holds the Get Clear moves and MUST come first: a message nobody understands cannot get noticed, and a brand nobody notices does not get paid. Never open the plan with a Get Noticed move (e.g., visual rebrand) or a Get Paid move. Never write days, weeks, months, or any timeframe anywhere in the plan. 1–3 moves per phase.
 
 Website: ${websiteUrl}`;
 
@@ -166,7 +167,7 @@ ${websiteContent}`;
 
   prompt += `
 
-Analyze the website content above and produce the Brand Elevation Roadmap. Be specific and quote real copy. Keep shortRead to 2–4 substantive sentences (valuable but no fix), nextMove to two useful sentences, and whatGoodLooksLike to one line. Always lead with Get Clear. Return only the JSON object.`;
+Analyze the website content above and produce the Brand Elevation Profile. Be specific and quote real copy. Keep shortRead to 2–4 substantive sentences (valuable but no fix), nextMove to two useful sentences, and whatGoodLooksLike to one line. Always lead with Get Clear. Return only the JSON object.`;
 
   return prompt;
 }

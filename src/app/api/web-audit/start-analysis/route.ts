@@ -57,7 +57,7 @@ function buildRoadmapResults(parsed: any): RoadmapResults {
         }))
     : [];
 
-  const legacyRead = str(parsed?.legacyRead, 'Your brand roadmap is ready below.');
+  const legacyRead = str(parsed?.legacyRead, 'Your Brand Elevation Profile is ready below.');
   const roadmapNudge = str(parsed?.roadmapNudge, '');
 
   if (voiceHits.length) {
@@ -84,14 +84,14 @@ function fallbackRoadmap(): RoadmapResults {
     for (const areaKey of pillar.areas) {
       areas[areaKey] = {
         status: 'Refine',
-        shortRead: 'We hit a snag formatting this part of your roadmap. Please regenerate or contact support.',
-        nextMove: 'Regenerate your roadmap, or reach out and we will rebuild it for you.',
+        shortRead: 'We hit a snag formatting this part of your Profile. Please regenerate or contact support.',
+        nextMove: 'Regenerate your Profile, or reach out and we will rebuild it for you.',
       };
     }
     pillars[pillar.key as PillarKey] = { areas };
   }
   return {
-    legacyRead: 'Your roadmap was generated but a formatting issue interrupted the final assembly. Please regenerate it or contact support.',
+    legacyRead: 'Your Profile was generated but a formatting issue interrupted the final assembly. Please regenerate it or contact support.',
     roadmapNudge: '',
     pillars,
     phasedPlan: [],

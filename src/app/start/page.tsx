@@ -473,7 +473,7 @@ export default function StartPage() {
               transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
               style={{ fontFamily: SANS, fontWeight: 400, fontSize: 16, letterSpacing: "2px", textTransform: "uppercase", color: LIME, margin: 0 }}
             >
-              Your Free Brand Elevation Roadmap
+              Your Free Brand Elevation Profile
             </motion.p>
 
             <motion.div
@@ -519,7 +519,7 @@ export default function StartPage() {
               transition={{ duration: 0.8, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
               style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "rgba(255,255,255,0.82)", maxWidth: 660, margin: 0 }}
             >
-              Your free Brand Elevation Roadmap finds every place your brand is
+              Your free Brand Elevation Profile finds every place your brand is
               mismatched, and tells you exactly what to fix first… before you spend
               another dime guessing what to do next.
             </motion.p>
@@ -530,7 +530,7 @@ export default function StartPage() {
               transition={{ duration: 0.7, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
             >
               <AccentBtn onClick={handleCTA} disabled={isLoading}>
-                {isLoading ? "Loading…" : <>Get My Free Brand Elevation Roadmap&nbsp;→</>}
+                {isLoading ? "Loading…" : <>Get My Free Brand Elevation Profile&nbsp;→</>}
               </AccentBtn>
             </motion.div>
 
@@ -544,8 +544,8 @@ export default function StartPage() {
 
           </div>
 
-          {/* Report mockup … the top of a real Roadmap (header, What We See, the
-              nine-lever wheel) so the product is visible before anyone scrolls. */}
+          {/* Report mockup … the top of a real Profile (header, What We See, the
+              nine-step wheel) so the product is visible before anyone scrolls. */}
           <motion.div
             className="hero-mockup"
             initial={{ opacity: 0, y: 30 }}
@@ -555,7 +555,7 @@ export default function StartPage() {
           >
             <Image
               src="/images/report-mockup.png"
-              alt="A Brand Elevation Roadmap report, showing the What We See summary and the nine-lever wheel"
+              alt="A Brand Elevation Profile report, showing the What We See summary and the nine-step wheel"
               width={1400}
               height={1332}
               priority
@@ -643,7 +643,7 @@ export default function StartPage() {
 
             <div style={{ display: "flex", flexDirection: "column", gap: 14, alignItems: "flex-start", marginTop: 6 }}>
               <AccentBtn onClick={handleCTA} disabled={isLoading}>
-                {isLoading ? "Loading…" : <>Get My Free Brand Elevation Roadmap&nbsp;→</>}
+                {isLoading ? "Loading…" : <>Get My Free Brand Elevation Profile&nbsp;→</>}
               </AccentBtn>
               <Badges dark />
             </div>
@@ -685,7 +685,7 @@ export default function StartPage() {
               Hear It From <em style={{ fontStyle: "italic", fontWeight: 400 }}>Them</em>
             </ScotchH2>
             <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "rgba(255,255,255,0.82)", maxWidth: 720, margin: 0 }}>
-              Every founder here worked through the Brand Elevation™ Method, and your Roadmap runs on the same one.
+              Every founder here worked through the Brand Elevation Method, and your Profile runs on the same one.
             </p>
           </motion.div>
 
@@ -739,11 +739,11 @@ export default function StartPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
             <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
               <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "#000", margin: 0 }}>
-                Brand Elevation™ is the framework we&apos;ve used with JJ Virgin,
+                The Brand Elevation Method is the framework we&apos;ve used with JJ Virgin,
                 Laila Ali, Mindshare, DesBio, and two decades of founders whose work
                 had outpaced the brand carrying it.{" "}
                 <strong style={{ color: "#000", fontWeight: 700 }}>
-                  Your Roadmap runs on the same framework. Free.
+                  Your Profile runs on the same framework. Free.
                 </strong>
               </p>
               <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "#000", margin: 0 }}>
@@ -799,11 +799,11 @@ export default function StartPage() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/images/brand-elevation-framework-wheel.png"
-              alt="The Brand Elevation framework: Get Clear, Get Noticed and Get Paid overlapping at Align, Activate and Ascend with Legacy at the centre, ringed by the nine levers."
+              alt="The Brand Elevation framework: Get Clear, Get Noticed and Get Paid overlapping at Align, Activate and Ascend with Legacy at the centre, ringed by the nine steps."
               style={{ width: "100%", maxWidth: 620, height: "auto", display: "block" }}
             />
             <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "rgba(255,255,255,0.82)", maxWidth: 620, margin: "clamp(20px, 2.4vw, 30px) 0 0", textAlign: "center" }}>
-              Each segment on the outer ring is a lever you can pull to elevate your brand. Your Roadmap reads all nine and shows you which one to pull first.
+              Each segment on the outer ring is one of the nine steps. Your Profile reads all nine and shows you which step to take next.
             </p>
           </motion.div>
 
@@ -876,8 +876,8 @@ export default function StartPage() {
               Why Clarity <em style={{ fontStyle: "italic", fontWeight: 400 }}>Comes First</em>
             </ScotchH2>
             <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "#000", margin: 0 }}>
-              A few minutes on the method behind your Roadmap… why clarity has to
-              land before visibility, and what that one free lever tends to set in
+              A few minutes on the method behind your Profile… why clarity has to
+              land before visibility, and what that one free step tends to set in
               motion.
             </p>
           </motion.div>
@@ -889,7 +889,7 @@ export default function StartPage() {
           >
             <iframe
               src="https://player.vimeo.com/video/1213335065?h=b0f9f53887&title=0&byline=0&portrait=0"
-              title="Why your Brand Elevation Roadmap is the first step"
+              title="Why your Brand Elevation Profile is the first step"
               style={{ position: "absolute", inset: 0, width: "100%", height: "100%", border: 0 }}
               allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
               allowFullScreen
@@ -913,11 +913,11 @@ export default function StartPage() {
           >
             <ScotchH2 white center>
               Everything{" "}
-              <em style={{ fontStyle: "italic", fontWeight: 400 }}>Inside Your Roadmap</em>
+              <em style={{ fontStyle: "italic", fontWeight: 400 }}>Inside Your Profile</em>
             </ScotchH2>
             <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "rgba(255,255,255,0.82)", maxWidth: 680, margin: 0 }}>
-              The full assessment across all nine levers is free, with your first
-              lever unlocked so you can act on it today. The complete plan is $97,
+              The full assessment across all nine steps is free, with your first
+              step unlocked so you can act on it today. The complete plan is $97,
               with a fourteen-day money-back guarantee.
             </p>
           </motion.div>
@@ -929,9 +929,9 @@ export default function StartPage() {
             style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", borderTop: "1px solid rgba(255,255,255,0.14)", marginTop: "clamp(40px, 5vw, 72px)" }}
           >
             {[
-              { num: "01", h3: "Where You're Losing People", p: "A complete read across all nine levers, free. Which ones are working for you, and which are quietly turning people away." },
-              { num: "02", h3: "The One to Pull First, Free", p: "We give away the best one on purpose. You'll know exactly which lever moves the most for your brand right now, at no cost, along with three short lessons on the method behind it. You'll leave with one specific action instead of another vague note to clarify your messaging." },
-              { num: "03", h3: "Your Full 90-Day Plan", p: "When you're ready, $97 gives you the other eight, sequenced across 30, 60, and 90 days, so you work them in the order that compounds. It comes with example rewrites in your own voice, so you're never starting from a blank page, and a link you can hand to whoever helps you carry it out." },
+              { num: "01", h3: "Where You're Losing People", p: "A complete read across all nine steps, free. Which ones are working for you, and which are quietly turning people away." },
+              { num: "02", h3: "The First Step, Free", p: "We give away the best one on purpose. You'll know exactly which step matters most for your brand right now, at no cost, along with three short lessons on the method behind it. You'll leave with one specific action instead of another vague note to clarify your messaging." },
+              { num: "03", h3: "The Other Eight, In Order", p: "When you're ready, $97 gives you the other eight steps in the order they have to happen, Get Clear first… because a message nobody understands can't get noticed, and a brand nobody notices doesn't get paid. It comes with example rewrites in your own voice, so you're never starting from a blank page, and a link you can hand to whoever helps you carry it out." },
             ].map((card, i) => (
               <div key={i} style={{ padding: "44px 40px 48px", display: "flex", flexDirection: "column", gap: 18, borderLeft: i === 0 ? "none" : "1px solid rgba(255,255,255,0.14)" }}>
                 <p style={{ fontFamily: SERIF, fontWeight: 700, fontStyle: "italic", fontSize: "clamp(48px, 6vw, 80px)", lineHeight: 1, color: LIME, margin: "0 0 8px" }}>
@@ -956,17 +956,17 @@ export default function StartPage() {
               <span style={{ fontFamily: SANS, fontSize: 18, color: "rgba(255,255,255,0.7)" }}>for the complete plan</span>
             </div>
             <p className="bal" style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "rgba(255,255,255,0.82)", maxWidth: 640, margin: 0 }}>
-              All eight remaining levers, example rewrites in your voice, ninety
-              days of sequencing, and a link your team can work from. Ninety days of
-              direction for less than the cost of a single hour with most
+              All eight remaining steps in the order they have to happen, example
+              rewrites in your voice, and a link your team can work from. Every step,
+              in order, for less than the cost of a single hour with most
               strategists.
             </p>
             <p className="bal" style={{ fontFamily: SANS, fontSize: 17, lineHeight: 1.5, color: "rgba(255,255,255,0.66)", maxWidth: 560, margin: 0 }}>
-              You have fourteen days to decide whether the Roadmap earned its place,
+              You have fourteen days to decide whether the Profile earned its place,
               or your money comes back, no questions asked.
             </p>
             <AccentBtn onClick={handleCTA} disabled={isLoading}>
-              {isLoading ? "Loading…" : <>Get My Free Brand Elevation Roadmap&nbsp;→</>}
+              {isLoading ? "Loading…" : <>Get My Free Brand Elevation Profile&nbsp;→</>}
             </AccentBtn>
           </motion.div>
         </div>
@@ -996,8 +996,8 @@ export default function StartPage() {
                 sequence, so they should look like one. */}
             {[
               { num: "1", h3: "Tell Us About Your Brand", p: "You give us your website, a few details, and answers to five questions about where you're headed and who you want in the room." },
-              { num: "2", h3: "We Read Your Brand", p: "Your online presence goes through the Brand Elevation™ framework, which looks for the gap between what you actually deliver and what your brand is currently promising." },
-              { num: "3", h3: "See Your Roadmap", p: "It shows up on screen about two minutes later, with a link in your inbox to keep, and it never expires." },
+              { num: "2", h3: "We Read Your Brand", p: "Your online presence goes through the Brand Elevation Method, which looks for the gap between what you actually deliver and what your brand is currently promising." },
+              { num: "3", h3: "See Your Profile", p: "It shows up on screen about two minutes later, with a link in your inbox to keep, and it never expires." },
             ].map((step, i) => (
               <div key={i} style={{ display: "flex", flexDirection: "column", gap: 16, paddingRight: 32 }}>
                 <div style={{ display: "flex", alignItems: "center" }}>
@@ -1092,11 +1092,11 @@ export default function StartPage() {
             with you.
           </p>
           <p style={{ fontFamily: SANS, fontWeight: 600, fontSize: BODY, lineHeight: 1.45, color: "#fff", maxWidth: 800, margin: "18px auto 0", textAlign: "center" }}>
-            The Brand Elevation Roadmap answers this for you.
+            The Brand Elevation Profile answers this for you.
           </p>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 18, marginTop: 34 }}>
             <AccentBtn onClick={handleCTA} disabled={isLoading}>
-              {isLoading ? "Loading…" : <>Get My Free Brand Elevation Roadmap&nbsp;→</>}
+              {isLoading ? "Loading…" : <>Get My Free Brand Elevation Profile&nbsp;→</>}
             </AccentBtn>
             <Badges />
           </div>
@@ -1121,13 +1121,13 @@ export default function StartPage() {
             initial="hidden" whileInView="visible" variants={rv} viewport={vp}
             style={{ marginTop: "clamp(40px, 5vw, 64px)", borderTop: "1px solid rgba(17,34,72,0.12)", maxWidth: 900 }}
           >
-            <FaqItem q="Is this actually" qEm="free?" a="It is. You get the full read across all nine levers, three short lessons on the method, and the one lever to pull first, and none of it asks for a credit card. We built the free version to be useful on its own, because a Roadmap that only works after you pay isn't much of a roadmap. When you want the other eight levers and your 90-day plan, that part is $97, and it'll be waiting whenever you decide." defaultOpen />
-            <FaqItem q="What happens when the $97 plan" qEm="isn't for me?" a="Then it comes back to you. You have fourteen days to decide whether the plan earned its place, and when it hasn't, we refund it without a form to fill out or a reason to give. We'd much rather return the occasional $97 than have anyone carrying around a plan they never wanted to open. Your Roadmap stays online either way, and it never expires." />
-            <FaqItem q="Will I be pitched at" qEm="the end?" a="You'll see the $97 option inside your free Roadmap, and we'll send a few emails over the following days, because we'd love for you to keep going and we're not shy about saying so. What you won't get is a sales call you didn't ask for, a countdown clock, or a stranger sliding into your DMs. Read the free version, pull your first lever, and take your time with the rest." />
-            <FaqItem q="How is this different from an" qEm="online quiz?" a="A quiz asks you to describe your brand and then sorts you into a category. Your Roadmap skips the asking and goes to look. It reads your actual website and your public presence, runs everything it finds through the Brand Elevation framework, and hands back findings that only make sense for you, because they came from your words, your offers, and your prices. No two Roadmaps have ever matched, and we've checked." />
-            <FaqItem q="Why do you fix things in a specific" qEm="order?" a="Because the order is where most brand work falls apart. Founders invest in visibility before the message has landed, or in a gorgeous new site before they know exactly who it's for, and then wonder why the beautiful new thing didn't move anything. Clarity goes first because everything else stands on it, so your Roadmap starts there too: Get Clear, then Get Noticed, then Get Paid. It's the same order every time, and that's on purpose." />
-            <FaqItem q="I've already invested in branding. Why would I" qEm="need this?" a="Then you already know how much the right read is worth, and this one is free. Brands don't hold still. You've grown since that last investment, your offers have shifted, your audience has moved up, and the brand you paid for is still describing the version of you it met back then. Think of your Roadmap as a check-in on that work: it shows you which parts are still earning their keep and which have drifted while you were busy being good at your job." />
-            <FaqItem q="How much time does this" qEm="actually take?" a="About five minutes on your side. You'll give us your website, a few details, and answers to five questions about where you're headed and who you want to reach. Then we take about two minutes to read everything and build your Roadmap. It shows up on your screen and in your inbox, it lives online, and it never expires, so there's no PDF to lose in a downloads folder." />
+            <FaqItem q="Is this actually" qEm="free?" a="It is. You get the full read across all nine steps, three short lessons on the method, and the first step to take, and none of it asks for a credit card. We built the free version to be useful on its own, because you should know exactly where your brand stands before anyone asks for a card. When you want the other eight steps, in order, that part is $97, and it'll be waiting whenever you decide." defaultOpen />
+            <FaqItem q="What happens when the $97 plan" qEm="isn't for me?" a="Then it comes back to you. You have fourteen days to decide whether the plan earned its place, and when it hasn't, we refund it without a form to fill out or a reason to give. We'd much rather return the occasional $97 than have anyone carrying around a plan they never wanted to open. Your Profile stays online either way, and it never expires." />
+            <FaqItem q="Will I be pitched at" qEm="the end?" a="You'll see the $97 option inside your free Profile, and we'll send a few emails over the following days, because we'd love for you to keep going and we're not shy about saying so. What you won't get is a sales call you didn't ask for, a countdown clock, or a stranger sliding into your DMs. Read the free version, take your first step, and take your time with the rest." />
+            <FaqItem q="How is this different from an" qEm="online quiz?" a="A quiz asks you to describe your brand and then sorts you into a category. Your Profile skips the asking and goes to look. It reads your actual website and your public presence, runs everything it finds through the Brand Elevation framework, and hands back findings that only make sense for you, because they came from your words, your offers, and your prices. No two Profiles have ever matched, and we've checked." />
+            <FaqItem q="Why do you fix things in a specific" qEm="order?" a="Because the order is where most brand work falls apart. Founders invest in visibility before the message has landed, or in a gorgeous new site before they know exactly who it's for, and then wonder why the beautiful new thing didn't move anything. Clarity goes first because everything else stands on it, so your Profile starts there too: Get Clear, then Get Noticed, then Get Paid. It's the same order every time, and that's on purpose." />
+            <FaqItem q="I've already invested in branding. Why would I" qEm="need this?" a="Then you already know how much the right read is worth, and this one is free. Brands don't hold still. You've grown since that last investment, your offers have shifted, your audience has moved up, and the brand you paid for is still describing the version of you it met back then. Think of your Profile as a check-in on that work: it shows you which parts are still earning their keep and which have drifted while you were busy being good at your job." />
+            <FaqItem q="How much time does this" qEm="actually take?" a="About five minutes on your side. You'll give us your website, a few details, and answers to five questions about where you're headed and who you want to reach. Then we take about two minutes to read everything and build your Profile. It shows up on your screen and in your inbox, it lives online, and it never expires, so there's no PDF to lose in a downloads folder." />
             <FaqItem q="How does AI fit" qEm="into this?" a="AI does the reading, and it's very good at reading. It moves through your entire public presence in the time it would take one of us to open the first tab, and it holds everything it finds against the Brand Elevation framework we built over nearly two decades with real clients. The framework, and the judgment about what matters and in what order, came from us. AI is what lets you have that read in two minutes instead of two weeks." />
           </motion.div>
         </div>
@@ -1152,7 +1152,7 @@ export default function StartPage() {
 
             <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "rgba(255,255,255,0.82)", maxWidth: 600, margin: 0 }}>
               You could be looking at the specific reasons your brand isn&apos;t
-              landing the way you do in person, and the one lever to pull first.
+              landing the way you do in person, and the first step to take.
             </p>
 
             <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 22, lineHeight: 1.6, color: LIME, maxWidth: 600, margin: 0 }}>
@@ -1160,7 +1160,7 @@ export default function StartPage() {
             </p>
 
             <AccentBtn onClick={handleCTA} disabled={isLoading}>
-              {isLoading ? "Loading…" : <>Get My Free Brand Elevation Roadmap&nbsp;→</>}
+              {isLoading ? "Loading…" : <>Get My Free Brand Elevation Profile&nbsp;→</>}
             </AccentBtn>
 
             <Badges />
@@ -1213,7 +1213,7 @@ export default function StartPage() {
           >
             <span>We take your brand seriously. Ourselves? Not so much.</span>
             <span>© 2026 Left Right Labs. All rights reserved.</span>
-            <span>Brand Elevation™ · Dallas, TX</span>
+            <span>Brand Elevation · Dallas, TX</span>
           </div>
         </div>
       </footer>

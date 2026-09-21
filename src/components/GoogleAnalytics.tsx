@@ -4,7 +4,7 @@ import { useGeolocationConsent } from '@/lib/use-geolocation-consent';
 import Script from 'next/script';
 
 // Google Analytics tracking. Honors EU/UK consent rules via geolocation hook.
-// Default measurement ID is the Brand Elevation Roadmap property; pass measurementId to override.
+// Default measurement ID is the Brand Elevation Profile property; pass measurementId to override.
 //
 // dataLayer and gtag themselves are defined in the document head (app/layout.tsx)
 // so events can queue from the first paint; this component only loads the

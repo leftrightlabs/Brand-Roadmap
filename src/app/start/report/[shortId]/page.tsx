@@ -30,7 +30,7 @@ const FULL_ROADMAP_PRICE_USD = 97;
 // three steps line up in Google Analytics' ecommerce funnel.
 const ROADMAP_ITEM = {
   item_id: "roadmap_full_plan",
-  item_name: "Brand Elevation Roadmap full plan",
+  item_name: "Brand Elevation Profile: Full Unlock",
   price: FULL_ROADMAP_PRICE_USD,
   quantity: 1,
 };
@@ -49,7 +49,7 @@ interface AssessmentResults extends Partial<RoadmapResults> {
 const FULL_PRICE = "$97";
 
 // Booking destination for the footer CTA — this URL redirects to Calendly.
-// Opened in a new tab so readers don't lose their roadmap.
+// Opened in a new tab so readers don't lose their Profile.
 const BOOKING_URL = "https://leftrightlabs.com/start";
 
 const CONTENT = "max-w-[84rem] mx-auto px-6 md:px-10";
@@ -190,7 +190,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
           const d = await r.json();
           if (d.status === "completed" && d.results?.paid) {
             setResults(d.results);
-            toast({ title: "Unlocked", description: "Your full Brand Elevation Roadmap is ready." });
+            toast({ title: "Unlocked", description: "Your full Brand Elevation Profile is ready." });
             clearInterval(id);
             return;
           }
@@ -344,7 +344,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
       <div className="min-h-screen bg-[#112248] flex items-center justify-center">
         <motion.div className="text-center" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#a7c140] mx-auto mb-4" />
-          <p className="text-white/80">Loading your Brand Elevation Roadmap...</p>
+          <p className="text-white/80">Loading your Brand Elevation Profile...</p>
         </motion.div>
       </div>
     );
@@ -355,12 +355,12 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
       <div className="min-h-screen bg-[#112248] flex items-center justify-center px-4">
         <motion.div className="text-center max-w-md" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
           <AlertTriangle className="h-12 w-12 text-red-400 mx-auto mb-4" />
-          <h2 className="text-xl font-heading font-semibold text-white mb-2">Roadmap Unavailable</h2>
+          <h2 className="text-xl font-heading font-semibold text-white mb-2">Profile Unavailable</h2>
           <p className="text-white/70 mb-6">
-            {results?.error || "This roadmap couldn't be loaded or needs to be regenerated."}
+            {results?.error || "This Profile couldn't be loaded or needs to be regenerated."}
             {results?.websiteUrl && (<><br /><span className="text-sm">Website: {results.websiteUrl}</span></>)}
           </p>
-          <Button onClick={() => router.push("/start")} className="bg-[#a7c140] hover:bg-[#96ad39] text-[#112248]">Start a New Roadmap</Button>
+          <Button onClick={() => router.push("/start")} className="bg-[#a7c140] hover:bg-[#96ad39] text-[#112248]">Start a New Profile</Button>
         </motion.div>
       </div>
     );
@@ -382,7 +382,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
     });
   });
 
-  // The roadmap always leads with Get Clear — that's the pillar we anchor to,
+  // The Profile always leads with Get Clear — that's the pillar we anchor to,
   // and the free "sample" move always comes from Get Clear.
   const getClearPillar = PILLARS.find((p) => p.key === "getClear") ?? PILLARS[0];
   const priorityPillar = getClearPillar;
@@ -390,7 +390,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
   // if the two disagreed, a truncated teaser would render as the unlocked move.
   const freeSampleAreaKey: AreaKey | null = pickFreeSampleArea(results.pillars);
 
-  // Free = the roadmap's route + first move (diagnosis). Paid/preview unlocks every move.
+  // Free = the Profile's route + first move (diagnosis). Paid/preview unlocks every move.
   const unlocked = results.paid === true && !forceFree;
 
   const goUnlock = async () => {
@@ -425,7 +425,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="grid md:grid-cols-[1fr_340px] gap-10 items-center">
             <div>
               <div className="font-heading-transform">
-                <h1 className="text-2xl md:text-[34px] font-heading text-white mb-2 leading-tight text-balance">Your Brand Elevation Roadmap™</h1>
+                <h1 className="text-2xl md:text-[34px] font-heading text-white mb-2 leading-tight text-balance">Your Brand Elevation Profile</h1>
               </div>
               <div className="w-16 h-0.5 bg-[#a7c140] my-4" />
               <p className="text-base md:text-lg text-white/50 mb-6">The sequenced moves to re-align {results.websiteUrl}</p>
@@ -469,7 +469,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
       <main>
         {checkoutReturn && !unlocked && (
           <div className="bg-[#a7c140] text-[#112248] text-center text-[13px] font-bold uppercase tracking-[0.12em] py-3 px-4">
-            Payment received … unlocking your full roadmap. This can take a few seconds.
+            Payment received … unlocking your full Profile. This can take a few seconds.
           </div>
         )}
         {/* Skip-to: take free readers straight to their unlocked move. */}
@@ -509,7 +509,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
             <div className={`${CONTENT} py-12 md:py-16`}>
               <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp} className="max-w-4xl mx-auto">
                 <div className="rounded-3xl border border-[#a7c140]/40 bg-white/[0.04] p-8 md:p-12">
-                  <p className="text-[13px] font-bold uppercase tracking-[0.12em] text-[#a7c140] mb-4">Where your roadmap starts</p>
+                  <p className="text-[13px] font-bold uppercase tracking-[0.12em] text-[#a7c140] mb-4">Where your Profile starts</p>
                   {results.roadmapNudge && (
                     <p className="text-white text-[22px] md:text-[26px] font-heading leading-[1.3] mb-6">{results.roadmapNudge}</p>
                   )}
@@ -527,7 +527,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
                       </div>
                     )}
                   </div>
-                  <p className="text-white/45 text-[15px] mt-6">We&apos;ve unlocked your first move in full below — look for the <span className="text-[#a7c140] font-semibold">Unlocked free</span> tag. The exact next step for every other area is in your complete roadmap.</p>
+                  <p className="text-white/45 text-[15px] mt-6">We&apos;ve unlocked your first move in full below… look for the <span className="text-[#a7c140] font-semibold">Unlocked free</span> tag. The exact next step for every other step is in your complete Profile.</p>
                 </div>
               </motion.div>
             </div>
@@ -644,13 +644,13 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
           );
         })}
 
-        {/* ── PAID: 30/60/90 PLAN  ·  FREE: UPSELL ── */}
+        {/* ── PAID: PHASED PLAN  ·  FREE: UPSELL ── */}
         {unlocked ? (
           results.phasedPlan && results.phasedPlan.length > 0 && (
             <section id="next-moves" className="scroll-mt-16" style={LIGHT_BAND}>
               <div className={`${CONTENT} py-14 md:py-20`}>
                 <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp} className="text-center mb-10">
-                  <h2 className="text-4xl md:text-6xl font-heading text-[#112248]">Your 30 / 60 / 90-Day Roadmap</h2>
+                  <h2 className="text-4xl md:text-6xl font-heading text-[#112248]">Your Next Moves, In Order</h2>
                   <div className="w-12 h-0.5 bg-[#a7c140] mx-auto mt-3 mb-3" />
                   <p className="text-gray-500 text-lg">Sequenced the way we teach it: Get Clear, then Get Noticed, then Get Paid.</p>
                 </motion.div>
@@ -678,12 +678,12 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
         ) : (
           <section id="next-moves" className="scroll-mt-16" style={DARK_BAND}>
             <div className={`${CONTENT} py-16 md:py-24`}>
-              {/* Locked plan teaser — the shape of the 30/60/90 plan is visible, the steps are not. */}
+              {/* Locked plan teaser: the shape of the plan is visible, the moves are not. */}
               <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp} className="text-center mb-10">
                 <p className="text-[13px] font-bold uppercase tracking-[0.12em] text-[#a7c140] mb-4">Your Sequenced Plan</p>
-                <h2 className="text-4xl md:text-6xl font-heading text-white leading-[1.1]">Your 30 / 60 / 90-day plan is built.</h2>
+                <h2 className="text-4xl md:text-6xl font-heading text-white leading-[1.1]">Your full plan is built.</h2>
                 <div className="w-16 h-1 bg-[#a7c140] mx-auto my-6" />
-                <p className="text-white/60 text-lg max-w-2xl mx-auto">We&apos;ve sequenced every move in the order we teach it. Unlock to see exactly what to do, and when.</p>
+                <p className="text-white/60 text-lg max-w-2xl mx-auto">We&apos;ve sequenced every move in the order we teach it. Unlock to see exactly what to do, and what comes next.</p>
               </motion.div>
 
               {results.phasedPlan && results.phasedPlan.length > 0 && (
@@ -717,9 +717,9 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
               <motion.div id="unlock" initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp} className="max-w-3xl mx-auto text-center scroll-mt-16">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/images/people-networking.webp" alt="Founders building elevated brands with Left Right Labs" className="w-full max-w-lg mx-auto rounded-2xl mb-8 shadow-xl border border-white/10" />
-                <p className="text-white/60 text-lg mb-8">Unlock the specific next move for all nine areas, plus example rewrites in your voice and your full 30/60/90-day plan in the order that actually builds.</p>
+                <p className="text-white/60 text-lg mb-8">Unlock the specific next move for all nine steps, plus example rewrites in your voice and your full plan in the order it has to happen.</p>
                 <ul className="text-left max-w-md mx-auto space-y-3 mb-10">
-                  {["The specific next move for all 9 areas", "Example rewrites in your brand voice", "Every step of your 30/60/90-day plan", "The exact order to work it, so nothing gets fixed out of sequence", "Shareable link, so your team can work from it too"].map((f) => (
+                  {["The specific next move for all nine steps", "Example rewrites in your brand voice", "Every remaining move, sequenced by what depends on what", "The exact order to work it, so nothing gets fixed out of sequence", "Shareable link, so your team can work from it too"].map((f) => (
                     <li key={f} className="flex items-center gap-3 text-white/85 text-[16px]">
                       <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#a7c140] flex-shrink-0"><Check className="w-3.5 h-3.5 text-[#112248]" /></span>
                       {f}
@@ -727,7 +727,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
                   ))}
                 </ul>
                 <Button onClick={goUnlock} disabled={isUnlocking} size="lg" className="bg-[#a7c140] hover:bg-[#96ad39] text-[#112248] font-bold uppercase tracking-wider text-base px-8 py-6">
-                  {isUnlocking ? "Starting checkout…" : `Unlock your full roadmap · ${FULL_PRICE}`}
+                  {isUnlocking ? "Starting checkout…" : `Unlock your full Profile · ${FULL_PRICE}`}
                 </Button>
                 <p className="text-white/40 text-sm mt-4">One-time · Instant access · Secure checkout by Stripe</p>
               </motion.div>
@@ -744,10 +744,10 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
               <h2 className="text-4xl md:text-5xl font-heading font-bold text-white mb-2">Ready to build the brand you&apos;re meant to lead?</h2>
             </div>
             <div className="w-16 h-0.5 bg-[#a7c140] mx-auto my-6" />
-            <p className="text-base md:text-lg text-white/60 mb-8 max-w-xl mx-auto">Let&apos;s turn this roadmap into a brand that speaks before you do, sells with integrity, and scales without chaos.</p>
+            <p className="text-base md:text-lg text-white/60 mb-8 max-w-xl mx-auto">Let&apos;s turn this Profile into a brand that speaks before you do, sells with integrity, and scales without chaos.</p>
             <Button onClick={() => window.open(BOOKING_URL, "_blank", "noopener,noreferrer")} size="lg" className="bg-[#a7c140] hover:bg-[#96ad39] text-[#112248] font-bold uppercase tracking-wider">Let&apos;s Elevate Your Brand</Button>
             <p className="text-xs text-white/40 max-w-xl mx-auto leading-relaxed mt-10">
-              This roadmap was generated using AI analysis of publicly available website content. It may occasionally misinterpret layout, messaging, or functionality — especially on sites with dynamic or complex content.{unlocked && (<>{" "}For the most accurate, tailored assessment, {""}
+              This Profile was generated using AI analysis of publicly available website content. It may occasionally misinterpret layout, messaging, or functionality, especially on sites with dynamic or complex content.{unlocked && (<>{" "}For the most accurate, tailored assessment, {""}
               <a href="https://leftrightlabs.com/contact" target="_blank" rel="noopener noreferrer" className="text-[#a7c140] underline hover:opacity-80 transition-opacity">contact us</a>{" "} to book an in-depth consultation.</>)}
             </p>
           </motion.div>

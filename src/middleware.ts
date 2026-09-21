@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-// Brand Elevation Roadmap — public lead-gen funnel, no authenticated routes.
+// Brand Elevation Profile: public lead-gen funnel, no authenticated routes.
 // Middleware exists only to redirect the root `/` to `/start`. Long-term,
 // we may move /start to the root URL, at which point this can be removed.
 
