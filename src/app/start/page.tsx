@@ -496,8 +496,9 @@ export default function StartPage() {
               transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
               style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "rgba(255,255,255,0.82)", maxWidth: 660, margin: 0 }}
             >
-              The people who&apos;ve worked with you already know. Everyone else is
-              still deciding from your website.
+              Your website has been describing you to strangers while you were busy
+                doing the work, and the people who&apos;ve actually hired you wouldn&apos;t
+                recognize a word of it.
             </motion.p>
 
             <motion.p
