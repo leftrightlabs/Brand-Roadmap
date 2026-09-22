@@ -24,9 +24,10 @@ const LIST_ID = process.env.ACTIVECAMPAIGN_LIST_ID;
 // mismatch silently creates a duplicate tag that no automation triggers on.
 // Renamed from "Roadmap:" to "Profile:" on 2026-09-21 with the product; the
 // tag IDs (395, 397, 398, 399, 400) were preserved, so automations 164 and 165
-// kept their triggers. The custom field titles below deliberately still say
-// "Brand Roadmap": their merge tags (%BRAND_ROADMAP_URL% etc.) are used inside
-// the automation emails, and the fields are matched by title here.
+// kept their triggers. The custom fields (ids 158-162) were renamed the same
+// day to "Brand Profile …" with merge tags %BRAND_PROFILE_*%, and the eight
+// automation emails that merge them were updated in the same pass. Fields are
+// matched by title here, so title changes in AC must land here too.
 //   `completed` is the entry trigger for the nurture automation.
 //   `paid` is the entry trigger for the post-purchase (Book a Call) automation,
 //   and the Jump To condition that stops the $97 nudge track.
@@ -40,11 +41,11 @@ export const AC_TAGS = {
 
 // ── Custom field titles (auto-created if missing; merge with %FIELD_NAME%) ───
 const AC_FIELDS: { key: string; title: string; type: 'text' | 'textarea' }[] = [
-  { key: 'priority', title: 'Brand Roadmap Priority', type: 'text' },
-  { key: 'startHere', title: 'Brand Roadmap Start Here', type: 'text' },
-  { key: 'nudge', title: 'Brand Roadmap Nudge', type: 'textarea' },
-  { key: 'url', title: 'Brand Roadmap URL', type: 'text' },
-  { key: 'paid', title: 'Brand Roadmap Paid', type: 'text' },
+  { key: 'priority', title: 'Brand Profile Priority', type: 'text' },
+  { key: 'startHere', title: 'Brand Profile Start Here', type: 'text' },
+  { key: 'nudge', title: 'Brand Profile Nudge', type: 'textarea' },
+  { key: 'url', title: 'Brand Profile URL', type: 'text' },
+  { key: 'paid', title: 'Brand Profile Paid', type: 'text' },
 ];
 
 export function acEnabled(): boolean {
@@ -154,7 +155,7 @@ async function resolveFieldIds(): Promise<Record<string, string>> {
     let id = byTitle.get(f.title);
     if (!id) {
       const created = await ac<{ field?: { id: string } }>('/fields', 'POST', {
-        field: { type: f.type, title: f.title, descript: 'Brand Roadmap', visible: 1 },
+        field: { type: f.type, title: f.title, descript: 'Brand Elevation Profile', visible: 1 },
       });
       id = created?.field?.id;
     }
@@ -214,7 +215,7 @@ function splitName(name: string): { firstName: string; lastName: string } {
 export interface RoadmapContactSync {
   email: string;
   name: string;
-  /** Human label for the `Brand Roadmap Priority` field — always "Get Clear". */
+  /** Human label for the `Brand Profile Priority` field, always "Get Clear". */
   priorityPillarLabel: string;
   /** Human label of the start-here area, e.g. "Visual positioning". */
   startHereArea: string;

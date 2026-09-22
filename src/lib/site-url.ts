@@ -2,7 +2,7 @@
  * The one place the app decides what its own public address is.
  *
  * Two things are built from this and must never disagree:
- *  - the report URL pushed to ActiveCampaign (`%BRAND_ROADMAP_URL%`), which
+ *  - the report URL pushed to ActiveCampaign (`%BRAND_PROFILE_URL%`), which
  *    lands in a customer's inbox and has to keep working for years
  *  - Stripe's `return_url` after embedded checkout
  *
