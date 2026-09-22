@@ -498,7 +498,7 @@ export default function StartPage() {
                 <Scaley>
                   Somebody Just Googled&nbsp;You.
                 <br />
-                  <em style={{ fontStyle: "italic", fontWeight: 400 }}>Here&apos;s What Your Brand Told Them.</em>
+                  <em style={{ fontStyle: "italic", fontWeight: 400 }}>Here&apos;s What Your Brand Told&nbsp;Them.</em>
                 </Scaley>
               </h1>
             </motion.div>
