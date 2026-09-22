@@ -473,8 +473,8 @@ export default function StartPage() {
               transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
               style={{ fontFamily: SANS, fontWeight: 400, fontSize: 16, letterSpacing: "2px", textTransform: "uppercase", color: LIME, margin: 0 }}
             >
-              Your Free Brand Elevation Profile
-            </motion.p>
+              Free · Five minutes · No card
+              </motion.p>
 
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -496,9 +496,9 @@ export default function StartPage() {
                 }}
               >
                 <Scaley>
-                  Your Brand Is the Best-Kept Secret in Your Industry.
+                  Somebody Just Googled You.
                   <br />
-                  <em style={{ fontStyle: "italic", fontWeight: 400 }}>Let&apos;s Ruin That.</em>
+                  <em style={{ fontStyle: "italic", fontWeight: 400 }}>Here&apos;s What Your Brand Told Them.</em>
                 </Scaley>
               </h1>
             </motion.div>
@@ -614,8 +614,8 @@ export default function StartPage() {
         >
           <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
             <ScotchH2>
-              <span style={{ whiteSpace: "nowrap" }}>Somebody Just</span>{" "}
-              <em style={{ fontStyle: "italic", fontWeight: 400 }}>Googled You.</em>
+              You Weren&apos;t in the{" "}
+              <em style={{ fontStyle: "italic", fontWeight: 400 }}>Room.</em>
             </ScotchH2>
             <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
               <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "#000", margin: 0 }}>
@@ -625,7 +625,7 @@ export default function StartPage() {
                 formed a complete opinion about what you charge.
               </p>
               <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "#000", margin: 0 }}>
-                You weren&apos;t in the room for that conversation.{" "}
+                You weren&apos;t there for that conversation.{" "}
                 <strong style={{ color: "#000", fontWeight: 700 }}>
                   Your brand was, and it may have said a few things you&apos;d never
                   say out loud.
@@ -635,9 +635,9 @@ export default function StartPage() {
                 and that your fee should probably start with a smaller number.
               </p>
               <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "#000", margin: 0 }}>
-                None of that reflects your work. It reflects a brand that stopped
-                keeping up with you somewhere around your last big leap… and is
-                still describing the version of you it met.
+                That gap isn&apos;t your work. It&apos;s a brand that stopped keeping
+                up with you somewhere around your last big leap… and is still
+                describing the version of you it met.
               </p>
             </div>
 
@@ -682,7 +682,7 @@ export default function StartPage() {
             style={{ display: "flex", flexDirection: "column", gap: 22, alignItems: "center", textAlign: "center", maxWidth: 820, margin: "0 auto" }}
           >
             <ScotchH2 white center>
-              Hear It From <em style={{ fontStyle: "italic", fontWeight: 400 }}>Them</em>
+              Recognize <em style={{ fontStyle: "italic", fontWeight: 400 }}>Anyone?</em>
             </ScotchH2>
             <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "rgba(255,255,255,0.82)", maxWidth: 720, margin: 0 }}>
               Every founder here worked through the Brand Elevation Method, and your Profile runs on the same one.
@@ -745,13 +745,21 @@ export default function StartPage() {
                 <strong style={{ color: "#000", fontWeight: 700 }}>
                   Your Profile runs on the same framework. Free.
                 </strong>
-              </p>
+                </p>
+                <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "#000", margin: 0 }}>
+                  It was built for founders whose work has moved faster than their
+                  website… the ones getting introduced with a résumé the brand
+                  hasn&apos;t caught up to yet. When that&apos;s you, the read is going to
+                  be useful. When you&apos;re still deciding what the business is, come
+                  back once you&apos;ve decided.
+                </p>
               <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "#000", margin: 0 }}>
                 A generic AI prompt returns generic advice. Ours reads your{" "}
                 <em style={{ fontStyle: "italic" }}>actual</em> brand… your site,
                 your language, how you price and position what you sell… and returns
-                findings that would be useless to anyone else. Then it puts them in
-                order. Get Clear. Get Noticed. Get Paid.
+                findings that would be useless to anyone else. No two Profiles have
+                ever matched, and yes, we checked. Then it puts them in order. Get
+                Clear. Get Noticed. Get Paid.
               </p>
               <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "#000", margin: 0 }}>
                 The order is doing more work than it appears to. No one gets noticed
@@ -781,7 +789,7 @@ export default function StartPage() {
                 is the method's descriptor, not a section title, so it sits
                 here as a subhead. */}
             <ScotchH2 white center>
-              The Brand Elevation<sup style={{ fontSize: "0.38em", verticalAlign: "super", fontWeight: 400 }}>&trade;</sup>{" "}
+              The Brand Elevation{" "}
               <em style={{ fontStyle: "italic", fontWeight: 400 }}>Method</em>
             </ScotchH2>
             <p style={{ fontFamily: SANS, fontWeight: 600, fontSize: "clamp(18px, 1.9vw, 26px)", letterSpacing: "0.02em", color: LIME, margin: 0 }}>
@@ -873,12 +881,13 @@ export default function StartPage() {
             style={{ display: "flex", flexDirection: "column", gap: 22, maxWidth: 800, margin: "0 auto clamp(32px, 4vw, 56px)", alignItems: "center", textAlign: "center" }}
           >
             <ScotchH2 center>
-              Why Clarity <em style={{ fontStyle: "italic", fontWeight: 400 }}>Comes First</em>
+              Why We Won&apos;t Let You Start{" "}
+              <em style={{ fontStyle: "italic", fontWeight: 400 }}>With the Logo</em>
             </ScotchH2>
             <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "#000", margin: 0 }}>
-              A few minutes on the method behind your Profile… why clarity has to
-              land before visibility, and what that one free step tends to set in
-              motion.
+              This short video covers the method behind your Profile… why clarity
+              has to land before visibility, and what that one free step tends to
+              set in motion.
             </p>
           </motion.div>
 
@@ -912,8 +921,8 @@ export default function StartPage() {
             style={{ display: "flex", flexDirection: "column", gap: 22, alignItems: "center", textAlign: "center", maxWidth: 800, margin: "0 auto" }}
           >
             <ScotchH2 white center>
-              Everything{" "}
-              <em style={{ fontStyle: "italic", fontWeight: 400 }}>Inside Your Profile</em>
+              What&apos;s Free, What&apos;s $97,{" "}
+              <em style={{ fontStyle: "italic", fontWeight: 400 }}>and Why</em>
             </ScotchH2>
             <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "rgba(255,255,255,0.82)", maxWidth: 680, margin: 0 }}>
               The full assessment across all nine steps is free, with your first
@@ -929,8 +938,8 @@ export default function StartPage() {
             style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", borderTop: "1px solid rgba(255,255,255,0.14)", marginTop: "clamp(40px, 5vw, 72px)" }}
           >
             {[
-              { num: "01", h3: "Where You're Losing People", p: "A complete read across all nine steps, free. Which ones are working for you, and which are quietly turning people away." },
-              { num: "02", h3: "The First Step, Free", p: "We give away the best one on purpose. You'll know exactly which step matters most for your brand right now, at no cost, along with three short lessons on the method behind it. You'll leave with one specific action instead of another vague note to clarify your messaging." },
+              { num: "01", h3: "Where You're Losing People", p: "A complete read across all nine steps, free, showing you which ones are working for you and which are quietly turning people away." },
+              { num: "02", h3: "The Best One, Free, On Purpose", p: "You'll know exactly which step matters most for your brand right now, at no cost, along with three short lessons on the method behind it. You'll leave with one specific action instead of another vague note to clarify your messaging." },
               { num: "03", h3: "The Other Eight, In Order", p: "When you're ready, $97 gives you the other eight steps in the order they have to happen, Get Clear first… because a message nobody understands can't get noticed, and a brand nobody notices doesn't get paid. It comes with example rewrites in your own voice, so you're never starting from a blank page, and a link you can hand to whoever helps you carry it out." },
             ].map((card, i) => (
               <div key={i} style={{ padding: "44px 40px 48px", display: "flex", flexDirection: "column", gap: 18, borderLeft: i === 0 ? "none" : "1px solid rgba(255,255,255,0.14)" }}>
@@ -956,15 +965,23 @@ export default function StartPage() {
               <span style={{ fontFamily: SANS, fontSize: 18, color: "rgba(255,255,255,0.7)" }}>for the complete plan</span>
             </div>
             <p className="bal" style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "rgba(255,255,255,0.82)", maxWidth: 640, margin: 0 }}>
-              All eight remaining steps in the order they have to happen, example
-              rewrites in your voice, and a link your team can work from. Every step,
-              in order, for less than the cost of a single hour with most
-              strategists.
+              All eight remaining steps, sequenced, with example rewrites in your
+              voice and a link your team can work from. Every step for less than
+              the cost of a single hour with most strategists.
             </p>
             <p className="bal" style={{ fontFamily: SANS, fontSize: 17, lineHeight: 1.5, color: "rgba(255,255,255,0.66)", maxWidth: 560, margin: 0 }}>
               You have fourteen days to decide whether the Profile earned its place,
               or your money comes back, no questions asked.
-            </p>
+              </p>
+              <div className="ctr" style={{ display: "flex", flexDirection: "column", gap: 8, alignItems: "center", maxWidth: 620, marginTop: 8 }}>
+                <p className="bal" style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 22, lineHeight: 1.5, color: "#fff", margin: 0 }}>
+                  &ldquo;I wish I knew I needed to start here… I&apos;ve never put it together
+                  like this. We&apos;re in a good place.&rdquo;
+                </p>
+                <p style={{ fontFamily: SANS, fontSize: 14, letterSpacing: "0.06em", textTransform: "uppercase", color: "rgba(255,255,255,0.6)", margin: 0 }}>
+                  Dr. Debbie Bright, DC, MS · on working through the Method
+                </p>
+              </div>
             <AccentBtn onClick={handleCTA} disabled={isLoading}>
               {isLoading ? "Loading…" : <>Get My Free Brand Elevation Profile&nbsp;→</>}
             </AccentBtn>
@@ -982,7 +999,8 @@ export default function StartPage() {
             style={{ display: "flex", flexDirection: "column", gap: 22, maxWidth: 800 }}
           >
             <ScotchH2>
-              Three Steps in <em style={{ fontStyle: "italic", fontWeight: 400 }}>About Five Minutes</em>
+              Five Minutes From You.{" "}
+              <em style={{ fontStyle: "italic", fontWeight: 400 }}>Two From Us.</em>
             </ScotchH2>
           </motion.div>
 
@@ -1032,10 +1050,10 @@ export default function StartPage() {
             style={{ display: "flex", flexDirection: "column", gap: 22, alignItems: "center", textAlign: "center", maxWidth: 820, margin: "0 auto" }}
           >
             <ScotchH2 white center>
-              What Leaders <em style={{ fontStyle: "italic", fontWeight: 400 }}>Say</em>
+              Six Founders Who Ran It <em style={{ fontStyle: "italic", fontWeight: 400 }}>First</em>
             </ScotchH2>
             <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "rgba(255,255,255,0.82)", maxWidth: 720, margin: 0 }}>
-              Get the same framework these leaders used to transform their business.
+              Same framework, same order, six different founders.
             </p>
           </motion.div>
 
@@ -1113,7 +1131,8 @@ export default function StartPage() {
             style={{ display: "flex", flexDirection: "column", gap: 22, maxWidth: 800 }}
           >
             <ScotchH2>
-              Your Questions, <em style={{ fontStyle: "italic", fontWeight: 400 }}>Answered</em>
+              You Have Questions.{" "}
+              <em style={{ fontStyle: "italic", fontWeight: 400 }}>We Have Opinions.</em>
             </ScotchH2>
           </motion.div>
 
@@ -1125,6 +1144,7 @@ export default function StartPage() {
             <FaqItem q="What happens when the $97 plan" qEm="isn't for me?" a="Then it comes back to you, and we mean that literally. You get fourteen days to decide whether the plan earned its place, and when it hasn't, one email gets you a refund with no form to fill out and no reason required. We would much rather return the occasional $97 than have someone carrying around a plan they never wanted to open. Your Profile stays online either way, and it never expires." />
             <FaqItem q="Will I be pitched at" qEm="the end?" a="A little, and we'll own it. The $97 option sits inside your free Profile, and a few emails will follow over the next several days, because we'd love for you to keep going and we're not shy about saying so. What you won't get is a sales call you never asked for, a countdown clock, or a stranger sliding into your DMs. Read the free version, make your first move, and take the rest at whatever pace suits you." />
             <FaqItem q="How is this different from an" qEm="online quiz?" a="A quiz asks you to describe your brand and then sorts you into one of five boxes. Your Profile skips the asking and goes to look. It reads your actual website and your public presence, runs everything it finds through the Brand Elevation Method, and hands back findings that only make sense for you, because they came from your words, your offers, and your prices. No two Profiles have ever matched, and yes, we checked." />
+            <FaqItem q="What if my site is" qEm="embarrassing right now?" a="Good. That's the version we want to read. The further your brand has drifted from where you actually are, the sharper and more useful the Profile gets, because the gap is the whole point. Founders with a polished site and a fuzzy message get a subtler read. Founders who've been avoiding their homepage for two years get the clearest one we write." />
             <FaqItem q="Why do you fix things in a specific" qEm="order?" a="Because the order is where most brand work falls apart. Founders invest in visibility before the message has landed, or in a gorgeous new site before they know exactly who it's for, and then wonder why the beautiful new thing didn't move anything. Clarity goes first because everything else stands on it… a message nobody understands can't get noticed, and a brand nobody notices doesn't get paid. So your Profile starts there too, Get Clear, then Get Noticed, then Get Paid, and it runs that way every single time on purpose." />
             <FaqItem q="I've already invested in branding. Why would I" qEm="need this?" a="Then you already know what the right read is worth, and this one is free. Brands don't hold still. You've grown since that last investment, your offers have shifted, your audience has moved up, and the brand you paid for is still describing the version of you it met back then. Think of your Profile as a check-in on that work: it shows you which parts are still earning their keep and which have drifted while you were busy being good at your job." />
             <FaqItem q="How much time does this" qEm="actually take?" a="About five minutes on your side, most of it spent answering five questions about where you're headed and who you want in the room. Then we take about two more to read everything and build your Profile. It shows up on your screen and in your inbox, it lives online, and it never expires, so there's no PDF to lose in a downloads folder." />
