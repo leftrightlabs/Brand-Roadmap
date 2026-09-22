@@ -691,7 +691,7 @@ export default function StartPage() {
               Recognize <em style={{ fontStyle: "italic", fontWeight: 400 }}>Anyone?</em>
             </ScotchH2>
             <p style={{ fontFamily: SANS, fontSize: BODY, lineHeight: 1.45, color: "rgba(255,255,255,0.82)", maxWidth: 720, margin: 0 }}>
-              Every founder here worked through the Brand Elevation Method, and your Profile runs on the same one.
+              Every founder here worked through our Brand Elevation framework, and your Profile runs on the same one.
             </p>
           </motion.div>
 
