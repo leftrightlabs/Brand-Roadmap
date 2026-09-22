@@ -1,5 +1,5 @@
 /**
- * Server-side ActiveCampaign v3 REST helper for the Brand Roadmap upsell flow.
+ * Server-side ActiveCampaign v3 REST helper for the Brand Elevation Profile upsell flow.
  *
  * The funnel needs AC contacts tagged so a small number of automations can
  * branch on them:
@@ -19,18 +19,23 @@ const API_KEY = process.env.ACTIVECAMPAIGN_API_KEY;
 const LIST_ID = process.env.ACTIVECAMPAIGN_LIST_ID;
 
 // ── Tag vocabulary (the contract between this app and AC automations) ────────
-// Names must match the tags the ActiveCampaign automations trigger on, exactly
-// (including capitalisation and the space after the colon) — a mismatch creates
-// a duplicate tag in AC and the automation silently never fires.
+// Names must match the tags in ActiveCampaign exactly (capitalisation and the
+// space after the colon included). findOrCreateTag looks tags up by name, so a
+// mismatch silently creates a duplicate tag that no automation triggers on.
+// Renamed from "Roadmap:" to "Profile:" on 2026-09-21 with the product; the
+// tag IDs (395, 397, 398, 399, 400) were preserved, so automations 164 and 165
+// kept their triggers. The custom field titles below deliberately still say
+// "Brand Roadmap": their merge tags (%BRAND_ROADMAP_URL% etc.) are used inside
+// the automation emails, and the fields are matched by title here.
 //   `completed` is the entry trigger for the nurture automation.
 //   `paid` is the entry trigger for the post-purchase (Book a Call) automation,
 //   and the Jump To condition that stops the $97 nudge track.
 // `Status: Nurturing` is applied by the automation itself, not here, so it can
 // be changed without a deploy.
 export const AC_TAGS = {
-  completed: 'Roadmap: Nurture Started',
-  paid: 'Roadmap: Paid Upgrade',
-  unpaid: 'Roadmap: No Upgrade',
+  completed: 'Profile: Nurture Started',
+  paid: 'Profile: Paid Upgrade',
+  unpaid: 'Profile: No Upgrade',
 };
 
 // ── Custom field titles (auto-created if missing; merge with %FIELD_NAME%) ───
@@ -113,7 +118,7 @@ async function findOrCreateTag(name: string): Promise<string | null> {
     return exact.id;
   }
   const created = await ac<{ tag?: { id: string } }>('/tags', 'POST', {
-    tag: { tag: name, tagType: 'contact', description: 'Brand Roadmap' },
+    tag: { tag: name, tagType: 'contact', description: 'Brand Elevation Profile' },
   });
   if (created?.tag?.id) {
     tagIdCache.set(name, created.tag.id);
