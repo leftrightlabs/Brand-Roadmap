@@ -458,7 +458,6 @@ export default function StartPage() {
           }}
         />
         <div
-          className="hero-grid"
           style={{
             ...container,
             position: "relative",
@@ -466,14 +465,7 @@ export default function StartPage() {
             paddingBottom: "clamp(80px, 10vw, 130px)",
           }}
         >
-          <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
-            <motion.p
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-              style={{ fontFamily: SANS, fontWeight: 400, fontSize: 16, letterSpacing: "2px", textTransform: "uppercase", color: LIME, margin: 0 }}
-            >
-              Free · Five minutes · No card
+          <div style={{ display: "flex", flexDirection: "column", gap: 28, marginBottom: "clamp(36px, 4vw, 56px)" }}>\1
               </motion.p>
 
             <motion.div
@@ -488,10 +480,7 @@ export default function StartPage() {
                   fontSize: "clamp(38px, 4.8vw, 70px)",
                   lineHeight: 1,
                   letterSpacing: "-0.02em",
-                  textTransform: "capitalize",
-                  color: "#fff",
-                  margin: 0,
-                  paddingBottom: "0.35em",
+                  \1\n                  maxWidth: 1100,
                   textWrap: "pretty" as React.CSSProperties["textWrap"],
                 }}
               >
@@ -499,9 +488,7 @@ export default function StartPage() {
                   Somebody Just Googled You.
                   <br />
                   <em style={{ fontStyle: "italic", fontWeight: 400 }}>Here&apos;s What Your Brand Told Them.</em>
-                </Scaley>
-              </h1>
-            </motion.div>
+                \1\n          </div>\n\n          <div className="hero-grid">\n          <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
 
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -565,12 +552,7 @@ export default function StartPage() {
                 display: "block",
                 borderTop: `4px solid ${LIME}`,
                 borderRadius: 4,
-                boxShadow: "0 30px 80px -20px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.10)",
-              }}
-            />
-          </motion.div>
-        </div>
-      </section>
+                \1\n          </div>\2
 
       {/* ════════════════════════════════════════════════════════
           LOGO BAND … navy, full-bleed proof strip
@@ -1262,7 +1244,7 @@ export default function StartPage() {
           display: grid;
           grid-template-columns: 1.15fr 0.85fr;
           gap: clamp(40px, 5vw, 80px);
-          align-items: center;
+          align-items: start;
         }
         /* Stacks at 1240 rather than 960: below that the left column is too
            narrow to keep the three hero badges on a single line. */
