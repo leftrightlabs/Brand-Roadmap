@@ -484,14 +484,14 @@ export default function StartPage() {
                 style={{
                   fontFamily: SERIF,
                   fontWeight: 700,
-                  fontSize: "clamp(38px, 4.4vw, 64px)",
+                  fontSize: "clamp(38px, 4.2vw, 60px)",
                   lineHeight: 1,
                   letterSpacing: "-0.02em",
                   textTransform: "capitalize",
                   color: "#fff",
                   margin: 0,
                   paddingBottom: "0.35em",
-                  maxWidth: 1100,
+                  maxWidth: 1200,
                   textWrap: "pretty" as React.CSSProperties["textWrap"],
                 }}
               >
