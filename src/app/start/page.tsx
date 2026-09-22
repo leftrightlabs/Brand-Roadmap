@@ -465,7 +465,14 @@ export default function StartPage() {
             paddingBottom: "clamp(80px, 10vw, 130px)",
           }}
         >
-          <div style={{ display: "flex", flexDirection: "column", gap: 28, marginBottom: "clamp(36px, 4vw, 56px)" }}>\1
+          <div style={{ display: "flex", flexDirection: "column", gap: 28, marginBottom: "clamp(36px, 4vw, 56px)" }}>
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+              style={{ fontFamily: SANS, fontWeight: 400, fontSize: 16, letterSpacing: "2px", textTransform: "uppercase", color: LIME, margin: 0 }}
+            >
+              Free · Five minutes · No card
               </motion.p>
 
             <motion.div
@@ -480,7 +487,11 @@ export default function StartPage() {
                   fontSize: "clamp(38px, 4.8vw, 70px)",
                   lineHeight: 1,
                   letterSpacing: "-0.02em",
-                  \1\n                  maxWidth: 1100,
+                  textTransform: "capitalize",
+                  color: "#fff",
+                  margin: 0,
+                  paddingBottom: "0.35em",
+                  maxWidth: 1100,
                   textWrap: "pretty" as React.CSSProperties["textWrap"],
                 }}
               >
@@ -488,7 +499,13 @@ export default function StartPage() {
                   Somebody Just Googled You.
                   <br />
                   <em style={{ fontStyle: "italic", fontWeight: 400 }}>Here&apos;s What Your Brand Told Them.</em>
-                \1\n          </div>\n\n          <div className="hero-grid">\n          <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
+                </Scaley>
+              </h1>
+            </motion.div>
+          </div>
+
+          <div className="hero-grid">
+          <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
 
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -553,7 +570,13 @@ export default function StartPage() {
                 display: "block",
                 borderTop: `4px solid ${LIME}`,
                 borderRadius: 4,
-                \1\n          </div>\2
+                boxShadow: "0 30px 80px -20px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.10)",
+              }}
+            />
+          </motion.div>
+        </div>
+          </div>
+      </section>
 
       {/* ════════════════════════════════════════════════════════
           LOGO BAND … navy, full-bleed proof strip
