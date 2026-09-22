@@ -6,13 +6,17 @@ export const metadata: Metadata = {
   title: "Brand Elevation Profile | Left Right Labs",
   description: "Your expertise has outpaced your brand. Get a free, personalized Brand Elevation Profile… the specific moves to re-align your brand and reconnect with the clients you want next.",
   alternates: { canonical: `${SITE_URL}/start` },
+  // The filename carries a version because Facebook and LinkedIn cache a
+  // preview image by URL: re-scraping the page will not re-fetch an image at
+  // an address they have already seen. Bump the suffix whenever the card
+  // changes, rather than overwriting the file in place.
   openGraph: {
     title: "Brand Elevation Profile | Left Right Labs",
     description: "Get a free, personalized Brand Elevation Profile… the specific moves to re-align your brand and connect with the clients you want next.",
     url: `${SITE_URL}/start`,
     images: [
       {
-        url: "/images/brand-elevation-og.png",
+        url: "/images/brand-elevation-og-v2.png",
         width: 1200,
         height: 630,
         alt: "Brand Elevation Profile by Left Right Labs",
@@ -24,7 +28,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Brand Elevation Profile | Left Right Labs",
     description: "Get a free, personalized Brand Elevation Profile… the specific moves to re-align your brand and connect with the clients you want next.",
-    images: ["/images/brand-elevation-og.png"],
+    images: ["/images/brand-elevation-og-v2.png"],
   },
 };
 
