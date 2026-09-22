@@ -461,8 +461,8 @@ export default function StartPage() {
           style={{
             ...container,
             position: "relative",
-            paddingTop: "clamp(120px, 16vh, 180px)",
-            paddingBottom: "clamp(80px, 10vw, 130px)",
+            paddingTop: "clamp(108px, 13vh, 150px)",
+            paddingBottom: "clamp(72px, 8vw, 110px)",
           }}
         >
           <div style={{ display: "flex", flexDirection: "column", gap: 28, marginBottom: "clamp(36px, 4vw, 56px)" }}>
@@ -484,7 +484,7 @@ export default function StartPage() {
                 style={{
                   fontFamily: SERIF,
                   fontWeight: 700,
-                  fontSize: "clamp(38px, 4.8vw, 70px)",
+                  fontSize: "clamp(38px, 4.4vw, 64px)",
                   lineHeight: 1,
                   letterSpacing: "-0.02em",
                   textTransform: "capitalize",
@@ -496,8 +496,8 @@ export default function StartPage() {
                 }}
               >
                 <Scaley>
-                  Somebody Just Googled You.
-                  <br />
+                  Somebody Just Googled&nbsp;You.
+                <br />
                   <em style={{ fontStyle: "italic", fontWeight: 400 }}>Here&apos;s What Your Brand Told Them.</em>
                 </Scaley>
               </h1>
