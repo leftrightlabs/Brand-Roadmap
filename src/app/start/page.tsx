@@ -484,7 +484,7 @@ export default function StartPage() {
                 style={{
                   fontFamily: SERIF,
                   fontWeight: 700,
-                  fontSize: "clamp(38px, 4.2vw, 60px)",
+                  fontSize: "clamp(38px, 4.2vw, 56px)",
                   lineHeight: 1,
                   letterSpacing: "-0.02em",
                   textTransform: "capitalize",
@@ -496,10 +496,10 @@ export default function StartPage() {
                 }}
               >
                 <Scaley>
-                  Somebody Just Googled&nbsp;You.
+                <span className="hero-h1-line">Somebody Just Googled&nbsp;You.</span>
                 <br />
-                  <em style={{ fontStyle: "italic", fontWeight: 400 }}>Here&apos;s What Your Brand Told&nbsp;Them.</em>
-                </Scaley>
+                <em className="hero-h1-line" style={{ fontStyle: "italic", fontWeight: 400 }}>Here&apos;s What Your Brand Told&nbsp;Them.</em>
+              </Scaley>
               </h1>
             </motion.div>
           </div>
@@ -1275,6 +1275,12 @@ export default function StartPage() {
         @media (max-width: 1240px) {
           .hero-grid { grid-template-columns: 1fr !important; }
           .hero-mockup { max-width: 620px; }
+        }
+        /* Above the stack breakpoint the two H1 lines never wrap: at 56px the
+           longer (italic) line needs about 1020px of layout width and the
+           container never offers less than 1100px there. */
+        @media (min-width: 1241px) {
+          .hero-h1-line { white-space: nowrap; }
         }
 
         /* Typography polish … avoid orphans everywhere, balance the short
