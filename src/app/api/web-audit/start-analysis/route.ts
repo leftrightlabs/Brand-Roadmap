@@ -459,7 +459,7 @@ export async function POST(request: NextRequest) {
     let shortId = '';
     let inserted = false;
     // Reports no longer expire. The roadmap is the strongest personalization
-    // asset we hold on a lead (see %BRAND_ROADMAP_URL% / START_HERE in the drip),
+    // asset we hold on a lead (see %BRAND_PROFILE_URL% / START_HERE in the drip),
     // so killing it after a week cost us both late upgrades and any long-tail
     // re-engagement. The column is kept (NOT NULL) and set far out rather than
     // dropped, so no migration is needed.
