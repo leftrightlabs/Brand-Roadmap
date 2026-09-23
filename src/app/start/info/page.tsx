@@ -168,7 +168,7 @@ export default function IntakeWizard() {
               {!isContact ? (
                 <>
                   <h2 style={{ fontFamily: "scotch-display, 'Playfair Display', Georgia, serif", fontWeight: 700, fontSize: "clamp(24px, 4vw, 34px)", lineHeight: 1.15, color: NAVY, marginBottom: q.help ? 8 : 22, textWrap: "balance" as React.CSSProperties["textWrap"] }}>
-                    {q.title}
+                    <span className="squeeze">{q.title}</span>
                   </h2>
                   {q.help && <p style={{ fontSize: 14, color: "#64748b", marginBottom: 22 }}>{q.help}</p>}
 
@@ -215,7 +215,7 @@ export default function IntakeWizard() {
               ) : (
                 <>
                   <h2 style={{ fontFamily: "scotch-display, 'Playfair Display', Georgia, serif", fontWeight: 700, fontSize: "clamp(24px, 4vw, 34px)", lineHeight: 1.15, color: NAVY, marginBottom: 8 }}>
-                    Where should we send it?
+                    <span className="squeeze">Where should we send it?</span>
                   </h2>
                   <p style={{ fontSize: 14, color: "#64748b", marginBottom: 22 }}>Your personalized Profile lands here in minutes.</p>
                   <form onSubmit={(e) => { e.preventDefault(); submit(); }} style={{ display: "flex", flexDirection: "column", gap: 16 }}>

@@ -367,7 +367,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
       <div className="min-h-screen bg-[#112248] flex items-center justify-center px-4">
         <motion.div className="text-center max-w-md" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
           <AlertTriangle className="h-12 w-12 text-red-400 mx-auto mb-4" />
-          <h2 className="text-xl font-heading font-semibold text-white mb-2">Profile Unavailable</h2>
+          <h2 className="text-xl font-heading font-semibold text-white mb-2"><span className="squeeze">Profile Unavailable</span></h2>
           <p className="text-white/70 mb-6">
             {results?.error || "This Profile couldn't be loaded or needs to be regenerated."}
             {results?.websiteUrl && (<><br /><span className="text-sm">Website: {results.websiteUrl}</span></>)}
@@ -437,7 +437,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="grid md:grid-cols-[1fr_340px] gap-10 items-center">
             <div>
               <div className="font-heading-transform">
-                <h1 className="text-2xl md:text-[34px] font-heading text-white mb-2 leading-tight text-balance">Your Brand Elevation Profile</h1>
+                <h1 className="text-2xl md:text-[34px] font-heading text-white mb-2 leading-tight text-balance"><span className="squeeze">Your Brand Elevation Profile</span></h1>
               </div>
               <div className="w-16 h-0.5 bg-[#a7c140] my-4" />
               <p className="text-base md:text-lg text-white/50 mb-6">The sequenced moves to re-align {results.websiteUrl}</p>
@@ -503,7 +503,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
                 <BrandVenn statuses={statuses} onSegmentClick={scrollToArea} />
               </motion.div>
               <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp}>
-                <h2 className="text-4xl md:text-6xl font-heading text-[#112248]">What We See</h2>
+                <h2 className="text-4xl md:text-6xl font-heading text-[#112248]"><span className="squeeze">What We See</span></h2>
                 <div className="w-12 h-0.5 bg-[#a7c140] mt-3 mb-6" />
                 <div className="space-y-5">
                   {results.legacyRead.split(/\n\n+/).filter(Boolean).map((para, i) => (
@@ -555,7 +555,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
                 <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-60px" }} variants={fadeUp} className="text-center mb-12">
                   <div className="flex items-center justify-center gap-4 mb-3">
                     <span className="text-xl md:text-3xl font-bold text-[#a7c140] tracking-[0.2em] font-heading">{String(idx + 1).padStart(2, "0")}</span>
-                    <h2 className={`text-5xl md:text-7xl font-heading leading-[1.1] ${dark ? "text-white" : "text-[#112248]"}`}>{pillar.label}</h2>
+                    <h2 className={`text-5xl md:text-7xl font-heading leading-[1.1] ${dark ? "text-white" : "text-[#112248]"}`}><span className="squeeze-inline">{pillar.label}</span></h2>
                   </div>
                   <div className="w-16 md:w-20 h-1 bg-[#a7c140] mx-auto mb-5" />
                   <p className={`${dark ? "text-white/65" : "text-gray-600"} text-2xl md:text-3xl max-w-3xl mx-auto leading-snug`}>{pillar.tagline}</p>
@@ -662,7 +662,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
             <section id="next-moves" className="scroll-mt-16" style={LIGHT_BAND}>
               <div className={`${CONTENT} py-14 md:py-20`}>
                 <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp} className="text-center mb-10">
-                  <h2 className="text-4xl md:text-6xl font-heading text-[#112248]">Your Next Moves, In Order</h2>
+                  <h2 className="text-4xl md:text-6xl font-heading text-[#112248]"><span className="squeeze">Your Next Moves, In Order</span></h2>
                   <div className="w-12 h-0.5 bg-[#a7c140] mx-auto mt-3 mb-3" />
                   <p className="text-gray-500 text-lg">Sequenced the way we teach it: Get Clear, then Get Noticed, then Get Paid.</p>
                 </motion.div>
@@ -693,7 +693,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
               {/* Locked plan teaser: the shape of the plan is visible, the moves are not. */}
               <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp} className="text-center mb-10">
                 <p className="text-[13px] font-bold uppercase tracking-[0.12em] text-[#a7c140] mb-4">Your Sequenced Plan</p>
-                <h2 className="text-4xl md:text-6xl font-heading text-white leading-[1.1]">Your full plan is built.</h2>
+                <h2 className="text-4xl md:text-6xl font-heading text-white leading-[1.1]"><span className="squeeze">Your full plan is built.</span></h2>
                 <div className="w-16 h-1 bg-[#a7c140] mx-auto my-6" />
                 <p className="text-white/60 text-lg max-w-2xl mx-auto">We&apos;ve sequenced every move in the order we teach it. Unlock to see exactly what to do, and what comes next.</p>
               </motion.div>
@@ -753,7 +753,7 @@ export default function ReportPage({ params }: { params: Promise<{ shortId: stri
         <div className="max-w-3xl mx-auto px-6 text-center">
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} viewport={{ once: true }}>
             <div className="font-heading-transform">
-              <h2 className="text-4xl md:text-5xl font-heading font-bold text-white mb-2">Ready to build the brand you&apos;re meant to lead?</h2>
+              <h2 className="text-4xl md:text-5xl font-heading font-bold text-white mb-2"><span className="squeeze">Ready to build the brand you&apos;re meant to lead?</span></h2>
             </div>
             <div className="w-16 h-0.5 bg-[#a7c140] mx-auto my-6" />
             <p className="text-base md:text-lg text-white/60 mb-8 max-w-xl mx-auto">Let&apos;s turn this Profile into a brand that speaks before you do, sells with integrity, and scales without chaos.</p>

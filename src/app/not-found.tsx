@@ -22,10 +22,10 @@ export default function NotFound() {
           <Card className="bg-white shadow-[0_20px_60px_rgb(0,0,0,0.1)] border-0 overflow-hidden">
             <CardContent className="p-12 text-center">
               <h1 className="text-8xl md:text-9xl font-heading text-[#112248] leading-none mb-8">
-                404
+                <span className="squeeze-inline">404</span>
               </h1>
               <h2 className="text-3xl md:text-4xl font-heading text-[#112248] mb-4">
-                Page Not Found
+                <span className="squeeze">Page Not Found</span>
               </h2>
               <p className="text-lg text-gray-600 leading-relaxed max-w-md mx-auto mb-8">
                 The page you&apos;re looking for has wandered off. Let&apos;s get you back to your Brand Elevation Profile.

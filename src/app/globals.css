@@ -49,12 +49,13 @@
     }
   }
 
-  /* Titles (H1/H2) + explicit .font-heading — Scotch Display with scaleY stretch */
+  /* Titles (H1/H2) + explicit .font-heading — Scotch Display.
+     The canon squeeze lives on .squeeze (see below), not here: a transform on
+     the heading itself is paint-only and reserves no layout space. */
   h1, h2, .font-heading {
     font-family: scotch-display, 'Playfair Display', Georgia, serif;
     font-weight: 700;
     line-height: 1.5;
-    transform: matrix(1, 0, 0, 1.2, 0, 0);
     letter-spacing: 1px;
   }
 
@@ -65,9 +66,9 @@
     line-height: 1.2;
   }
 
-  /* Wrapper for motion-based headings so transform isn't overridden by Framer */
+  /* Wrapper for motion-based headings. Kept as a layout hook; the retired
+     scaleY stretch it used to carry was removed 2026-09-23. */
   .font-heading-transform {
-    transform: matrix(1, 0, 0, 1.2, 0, 0);
     line-height: 1.5;
   }
   
@@ -124,11 +125,46 @@
   }
 }
 
-/* Enforce Scotch Display + scaleY stretch on titles (H1/H2) & explicit .font-heading site-wide */
+/* Enforce Scotch Display on titles (H1/H2) & explicit .font-heading site-wide.
+   The retired scaleY stretch was removed here 2026-09-23; wrap heading text in
+   a <span className="squeeze"> for the canon treatment instead. */
 h1, h2, .font-heading {
   font-family: scotch-display, 'Playfair Display', Georgia, serif !important;
   font-weight: 700 !important;
-  transform: matrix(1, 0, 0, 1.2, 0, 0) !important;
+}
+
+/* ── Canon heading treatment ────────────────────────────────────────────────
+   Scotch Display is set 1.2x its nominal size and compressed horizontally to
+   83.33%. Net glyph proportions are identical to the retired scaleY(1.2), but
+   the extra height now comes from font-size, which participates in layout
+   instead of overflowing its box.
+
+   width:120% with margin-inline:-10% is what makes a WRAPPING heading fill its
+   column. Without it the text wraps at 100% and then paints at 83.33%, leaving
+   16.67% of the column empty on the right. (width:fit-content does not help:
+   it resolves to the available width whenever the text is longer than the
+   column, which is exactly when a heading wraps.)
+
+   transform-origin:center serves left-aligned and centred headings alike: the
+   box spans -10% to 110%, so scaling from its centre lands it on 0 to 100%. */
+.squeeze {
+  display: block;
+  width: 120%;
+  margin-inline: -10%;
+  font-size: 1.2em;
+  transform: scaleX(0.8333);
+  transform-origin: center;
+}
+
+/* Short labels that sit inside a flex row (a pillar name next to its number,
+   the 404 digits). No 120% box, because a percentage width inside a
+   shrink-to-fit flex item has nothing stable to resolve against. These never
+   wrap, so hugging the text is correct. */
+.squeeze-inline {
+  display: inline-block;
+  font-size: 1.2em;
+  transform: scaleX(0.8333);
+  transform-origin: center;
 }
 
 /* Enforce Sweet Sans Pro on subheads (H3–H6) per LRL brand spec — no scaleY stretch.

@@ -495,7 +495,7 @@ export default function AnalyzingPage() {
           transition={{ duration: 0.7, ease: "easeOut" }}
         >
           <h1 className="h1-form-title font-heading text-white mb-4 leading-tight">
-            Building Your Brand Elevation Profile
+            <span className="squeeze">Building Your Brand Elevation Profile</span>
           </h1>
           <div className="w-16 h-0.5 bg-[#a7c140] mx-auto mb-4" />
           <p className="text-base md:text-lg text-white/60 max-w-md mx-auto">
