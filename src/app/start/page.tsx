@@ -121,18 +121,17 @@ function Scaley({ children, center = false }: { children: React.ReactNode; cente
     <span
       style={{
         display: "block",
-        // 120% box, pulled back 10% each side, so a heading that WRAPS still
-        // fills its column: it wraps at 120% and paints at exactly 100%.
-        // fit-content looked right only because these headings rarely wrapped;
-        // on a phone it left 17% of the column empty. Centre origin serves both
-        // alignments, so `center` no longer changes the transform.
+        // 120% box so a heading that WRAPS still fills its column: it wraps at
+        // 120% and paints at exactly 100%. fit-content looked right only
+        // because these headings rarely wrapped; on a phone it left 17% of the
+        // column empty. Left origin needs no compensating margin and handles
+        // centred text too, because the box's centre (0.6W) maps to 0.5W.
         width: "120%",
-        marginInline: "-10%",
         fontSize: "1.2em",
         lineHeight: 0.85,
         paddingInline: "0.1em",
         transform: "scaleX(0.8333)",
-        transformOrigin: "center",
+        transformOrigin: "left center",
       }}
     >
       {children}

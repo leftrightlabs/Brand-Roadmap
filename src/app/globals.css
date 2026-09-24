@@ -145,15 +145,19 @@ h1, h2, .font-heading {
    it resolves to the available width whenever the text is longer than the
    column, which is exactly when a heading wraps.)
 
-   transform-origin:center serves left-aligned and centred headings alike: the
-   box spans -10% to 110%, so scaling from its centre lands it on 0 to 100%. */
+   transform-origin:left needs no compensating margin and serves BOTH
+   alignments: the left edge maps to 0, the right edge (1.2W) maps to W, and
+   text centred in the 1.2W box lands on 0.5W, the container's centre. An
+   earlier version used centre origin plus margin-inline:-10%, which produced
+   the same result but only while that negative margin survived the cascade.
+   On leftrightlabs.com it didn't, and those headings sat 10% right and
+   overflowed. Do not reintroduce the margin. */
 .squeeze {
   display: block;
   width: 120%;
-  margin-inline: -10%;
   font-size: 1.2em;
   transform: scaleX(0.8333);
-  transform-origin: center;
+  transform-origin: left center;
 }
 
 /* Short labels that sit inside a flex row (a pillar name next to its number,
