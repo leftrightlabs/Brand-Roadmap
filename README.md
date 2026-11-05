@@ -3,7 +3,7 @@
 A free, personalized brand assessment that delivers a sequenced set of moves
 for re-aligning your brand with the clients you want to attract.
 
-Hosted at **https://roadmap.leftrightlabs.com**.
+Hosted at **https://profile.brandelevationlabs.com**.
 
 Forked from the Brand Advantage Toolkit codebase, stripped down to just the
 `/start` opt-in funnel and its supporting API routes.
@@ -38,7 +38,7 @@ This repo is Railway-ready. The included `Dockerfile` (multi-stage build with
 1. Create a new Railway project from this GitHub repo
 2. Set environment variables in Railway's Variables UI (see `.env.example`)
 3. Railway auto-detects the `Dockerfile` and builds. No `railway.json` needed.
-4. Add the custom domain in Settings → Domains → `roadmap.leftrightlabs.com`
+4. Add the custom domain in Settings → Domains → `profile.brandelevationlabs.com`
 5. Update DNS at your provider: CNAME → the Railway-provided target
 
 ## Routes
